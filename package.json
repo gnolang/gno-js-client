@@ -24,6 +24,6 @@
     "lint": "eslint '**/*.ts' --fix",
     "prettier": "prettier --write .",
     "build": "yarn tsc",
-    "test": "jest"
+    "test": "jest --passWithNoTests"
   }
 }
