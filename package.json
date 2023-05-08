@@ -1,0 +1,29 @@
+{
+  "name": "gno-js-client",
+  "version": "1.0.0",
+  "description": "GNO JS Client",
+  "main": "./bin/index.js",
+  "author": "Milos Zivkovic <milos.zivkovic@tendermint.com>",
+  "license": "Apache-2.0",
+  "private": false,
+  "devDependencies": {
+    "@types/jest": "^29.5.1",
+    "@types/node": "^20.1.0",
+    "@typescript-eslint/eslint-plugin": "^5.59.2",
+    "@typescript-eslint/parser": "^5.59.2",
+    "eslint": "^8.40.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "jest": "^29.5.0",
+    "prettier": "^2.8.8",
+    "ts-jest": "^29.1.0",
+    "typescript": "^5.0.4"
+  },
+  "scripts": {
+    "tsc": "tsc",
+    "lint": "eslint '**/*.ts' --fix",
+    "prettier": "prettier --write .",
+    "build": "yarn tsc",
+    "test": "jest"
+  }
+}
