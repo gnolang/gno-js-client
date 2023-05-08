@@ -17,6 +17,7 @@
     "jest": "^29.5.0",
     "prettier": "^2.8.8",
     "ts-jest": "^29.1.0",
+    "ts-proto": "^1.147.2",
     "typescript": "^5.0.4"
   },
   "scripts": {
@@ -24,6 +25,9 @@
     "lint": "eslint '**/*.ts' --fix",
     "prettier": "prettier --write .",
     "build": "yarn tsc",
-    "test": "jest --passWithNoTests"
+    "test": "jest"
+  },
+  "dependencies": {
+    "protobufjs": "^7.2.3"
   }
 }

@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package gno.bank;
+
+// MsgSend is the fund transfer tx message
+message MsgSend {
+  // the bech32 address of the fund sender
+  string from_address = 1;
+  // the bech32 address of the fund receiver
+  string to_address = 2;
+  // the denomination and amount of fund sent ("<amount><denomination>")
+  string amount = 3;
+}

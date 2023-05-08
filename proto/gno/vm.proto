@@ -1,0 +1,49 @@
+syntax = "proto3";
+
+package gno.vm;
+
+// MsgCall is the method invocation tx message,
+// denoted as "m_call"
+message MsgCall {
+  // the bech32 address of the caller
+  string caller = 1;
+  // the amount of funds to be deposited to the package, if any ("<amount><denomination>")
+  string send = 2;
+  // the gno package path
+  string pkg_path = 3;
+  // the function name being invoked
+  string func = 4;
+  // the function arguments
+  repeated string args = 5;
+}
+
+// MsgAddPackage is the package deployment tx message,
+// denoted as "m_addpkg"
+message MsgAddPackage {
+  // the package deployer
+  string creator = 1;
+  // the package being deployed
+  MemPackage package = 2;
+  // the amount of funds to be deposited at deployment, if any ("<amount><denomination>")
+  string deposit = 3;
+}
+
+// MemPackage is the metadata information tied to
+// package / realm deployment
+message MemPackage {
+  // the name of the package
+  string name = 1;
+  // the gno path of the package
+  string path = 2;
+  // the associated package gno source
+  repeated MemFile files = 3;
+}
+
+// MemFile is the metadata information tied to
+// a single gno package / realm file
+message MemFile {
+  // the name of the source gno file
+  string name = 1;
+  // the content of the source gno file
+  string body = 2;
+}
