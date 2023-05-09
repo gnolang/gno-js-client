@@ -1,5 +1,9 @@
 import { Tx, TxFee, Wallet } from 'tm2-js-client';
-import { fundsToCoins } from './utility/utility';
+import {
+  decodeTxMessages,
+  defaultTxFee,
+  fundsToCoins,
+} from './utility/utility';
 import Long from 'long';
 import { MsgSend } from '../proto/gno/bank';
 import { MsgEndpoint } from './endpoints';
@@ -94,13 +98,13 @@ export class GnoWallet extends Wallet {
       ? fee
       : {
           gasWanted: new Long(60000),
-          gasFee: '1ugnot',
+          gasFee: defaultTxFee,
         };
 
     // Prepare the Msg
     const sendMsg: MsgSend = {
-      fromAddress: sender,
-      toAddress: to,
+      from_address: sender,
+      to_address: to,
       amount: amount,
     };
 
@@ -117,8 +121,11 @@ export class GnoWallet extends Wallet {
       signatures: [], // No signature yet
     };
 
-    // Sign and send the transaction
-    return this.sendTransaction(tx);
+    // Sign the transaction
+    const signedTx: Tx = await this.signTransaction(tx, decodeTxMessages);
+
+    // Send the transaction
+    return this.sendTransaction(signedTx);
   };
 
   /**
@@ -147,14 +154,14 @@ export class GnoWallet extends Wallet {
       ? fee
       : {
           gasWanted: new Long(60000),
-          gasFee: '1ugnot',
+          gasFee: defaultTxFee,
         };
 
     // Prepare the Msg
     const callMsg: MsgCall = {
       caller: caller,
       send: amount,
-      pkgPath: path,
+      pkg_path: path,
       func: method,
       args: args,
     };
@@ -172,8 +179,11 @@ export class GnoWallet extends Wallet {
       signatures: [], // No signature yet
     };
 
-    // Sign and send the transaction
-    return this.sendTransaction(tx);
+    // Sign the transaction
+    const signedTx: Tx = await this.signTransaction(tx, decodeTxMessages);
+
+    // Send the transaction
+    return this.sendTransaction(signedTx);
   };
 
   /**
@@ -198,7 +208,7 @@ export class GnoWallet extends Wallet {
       ? fee
       : {
           gasWanted: new Long(60000),
-          gasFee: '1ugnot',
+          gasFee: defaultTxFee,
         };
 
     // Prepare the Msg
@@ -221,7 +231,10 @@ export class GnoWallet extends Wallet {
       signatures: [], // No signature yet
     };
 
-    // Sign and send the transaction
-    return this.sendTransaction(tx);
+    // Sign the transaction
+    const signedTx: Tx = await this.signTransaction(tx, decodeTxMessages);
+
+    // Send the transaction
+    return this.sendTransaction(signedTx);
   };
 }

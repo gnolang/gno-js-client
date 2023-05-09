@@ -14,7 +14,7 @@ export interface MsgCall {
   /** the amount of funds to be deposited to the package, if any ("<amount><denomination>") */
   send: string;
   /** the gno package path */
-  pkgPath: string;
+  pkg_path: string;
   /** the function name being invoked */
   func: string;
   /** the function arguments */
@@ -59,7 +59,7 @@ export interface MemFile {
 }
 
 function createBaseMsgCall(): MsgCall {
-  return { caller: '', send: '', pkgPath: '', func: '', args: [] };
+  return { caller: '', send: '', pkg_path: '', func: '', args: [] };
 }
 
 export const MsgCall = {
@@ -73,8 +73,8 @@ export const MsgCall = {
     if (message.send !== '') {
       writer.uint32(18).string(message.send);
     }
-    if (message.pkgPath !== '') {
-      writer.uint32(26).string(message.pkgPath);
+    if (message.pkg_path !== '') {
+      writer.uint32(26).string(message.pkg_path);
     }
     if (message.func !== '') {
       writer.uint32(34).string(message.func);
@@ -112,7 +112,7 @@ export const MsgCall = {
             break;
           }
 
-          message.pkgPath = reader.string();
+          message.pkg_path = reader.string();
           continue;
         case 4:
           if (tag !== 34) {
@@ -141,7 +141,7 @@ export const MsgCall = {
     return {
       caller: isSet(object.caller) ? String(object.caller) : '',
       send: isSet(object.send) ? String(object.send) : '',
-      pkgPath: isSet(object.pkgPath) ? String(object.pkgPath) : '',
+      pkg_path: isSet(object.pkg_path) ? String(object.pkg_path) : '',
       func: isSet(object.func) ? String(object.func) : '',
       args: Array.isArray(object?.args)
         ? object.args.map((e: any) => String(e))
@@ -153,7 +153,7 @@ export const MsgCall = {
     const obj: any = {};
     message.caller !== undefined && (obj.caller = message.caller);
     message.send !== undefined && (obj.send = message.send);
-    message.pkgPath !== undefined && (obj.pkgPath = message.pkgPath);
+    message.pkg_path !== undefined && (obj.pkg_path = message.pkg_path);
     message.func !== undefined && (obj.func = message.func);
     if (message.args) {
       obj.args = message.args.map((e) => e);
@@ -171,7 +171,7 @@ export const MsgCall = {
     const message = createBaseMsgCall();
     message.caller = object.caller ?? '';
     message.send = object.send ?? '';
-    message.pkgPath = object.pkgPath ?? '';
+    message.pkg_path = object.pkg_path ?? '';
     message.func = object.func ?? '';
     message.args = object.args?.map((e) => e) || [];
     return message;

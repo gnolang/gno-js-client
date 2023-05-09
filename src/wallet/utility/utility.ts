@@ -1,3 +1,8 @@
+import { Any } from '../../proto/google/protobuf/any';
+import { MsgCall } from '../../proto/gno/vm';
+import { MsgEndpoint } from '../endpoints';
+import { MsgSend } from '../../proto/gno/bank';
+
 /**
  * Converts a fund map to a concatenated string representation ("<value><denomination>")
  * @param funds
@@ -27,3 +32,31 @@ export const fundsToCoins = (funds?: Map<string, number>): string => {
  * https://github.com/gnolang/gno/issues/649
  */
 export const defaultTxFee = '1000000ugnot'; // 1 GNOT
+
+/**
+ * Decodes (and unrolls) Transaction messages into full objects
+ * @param {Any[]} messages the encoded transaction messages
+ */
+export const decodeTxMessages = (messages: Any[]): any[] => {
+  return messages.map((m: Any) => {
+    switch (m.typeUrl) {
+      case MsgEndpoint.MSG_CALL:
+        return {
+          '@type': m.typeUrl,
+          ...MsgCall.decode(m.value),
+        };
+      case MsgEndpoint.MSG_SEND:
+        return {
+          '@type': m.typeUrl,
+          ...MsgSend.decode(m.value),
+        };
+      case MsgEndpoint.MSG_ADD_PKG:
+        return {
+          '@type': m.typeUrl,
+          ...MsgSend.decode(m.value),
+        };
+      default:
+        throw new Error(`unsupported message type ${m.typeUrl}`);
+    }
+  });
+};
