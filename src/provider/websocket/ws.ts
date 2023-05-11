@@ -5,12 +5,9 @@ import {
   newRequest,
   WSProvider,
 } from 'tm2-js-client';
-import { FunctionSignature } from '../types/vm';
+import { FunctionSignature } from '../types';
 import { VMEndpoint } from '../endpoints';
-import {
-  extractStringFromResponse,
-  prepareVMABCIQuery,
-} from '../utility/provider.utility';
+import { extractStringFromResponse, prepareVMABCIQuery } from '../utility';
 
 export class GnoWSProvider extends WSProvider implements GnoProvider {
   /**

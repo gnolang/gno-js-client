@@ -1,5 +1,5 @@
 import { Provider } from 'tm2-js-client';
-import { FunctionSignature } from './types/vm';
+import { FunctionSignature } from './types';
 
 /**
  * GnoProvider is the Provider interface for Gno-specific functionality

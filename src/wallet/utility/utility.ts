@@ -1,7 +1,5 @@
-import { Any } from '../../proto/google/protobuf/any';
-import { MsgCall } from '../../proto/gno/vm';
+import { Any, MsgCall, MsgSend } from '../../proto';
 import { MsgEndpoint } from '../endpoints';
-import { MsgSend } from '../../proto/gno/bank';
 
 /**
  * Converts a fund map to a concatenated string representation ("<value><denomination>")

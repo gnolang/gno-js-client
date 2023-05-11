@@ -1,14 +1,9 @@
 import { Tx, TxFee, Wallet } from 'tm2-js-client';
-import {
-  decodeTxMessages,
-  defaultTxFee,
-  fundsToCoins,
-} from './utility/utility';
+import { decodeTxMessages, defaultTxFee, fundsToCoins } from './utility';
 import Long from 'long';
-import { MsgSend } from '../proto/gno/bank';
+import { MemPackage, MsgAddPackage, MsgCall, MsgSend } from '../proto';
 import { MsgEndpoint } from './endpoints';
 import { LedgerConnector } from '@cosmjs/ledger-amino';
-import { MemPackage, MsgAddPackage, MsgCall } from '../proto/gno/vm';
 
 /**
  * GnoWallet is an extension of the TM2 wallet with

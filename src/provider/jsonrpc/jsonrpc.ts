@@ -6,12 +6,9 @@ import {
   newRequest,
   RestService,
 } from 'tm2-js-client';
-import { FunctionSignature } from '../types/vm';
+import { FunctionSignature } from '../types';
 import { VMEndpoint } from '../endpoints';
-import {
-  extractStringFromResponse,
-  prepareVMABCIQuery,
-} from '../utility/provider.utility';
+import { extractStringFromResponse, prepareVMABCIQuery } from '../utility';
 
 /**
  * Provider based on JSON-RPC HTTP requests
