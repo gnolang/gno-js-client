@@ -1,4 +1,10 @@
-import { Tx, TxFee, Wallet } from 'tm2-js-client';
+import {
+  AccountWalletOption,
+  CreateWalletOptions,
+  Tx,
+  TxFee,
+  Wallet,
+} from 'tm2-js-client';
 import { decodeTxMessages, defaultTxFee, fundsToCoins } from './utility';
 import Long from 'long';
 import { MemPackage, MsgAddPackage, MsgCall, MsgSend } from '../proto';
@@ -12,9 +18,12 @@ import { LedgerConnector } from '@cosmjs/ledger-amino';
 export class GnoWallet extends Wallet {
   /**
    * Generates a private key-based wallet, using a random seed
+   * @param {AccountWalletOption} options the account options
    */
-  static override createRandom = async (): Promise<GnoWallet> => {
-    const wallet = await Wallet.createRandom();
+  static override createRandom = async (
+    options?: AccountWalletOption
+  ): Promise<GnoWallet> => {
+    const wallet = await Wallet.createRandom(options);
 
     const gnoWallet: GnoWallet = new GnoWallet();
     Object.assign(gnoWallet, wallet);
@@ -25,13 +34,13 @@ export class GnoWallet extends Wallet {
   /**
    * Generates a bip39 mnemonic-based wallet
    * @param {string} mnemonic the bip39 mnemonic
-   * @param {number} [accountIndex=0] the account index
+   * @param {CreateWalletOptions} options the wallet generation options
    */
   static override fromMnemonic = async (
     mnemonic: string,
-    accountIndex?: number
+    options?: CreateWalletOptions
   ): Promise<GnoWallet> => {
-    const wallet = await Wallet.fromMnemonic(mnemonic, accountIndex);
+    const wallet = await Wallet.fromMnemonic(mnemonic, options);
 
     const gnoWallet: GnoWallet = new GnoWallet();
     Object.assign(gnoWallet, wallet);
@@ -42,11 +51,13 @@ export class GnoWallet extends Wallet {
   /**
    * Generates a private key-based wallet
    * @param {string} privateKey the private key
+   * @param {AccountWalletOption} options the account options
    */
   static override fromPrivateKey = async (
-    privateKey: Uint8Array
+    privateKey: Uint8Array,
+    options?: AccountWalletOption
   ): Promise<GnoWallet> => {
-    const wallet = await Wallet.fromPrivateKey(privateKey);
+    const wallet = await Wallet.fromPrivateKey(privateKey, options);
 
     const gnoWallet: GnoWallet = new GnoWallet();
     Object.assign(gnoWallet, wallet);
@@ -57,13 +68,13 @@ export class GnoWallet extends Wallet {
   /**
    * Creates a Ledger-based wallet
    * @param {LedgerConnector} connector the Ledger device connector
-   * @param {number} [accountIndex=0] the account index
+   * @param {CreateWalletOptions} options the wallet generation options
    */
   static override fromLedger = (
     connector: LedgerConnector,
-    accountIndex?: number
+    options?: CreateWalletOptions
   ): GnoWallet => {
-    const wallet = Wallet.fromLedger(connector, accountIndex);
+    const wallet = Wallet.fromLedger(connector, options);
 
     const gnoWallet: GnoWallet = new GnoWallet();
     Object.assign(gnoWallet, wallet);
