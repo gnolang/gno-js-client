@@ -5,7 +5,7 @@ import {
   JSONRPCProvider,
   newRequest,
   RestService,
-} from 'tm2-js-client';
+} from '@gnolang/tm2-js-client';
 import { FunctionSignature } from '../types';
 import { VMEndpoint } from '../endpoints';
 import { extractStringFromResponse, prepareVMABCIQuery } from '../utility';

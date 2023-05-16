@@ -1,4 +1,4 @@
-import { stringToBase64 } from 'tm2-js-client';
+import { stringToBase64 } from '@gnolang/tm2-js-client';
 
 /**
  * Prepares the VM ABCI query params by concatenating them

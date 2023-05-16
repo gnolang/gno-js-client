@@ -4,7 +4,7 @@ import {
   Tx,
   TxFee,
   Wallet,
-} from 'tm2-js-client';
+} from '@gnolang/tm2-js-client';
 import { decodeTxMessages, defaultTxFee, fundsToCoins } from './utility';
 import Long from 'long';
 import { MemPackage, MsgAddPackage, MsgCall, MsgSend } from '../proto';

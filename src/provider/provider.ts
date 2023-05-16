@@ -1,4 +1,4 @@
-import { Provider } from 'tm2-js-client';
+import { Provider } from '@gnolang/tm2-js-client';
 import { FunctionSignature } from './types';
 
 /**

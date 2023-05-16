@@ -2,7 +2,7 @@
 
 ## Overview
 
-`gno-js-client` is a JavaScript/TypeScript client implementation for Gno chains. It is an extension of the
+`@gnolang/gno-js-client` is a JavaScript/TypeScript client implementation for Gno chains. It is an extension of the
 [tm2-js-client](https://github.com/gnolang/tm2-js-client), but with Gno-specific functionality.
 
 ## Key Features
@@ -12,17 +12,17 @@
 
 ## Installation
 
-To install `gno-js-client`, use your preferred package manager:
+To install `@gnolang/gno-js-client`, use your preferred package manager:
 
 ```bash
-yarn add gno-js-client
+yarn add @gnolang/gno-js-client
 ```
 
 ```bash
-npm install gno-js-client
+npm install @gnolang/gno-js-client
 ```
 
 ## Documentation
 
 For the sake of keeping the README short and sweet, you can find the documentation and usage examples
-for the package [here](#).
+for the package [here](https://onbloc.gitbook.io/gnoland-developer-portal/docs/gno-js-client).
