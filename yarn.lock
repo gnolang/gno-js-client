@@ -401,9 +401,9 @@
   integrity sha512-Ag+9YM4ocKQx9AarydN0KY2j0ErMHNIocPDrVo8zAE44xLTjEtz81OdR68/cydGtk6m6jDb5Za3r2useMzYmSw==
 
 "@gnolang/tm2-js-client@^1.0.0":
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/@gnolang/tm2-js-client/-/tm2-js-client-1.0.2.tgz#712551ab765aeb9b2c23da4c77d1418695067018"
-  integrity sha512-DYA8SaDWuWPd8tmsL8hJIbY/Gqik3YegFZrYyg/yTyHFYmjE5Mjpw5XmcS3ahNnWhMO+Z52MmpGema6HPkWWCg==
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/@gnolang/tm2-js-client/-/tm2-js-client-1.0.3.tgz#2c6168625f8be4b2de9fcdd78b541e47b79c32cd"
+  integrity sha512-8xj2Dzg0Go5dbe9XRlKVDMmTobMN9ik5HJlZ0hKZAgEGG7QA9vUklDp/hhW41PSPK0wIesVSKVP/dy0JvGecsQ==
   dependencies:
     "@cosmjs/amino" "^0.30.1"
     "@cosmjs/crypto" "^0.30.1"

@@ -1,6 +1,6 @@
 {
   "name": "@gnolang/gno-js-client",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Gno JS / TS Client",
   "main": "./bin/index.js",
   "author": "Milos Zivkovic <milos.zivkovic@tendermint.com>",
