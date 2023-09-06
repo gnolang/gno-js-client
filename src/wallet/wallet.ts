@@ -1,6 +1,7 @@
 import {
   AccountWalletOption,
   CreateWalletOptions,
+  TransactionEndpoint,
   Tx,
   TxFee,
   Wallet,
@@ -87,11 +88,16 @@ export class GnoWallet extends Wallet {
    * @param {string} to the bech32 address of the receiver
    * @param {Map<string, number>} funds the denomination -> value map for funds
    * @param {TxFee} [fee] the custom transaction fee, if any
+   * @param {TransactionEndpoint} endpoint the transaction broadcast type (sync / commit).
+   * Defaults to broadcast_sync
    */
   transferFunds = async (
     to: string,
     funds: Map<string, number>,
-    fee?: TxFee
+    fee?: TxFee,
+    endpoint?:
+      | TransactionEndpoint.BROADCAST_TX_SYNC
+      | TransactionEndpoint.BROADCAST_TX_COMMIT
   ): Promise<string> => {
     // Convert the funds into the correct representation
     const amount: string = fundsToCoins(funds);
@@ -131,7 +137,7 @@ export class GnoWallet extends Wallet {
     const signedTx: Tx = await this.signTransaction(tx, decodeTxMessages);
 
     // Send the transaction
-    return this.sendTransaction(signedTx);
+    return this.sendTransaction(signedTx, endpoint);
   };
 
   /**
@@ -141,13 +147,18 @@ export class GnoWallet extends Wallet {
    * @param {string[]} args the method arguments, if any
    * @param {Map<string, number>} [funds] the denomination -> value map for funds, if any
    * @param {TxFee} [fee] the custom transaction fee, if any
+   * @param {TransactionEndpoint} endpoint the transaction broadcast type (sync / commit).
+   * Defaults to broadcast_sync
    */
   callMethod = async (
     path: string,
     method: string,
     args: string[],
     funds?: Map<string, number>,
-    fee?: TxFee
+    fee?: TxFee,
+    endpoint?:
+      | TransactionEndpoint.BROADCAST_TX_SYNC
+      | TransactionEndpoint.BROADCAST_TX_COMMIT
   ): Promise<string> => {
     // Convert the funds into the correct representation
     const amount: string = fundsToCoins(funds);
@@ -189,7 +200,7 @@ export class GnoWallet extends Wallet {
     const signedTx: Tx = await this.signTransaction(tx, decodeTxMessages);
 
     // Send the transaction
-    return this.sendTransaction(signedTx);
+    return this.sendTransaction(signedTx, endpoint);
   };
 
   /**
@@ -197,11 +208,16 @@ export class GnoWallet extends Wallet {
    * @param {MemPackage} gnoPackage the package / realm to be deployed
    * @param {Map<string, number>} [funds] the denomination -> value map for funds, if any
    * @param {TxFee} [fee] the custom transaction fee, if any
+   * @param {TransactionEndpoint} endpoint the transaction broadcast type (sync / commit).
+   * Defaults to broadcast_sync
    */
   deployPackage = async (
     gnoPackage: MemPackage,
     funds?: Map<string, number>,
-    fee?: TxFee
+    fee?: TxFee,
+    endpoint?:
+      | TransactionEndpoint.BROADCAST_TX_SYNC
+      | TransactionEndpoint.BROADCAST_TX_COMMIT
   ): Promise<string> => {
     // Convert the funds into the correct representation
     const amount: string = fundsToCoins(funds);
@@ -241,6 +257,6 @@ export class GnoWallet extends Wallet {
     const signedTx: Tx = await this.signTransaction(tx, decodeTxMessages);
 
     // Send the transaction
-    return this.sendTransaction(signedTx);
+    return this.sendTransaction(signedTx, endpoint);
   };
 }
