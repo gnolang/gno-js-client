@@ -1,4 +1,4 @@
-import { Any, MsgCall, MsgSend } from '../../proto';
+import { Any, MsgAddPackage, MsgCall, MsgSend } from '../../proto';
 import { MsgEndpoint } from '../endpoints';
 
 /**
@@ -51,7 +51,7 @@ export const decodeTxMessages = (messages: Any[]): any[] => {
       case MsgEndpoint.MSG_ADD_PKG:
         return {
           '@type': m.typeUrl,
-          ...MsgSend.decode(m.value),
+          ...MsgAddPackage.decode(m.value),
         };
       default:
         throw new Error(`unsupported message type ${m.typeUrl}`);
