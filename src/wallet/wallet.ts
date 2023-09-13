@@ -1,7 +1,7 @@
 import {
   AccountWalletOption,
+  BroadcastTransactionMap,
   CreateWalletOptions,
-  TransactionEndpoint,
   Tx,
   TxFee,
   Wallet,
@@ -87,18 +87,15 @@ export class GnoWallet extends Wallet {
    * Initiates a native currency transfer transaction between accounts
    * @param {string} to the bech32 address of the receiver
    * @param {Map<string, number>} funds the denomination -> value map for funds
+   * @param {TransactionEndpoint} endpoint the transaction broadcast type (sync / commit)
    * @param {TxFee} [fee] the custom transaction fee, if any
-   * @param {TransactionEndpoint} endpoint the transaction broadcast type (sync / commit).
-   * Defaults to broadcast_sync
    */
-  transferFunds = async (
+  transferFunds = async <K extends keyof BroadcastTransactionMap>(
     to: string,
     funds: Map<string, number>,
-    fee?: TxFee,
-    endpoint?:
-      | TransactionEndpoint.BROADCAST_TX_SYNC
-      | TransactionEndpoint.BROADCAST_TX_COMMIT
-  ): Promise<string> => {
+    endpoint: K,
+    fee?: TxFee
+  ): Promise<BroadcastTransactionMap[K]['result']> => {
     // Convert the funds into the correct representation
     const amount: string = fundsToCoins(funds);
 
@@ -145,21 +142,18 @@ export class GnoWallet extends Wallet {
    * @param {string} path the gno package / realm path
    * @param {string} method the method name
    * @param {string[]} args the method arguments, if any
+   * @param {TransactionEndpoint} endpoint the transaction broadcast type (sync / commit)
    * @param {Map<string, number>} [funds] the denomination -> value map for funds, if any
    * @param {TxFee} [fee] the custom transaction fee, if any
-   * @param {TransactionEndpoint} endpoint the transaction broadcast type (sync / commit).
-   * Defaults to broadcast_sync
    */
-  callMethod = async (
+  callMethod = async <K extends keyof BroadcastTransactionMap>(
     path: string,
     method: string,
     args: string[],
+    endpoint: K,
     funds?: Map<string, number>,
-    fee?: TxFee,
-    endpoint?:
-      | TransactionEndpoint.BROADCAST_TX_SYNC
-      | TransactionEndpoint.BROADCAST_TX_COMMIT
-  ): Promise<string> => {
+    fee?: TxFee
+  ): Promise<BroadcastTransactionMap[K]['result']> => {
     // Convert the funds into the correct representation
     const amount: string = fundsToCoins(funds);
 
@@ -206,19 +200,16 @@ export class GnoWallet extends Wallet {
   /**
    * Deploys the specified package / realm
    * @param {MemPackage} gnoPackage the package / realm to be deployed
+   * @param {TransactionEndpoint} endpoint the transaction broadcast type (sync / commit)
    * @param {Map<string, number>} [funds] the denomination -> value map for funds, if any
    * @param {TxFee} [fee] the custom transaction fee, if any
-   * @param {TransactionEndpoint} endpoint the transaction broadcast type (sync / commit).
-   * Defaults to broadcast_sync
    */
-  deployPackage = async (
+  deployPackage = async <K extends keyof BroadcastTransactionMap>(
     gnoPackage: MemPackage,
+    endpoint: K,
     funds?: Map<string, number>,
-    fee?: TxFee,
-    endpoint?:
-      | TransactionEndpoint.BROADCAST_TX_SYNC
-      | TransactionEndpoint.BROADCAST_TX_COMMIT
-  ): Promise<string> => {
+    fee?: TxFee
+  ): Promise<BroadcastTransactionMap[K]['result']> => {
     // Convert the funds into the correct representation
     const amount: string = fundsToCoins(funds);
 
