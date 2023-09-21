@@ -17,6 +17,10 @@ import { LedgerConnector } from '@cosmjs/ledger-amino';
  * specific functionality for Gno chains
  */
 export class GnoWallet extends Wallet {
+  constructor() {
+    super();
+  }
+
   /**
    * Generates a private key-based wallet, using a random seed
    * @param {AccountWalletOption} options the account options
@@ -27,7 +31,7 @@ export class GnoWallet extends Wallet {
     const wallet = await Wallet.createRandom(options);
 
     const gnoWallet: GnoWallet = new GnoWallet();
-    Object.assign(gnoWallet, wallet);
+    gnoWallet.signer = wallet.getSigner();
 
     return gnoWallet;
   };
@@ -44,7 +48,7 @@ export class GnoWallet extends Wallet {
     const wallet = await Wallet.fromMnemonic(mnemonic, options);
 
     const gnoWallet: GnoWallet = new GnoWallet();
-    Object.assign(gnoWallet, wallet);
+    gnoWallet.signer = wallet.getSigner();
 
     return gnoWallet;
   };
@@ -61,7 +65,7 @@ export class GnoWallet extends Wallet {
     const wallet = await Wallet.fromPrivateKey(privateKey, options);
 
     const gnoWallet: GnoWallet = new GnoWallet();
-    Object.assign(gnoWallet, wallet);
+    gnoWallet.signer = wallet.getSigner();
 
     return gnoWallet;
   };
@@ -78,7 +82,7 @@ export class GnoWallet extends Wallet {
     const wallet = Wallet.fromLedger(connector, options);
 
     const gnoWallet: GnoWallet = new GnoWallet();
-    Object.assign(gnoWallet, wallet);
+    gnoWallet.signer = wallet.getSigner();
 
     return gnoWallet;
   };
