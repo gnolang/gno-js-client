@@ -153,7 +153,7 @@ export class GnoWallet extends Wallet {
   callMethod = async <K extends keyof BroadcastTransactionMap>(
     path: string,
     method: string,
-    args: string[],
+    args: string[] | null,
     endpoint: K,
     funds?: Map<string, number>,
     fee?: TxFee
@@ -178,7 +178,7 @@ export class GnoWallet extends Wallet {
       send: amount,
       pkg_path: path,
       func: method,
-      args: args.length === 0 ? null : args,
+      args: args ? (args.length === 0 ? null : args) : null,
     };
 
     // Construct the transfer transaction
