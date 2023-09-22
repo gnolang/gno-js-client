@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package gno.vm;
 
-import "google/protobuf/struct.proto";
+
 
 // MsgCall is the method invocation tx message,
 // denoted as "m_call"
@@ -16,7 +16,7 @@ message MsgCall {
   // the function name being invoked
   string func = 4;
   // the function arguments
-  google.protobuf.Value args = 5; // null | string[]
+  repeated string args = 5; // null | string[]
 }
 
 // MsgAddPackage is the package deployment tx message,

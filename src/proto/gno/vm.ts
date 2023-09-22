@@ -1,7 +1,6 @@
 /* eslint-disable */
 import Long from 'long';
 import _m0 from 'protobufjs/minimal';
-import { Value } from '../google/protobuf/struct';
 
 export const protobufPackage = 'gno.vm';
 
@@ -19,7 +18,7 @@ export interface MsgCall {
   /** the function name being invoked */
   func: string;
   /** the function arguments */
-  args?: any | undefined;
+  args: string[] | null;
 }
 
 /**
@@ -60,7 +59,7 @@ export interface MemFile {
 }
 
 function createBaseMsgCall(): MsgCall {
-  return { caller: '', send: '', pkg_path: '', func: '', args: undefined };
+  return { caller: '', send: '', pkg_path: '', func: '', args: null };
 }
 
 export const MsgCall = {
@@ -80,8 +79,10 @@ export const MsgCall = {
     if (message.func !== '') {
       writer.uint32(34).string(message.func);
     }
-    if (message.args !== undefined) {
-      Value.encode(Value.wrap(message.args), writer.uint32(42).fork()).ldelim();
+    if (message.args) {
+      for (const v of message.args) {
+        writer.uint32(42).string(v!);
+      }
     }
     return writer;
   },
@@ -126,8 +127,10 @@ export const MsgCall = {
           if (tag !== 42) {
             break;
           }
-
-          message.args = Value.unwrap(Value.decode(reader, reader.uint32()));
+          if (!message.args) {
+            message.args = [];
+          }
+          message.args.push(reader.string());
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -144,7 +147,9 @@ export const MsgCall = {
       send: isSet(object.send) ? String(object.send) : '',
       pkg_path: isSet(object.pkg_path) ? String(object.pkg_path) : '',
       func: isSet(object.func) ? String(object.func) : '',
-      args: isSet(object?.args) ? object.args : undefined,
+      args: Array.isArray(object?.args)
+        ? object.args.map((e: any) => String(e))
+        : null,
     };
   },
 
@@ -162,8 +167,10 @@ export const MsgCall = {
     if (message.func !== '') {
       obj.func = message.func;
     }
-    if (message.args !== undefined) {
+    if (message.args?.length) {
       obj.args = message.args;
+    } else {
+      obj.args = null;
     }
     return obj;
   },
@@ -177,7 +184,7 @@ export const MsgCall = {
     message.send = object.send ?? '';
     message.pkg_path = object.pkg_path ?? '';
     message.func = object.func ?? '';
-    message.args = object.args ?? undefined;
+    message.args = object.args?.map((e) => e) || null;
     return message;
   },
 };
