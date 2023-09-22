@@ -85,17 +85,21 @@ export const MsgSend = {
 
   toJSON(message: MsgSend): unknown {
     const obj: any = {};
-    message.from_address !== undefined &&
-      (obj.from_address = message.from_address);
-    message.to_address !== undefined && (obj.to_address = message.to_address);
-    message.amount !== undefined && (obj.amount = message.amount);
+    if (message.from_address !== '') {
+      obj.from_address = message.from_address;
+    }
+    if (message.to_address !== '') {
+      obj.to_address = message.to_address;
+    }
+    if (message.amount !== '') {
+      obj.amount = message.amount;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<MsgSend>, I>>(base?: I): MsgSend {
-    return MsgSend.fromPartial(base ?? {});
+    return MsgSend.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<MsgSend>, I>>(object: I): MsgSend {
     const message = createBaseMsgSend();
     message.from_address = object.from_address ?? '';

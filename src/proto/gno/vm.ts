@@ -1,6 +1,7 @@
 /* eslint-disable */
 import Long from 'long';
 import _m0 from 'protobufjs/minimal';
+import { Value } from '../google/protobuf/struct';
 
 export const protobufPackage = 'gno.vm';
 
@@ -18,7 +19,7 @@ export interface MsgCall {
   /** the function name being invoked */
   func: string;
   /** the function arguments */
-  args: string[];
+  args?: any | undefined;
 }
 
 /**
@@ -29,7 +30,7 @@ export interface MsgAddPackage {
   /** the package deployer */
   creator: string;
   /** the package being deployed */
-  package?: MemPackage;
+  package?: MemPackage | undefined;
   /** the amount of funds to be deposited at deployment, if any ("<amount><denomination>") */
   deposit: string;
 }
@@ -59,7 +60,7 @@ export interface MemFile {
 }
 
 function createBaseMsgCall(): MsgCall {
-  return { caller: '', send: '', pkg_path: '', func: '', args: [] };
+  return { caller: '', send: '', pkg_path: '', func: '', args: undefined };
 }
 
 export const MsgCall = {
@@ -79,8 +80,8 @@ export const MsgCall = {
     if (message.func !== '') {
       writer.uint32(34).string(message.func);
     }
-    for (const v of message.args) {
-      writer.uint32(42).string(v!);
+    if (message.args !== undefined) {
+      Value.encode(Value.wrap(message.args), writer.uint32(42).fork()).ldelim();
     }
     return writer;
   },
@@ -126,7 +127,7 @@ export const MsgCall = {
             break;
           }
 
-          message.args.push(reader.string());
+          message.args = Value.unwrap(Value.decode(reader, reader.uint32()));
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -143,37 +144,40 @@ export const MsgCall = {
       send: isSet(object.send) ? String(object.send) : '',
       pkg_path: isSet(object.pkg_path) ? String(object.pkg_path) : '',
       func: isSet(object.func) ? String(object.func) : '',
-      args: Array.isArray(object?.args)
-        ? object.args.map((e: any) => String(e))
-        : [],
+      args: isSet(object?.args) ? object.args : undefined,
     };
   },
 
   toJSON(message: MsgCall): unknown {
     const obj: any = {};
-    message.caller !== undefined && (obj.caller = message.caller);
-    message.send !== undefined && (obj.send = message.send);
-    message.pkg_path !== undefined && (obj.pkg_path = message.pkg_path);
-    message.func !== undefined && (obj.func = message.func);
-    if (message.args) {
-      obj.args = message.args.map((e) => e);
-    } else {
-      obj.args = [];
+    if (message.caller !== '') {
+      obj.caller = message.caller;
+    }
+    if (message.send !== '') {
+      obj.send = message.send;
+    }
+    if (message.pkg_path !== '') {
+      obj.pkg_path = message.pkg_path;
+    }
+    if (message.func !== '') {
+      obj.func = message.func;
+    }
+    if (message.args !== undefined) {
+      obj.args = message.args;
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<MsgCall>, I>>(base?: I): MsgCall {
-    return MsgCall.fromPartial(base ?? {});
+    return MsgCall.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<MsgCall>, I>>(object: I): MsgCall {
     const message = createBaseMsgCall();
     message.caller = object.caller ?? '';
     message.send = object.send ?? '';
     message.pkg_path = object.pkg_path ?? '';
     message.func = object.func ?? '';
-    message.args = object.args?.map((e) => e) || [];
+    message.args = object.args ?? undefined;
     return message;
   },
 };
@@ -249,21 +253,23 @@ export const MsgAddPackage = {
 
   toJSON(message: MsgAddPackage): unknown {
     const obj: any = {};
-    message.creator !== undefined && (obj.creator = message.creator);
-    message.package !== undefined &&
-      (obj.package = message.package
-        ? MemPackage.toJSON(message.package)
-        : undefined);
-    message.deposit !== undefined && (obj.deposit = message.deposit);
+    if (message.creator !== '') {
+      obj.creator = message.creator;
+    }
+    if (message.package !== undefined) {
+      obj.package = MemPackage.toJSON(message.package);
+    }
+    if (message.deposit !== '') {
+      obj.deposit = message.deposit;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<MsgAddPackage>, I>>(
     base?: I
   ): MsgAddPackage {
-    return MsgAddPackage.fromPartial(base ?? {});
+    return MsgAddPackage.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<MsgAddPackage>, I>>(
     object: I
   ): MsgAddPackage {
@@ -349,20 +355,21 @@ export const MemPackage = {
 
   toJSON(message: MemPackage): unknown {
     const obj: any = {};
-    message.name !== undefined && (obj.name = message.name);
-    message.path !== undefined && (obj.path = message.path);
-    if (message.files) {
-      obj.files = message.files.map((e) => (e ? MemFile.toJSON(e) : undefined));
-    } else {
-      obj.files = [];
+    if (message.name !== '') {
+      obj.name = message.name;
+    }
+    if (message.path !== '') {
+      obj.path = message.path;
+    }
+    if (message.files?.length) {
+      obj.files = message.files.map((e) => MemFile.toJSON(e));
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<MemPackage>, I>>(base?: I): MemPackage {
-    return MemPackage.fromPartial(base ?? {});
+    return MemPackage.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<MemPackage>, I>>(
     object: I
   ): MemPackage {
@@ -432,15 +439,18 @@ export const MemFile = {
 
   toJSON(message: MemFile): unknown {
     const obj: any = {};
-    message.name !== undefined && (obj.name = message.name);
-    message.body !== undefined && (obj.body = message.body);
+    if (message.name !== '') {
+      obj.name = message.name;
+    }
+    if (message.body !== '') {
+      obj.body = message.body;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<MemFile>, I>>(base?: I): MemFile {
-    return MemFile.fromPartial(base ?? {});
+    return MemFile.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<MemFile>, I>>(object: I): MemFile {
     const message = createBaseMemFile();
     message.name = object.name ?? '';

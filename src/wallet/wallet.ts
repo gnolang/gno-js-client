@@ -178,7 +178,7 @@ export class GnoWallet extends Wallet {
       send: amount,
       pkg_path: path,
       func: method,
-      args: args,
+      args: args.length === 0 ? null : args,
     };
 
     // Construct the transfer transaction
