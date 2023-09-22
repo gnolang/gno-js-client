@@ -1,8 +1,9 @@
 /* eslint-disable */
-import Long from 'long';
-import _m0 from 'protobufjs/minimal';
+import Long from "long";
+import _m0 from "protobufjs/minimal";
+import { Value } from "../google/protobuf/struct";
 
-export const protobufPackage = 'gno.vm';
+export const protobufPackage = "gno.vm";
 
 /**
  * MsgCall is the method invocation tx message,
@@ -18,7 +19,7 @@ export interface MsgCall {
   /** the function name being invoked */
   func: string;
   /** the function arguments */
-  args: string[];
+  args?: any | undefined;
 }
 
 /**
@@ -29,7 +30,9 @@ export interface MsgAddPackage {
   /** the package deployer */
   creator: string;
   /** the package being deployed */
-  package?: MemPackage;
+  package?:
+    | MemPackage
+    | undefined;
   /** the amount of funds to be deposited at deployment, if any ("<amount><denomination>") */
   deposit: string;
 }
@@ -59,35 +62,31 @@ export interface MemFile {
 }
 
 function createBaseMsgCall(): MsgCall {
-  return { caller: '', send: '', pkg_path: '', func: '', args: [] };
+  return { caller: "", send: "", pkg_path: "", func: "", args: undefined };
 }
 
 export const MsgCall = {
-  encode(
-    message: MsgCall,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
-    if (message.caller !== '') {
+  encode(message: MsgCall, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.caller !== "") {
       writer.uint32(10).string(message.caller);
     }
-    if (message.send !== '') {
+    if (message.send !== "") {
       writer.uint32(18).string(message.send);
     }
-    if (message.pkg_path !== '') {
+    if (message.pkg_path !== "") {
       writer.uint32(26).string(message.pkg_path);
     }
-    if (message.func !== '') {
+    if (message.func !== "") {
       writer.uint32(34).string(message.func);
     }
-    for (const v of message.args) {
-      writer.uint32(42).string(v!);
+    if (message.args !== undefined) {
+      Value.encode(Value.wrap(message.args), writer.uint32(42).fork()).ldelim();
     }
     return writer;
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): MsgCall {
-    const reader =
-      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseMsgCall();
     while (reader.pos < end) {
@@ -126,7 +125,7 @@ export const MsgCall = {
             break;
           }
 
-          message.args.push(reader.string());
+          message.args = Value.unwrap(Value.decode(reader, reader.uint32()));
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -139,69 +138,68 @@ export const MsgCall = {
 
   fromJSON(object: any): MsgCall {
     return {
-      caller: isSet(object.caller) ? String(object.caller) : '',
-      send: isSet(object.send) ? String(object.send) : '',
-      pkg_path: isSet(object.pkg_path) ? String(object.pkg_path) : '',
-      func: isSet(object.func) ? String(object.func) : '',
-      args: Array.isArray(object?.args)
-        ? object.args.map((e: any) => String(e))
-        : [],
+      caller: isSet(object.caller) ? String(object.caller) : "",
+      send: isSet(object.send) ? String(object.send) : "",
+      pkg_path: isSet(object.pkg_path) ? String(object.pkg_path) : "",
+      func: isSet(object.func) ? String(object.func) : "",
+      args: isSet(object?.args) ? object.args : undefined,
     };
   },
 
   toJSON(message: MsgCall): unknown {
     const obj: any = {};
-    message.caller !== undefined && (obj.caller = message.caller);
-    message.send !== undefined && (obj.send = message.send);
-    message.pkg_path !== undefined && (obj.pkg_path = message.pkg_path);
-    message.func !== undefined && (obj.func = message.func);
-    if (message.args) {
-      obj.args = message.args.map((e) => e);
-    } else {
-      obj.args = [];
+    if (message.caller !== "") {
+      obj.caller = message.caller;
+    }
+    if (message.send !== "") {
+      obj.send = message.send;
+    }
+    if (message.pkg_path !== "") {
+      obj.pkg_path = message.pkg_path;
+    }
+    if (message.func !== "") {
+      obj.func = message.func;
+    }
+    if (message.args !== undefined) {
+      obj.args = message.args;
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<MsgCall>, I>>(base?: I): MsgCall {
-    return MsgCall.fromPartial(base ?? {});
+    return MsgCall.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<MsgCall>, I>>(object: I): MsgCall {
     const message = createBaseMsgCall();
-    message.caller = object.caller ?? '';
-    message.send = object.send ?? '';
-    message.pkg_path = object.pkg_path ?? '';
-    message.func = object.func ?? '';
-    message.args = object.args?.map((e) => e) || [];
+    message.caller = object.caller ?? "";
+    message.send = object.send ?? "";
+    message.pkg_path = object.pkg_path ?? "";
+    message.func = object.func ?? "";
+    message.args = object.args ?? undefined;
     return message;
   },
 };
 
 function createBaseMsgAddPackage(): MsgAddPackage {
-  return { creator: '', package: undefined, deposit: '' };
+  return { creator: "", package: undefined, deposit: "" };
 }
 
 export const MsgAddPackage = {
-  encode(
-    message: MsgAddPackage,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
-    if (message.creator !== '') {
+  encode(message: MsgAddPackage, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.creator !== "") {
       writer.uint32(10).string(message.creator);
     }
     if (message.package !== undefined) {
       MemPackage.encode(message.package, writer.uint32(18).fork()).ldelim();
     }
-    if (message.deposit !== '') {
+    if (message.deposit !== "") {
       writer.uint32(26).string(message.deposit);
     }
     return writer;
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): MsgAddPackage {
-    const reader =
-      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseMsgAddPackage();
     while (reader.pos < end) {
@@ -239,58 +237,50 @@ export const MsgAddPackage = {
 
   fromJSON(object: any): MsgAddPackage {
     return {
-      creator: isSet(object.creator) ? String(object.creator) : '',
-      package: isSet(object.package)
-        ? MemPackage.fromJSON(object.package)
-        : undefined,
-      deposit: isSet(object.deposit) ? String(object.deposit) : '',
+      creator: isSet(object.creator) ? String(object.creator) : "",
+      package: isSet(object.package) ? MemPackage.fromJSON(object.package) : undefined,
+      deposit: isSet(object.deposit) ? String(object.deposit) : "",
     };
   },
 
   toJSON(message: MsgAddPackage): unknown {
     const obj: any = {};
-    message.creator !== undefined && (obj.creator = message.creator);
-    message.package !== undefined &&
-      (obj.package = message.package
-        ? MemPackage.toJSON(message.package)
-        : undefined);
-    message.deposit !== undefined && (obj.deposit = message.deposit);
+    if (message.creator !== "") {
+      obj.creator = message.creator;
+    }
+    if (message.package !== undefined) {
+      obj.package = MemPackage.toJSON(message.package);
+    }
+    if (message.deposit !== "") {
+      obj.deposit = message.deposit;
+    }
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<MsgAddPackage>, I>>(
-    base?: I
-  ): MsgAddPackage {
-    return MsgAddPackage.fromPartial(base ?? {});
+  create<I extends Exact<DeepPartial<MsgAddPackage>, I>>(base?: I): MsgAddPackage {
+    return MsgAddPackage.fromPartial(base ?? ({} as any));
   },
-
-  fromPartial<I extends Exact<DeepPartial<MsgAddPackage>, I>>(
-    object: I
-  ): MsgAddPackage {
+  fromPartial<I extends Exact<DeepPartial<MsgAddPackage>, I>>(object: I): MsgAddPackage {
     const message = createBaseMsgAddPackage();
-    message.creator = object.creator ?? '';
-    message.package =
-      object.package !== undefined && object.package !== null
-        ? MemPackage.fromPartial(object.package)
-        : undefined;
-    message.deposit = object.deposit ?? '';
+    message.creator = object.creator ?? "";
+    message.package = (object.package !== undefined && object.package !== null)
+      ? MemPackage.fromPartial(object.package)
+      : undefined;
+    message.deposit = object.deposit ?? "";
     return message;
   },
 };
 
 function createBaseMemPackage(): MemPackage {
-  return { name: '', path: '', files: [] };
+  return { name: "", path: "", files: [] };
 }
 
 export const MemPackage = {
-  encode(
-    message: MemPackage,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
-    if (message.name !== '') {
+  encode(message: MemPackage, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.name !== "") {
       writer.uint32(10).string(message.name);
     }
-    if (message.path !== '') {
+    if (message.path !== "") {
       writer.uint32(18).string(message.path);
     }
     for (const v of message.files) {
@@ -300,8 +290,7 @@ export const MemPackage = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): MemPackage {
-    const reader =
-      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseMemPackage();
     while (reader.pos < end) {
@@ -339,62 +328,55 @@ export const MemPackage = {
 
   fromJSON(object: any): MemPackage {
     return {
-      name: isSet(object.name) ? String(object.name) : '',
-      path: isSet(object.path) ? String(object.path) : '',
-      files: Array.isArray(object?.files)
-        ? object.files.map((e: any) => MemFile.fromJSON(e))
-        : [],
+      name: isSet(object.name) ? String(object.name) : "",
+      path: isSet(object.path) ? String(object.path) : "",
+      files: Array.isArray(object?.files) ? object.files.map((e: any) => MemFile.fromJSON(e)) : [],
     };
   },
 
   toJSON(message: MemPackage): unknown {
     const obj: any = {};
-    message.name !== undefined && (obj.name = message.name);
-    message.path !== undefined && (obj.path = message.path);
-    if (message.files) {
-      obj.files = message.files.map((e) => (e ? MemFile.toJSON(e) : undefined));
-    } else {
-      obj.files = [];
+    if (message.name !== "") {
+      obj.name = message.name;
+    }
+    if (message.path !== "") {
+      obj.path = message.path;
+    }
+    if (message.files?.length) {
+      obj.files = message.files.map((e) => MemFile.toJSON(e));
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<MemPackage>, I>>(base?: I): MemPackage {
-    return MemPackage.fromPartial(base ?? {});
+    return MemPackage.fromPartial(base ?? ({} as any));
   },
-
-  fromPartial<I extends Exact<DeepPartial<MemPackage>, I>>(
-    object: I
-  ): MemPackage {
+  fromPartial<I extends Exact<DeepPartial<MemPackage>, I>>(object: I): MemPackage {
     const message = createBaseMemPackage();
-    message.name = object.name ?? '';
-    message.path = object.path ?? '';
+    message.name = object.name ?? "";
+    message.path = object.path ?? "";
     message.files = object.files?.map((e) => MemFile.fromPartial(e)) || [];
     return message;
   },
 };
 
 function createBaseMemFile(): MemFile {
-  return { name: '', body: '' };
+  return { name: "", body: "" };
 }
 
 export const MemFile = {
-  encode(
-    message: MemFile,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
-    if (message.name !== '') {
+  encode(message: MemFile, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.name !== "") {
       writer.uint32(10).string(message.name);
     }
-    if (message.body !== '') {
+    if (message.body !== "") {
       writer.uint32(18).string(message.body);
     }
     return writer;
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): MemFile {
-    const reader =
-      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseMemFile();
     while (reader.pos < end) {
@@ -424,58 +406,42 @@ export const MemFile = {
   },
 
   fromJSON(object: any): MemFile {
-    return {
-      name: isSet(object.name) ? String(object.name) : '',
-      body: isSet(object.body) ? String(object.body) : '',
-    };
+    return { name: isSet(object.name) ? String(object.name) : "", body: isSet(object.body) ? String(object.body) : "" };
   },
 
   toJSON(message: MemFile): unknown {
     const obj: any = {};
-    message.name !== undefined && (obj.name = message.name);
-    message.body !== undefined && (obj.body = message.body);
+    if (message.name !== "") {
+      obj.name = message.name;
+    }
+    if (message.body !== "") {
+      obj.body = message.body;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<MemFile>, I>>(base?: I): MemFile {
-    return MemFile.fromPartial(base ?? {});
+    return MemFile.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<MemFile>, I>>(object: I): MemFile {
     const message = createBaseMemFile();
-    message.name = object.name ?? '';
-    message.body = object.body ?? '';
+    message.name = object.name ?? "";
+    message.body = object.body ?? "";
     return message;
   },
 };
 
-type Builtin =
-  | Date
-  | Function
-  | Uint8Array
-  | string
-  | number
-  | boolean
-  | undefined;
+type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
-export type DeepPartial<T> = T extends Builtin
-  ? T
-  : T extends Long
-  ? string | number | Long
-  : T extends Array<infer U>
-  ? Array<DeepPartial<U>>
-  : T extends ReadonlyArray<infer U>
-  ? ReadonlyArray<DeepPartial<U>>
-  : T extends {}
-  ? { [K in keyof T]?: DeepPartial<T[K]> }
+export type DeepPartial<T> = T extends Builtin ? T
+  : T extends Long ? string | number | Long : T extends Array<infer U> ? Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 
 type KeysOfUnion<T> = T extends T ? keyof T : never;
-export type Exact<P, I extends P> = P extends Builtin
-  ? P
-  : P & { [K in keyof P]: Exact<P[K], I[K]> } & {
-      [K in Exclude<keyof I, KeysOfUnion<P>>]: never;
-    };
+export type Exact<P, I extends P> = P extends Builtin ? P
+  : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
 if (_m0.util.Long !== Long) {
   _m0.util.Long = Long as any;
