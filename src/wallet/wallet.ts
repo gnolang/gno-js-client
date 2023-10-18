@@ -11,16 +11,33 @@ import Long from 'long';
 import { MemPackage, MsgAddPackage, MsgCall, MsgSend } from '../proto';
 import { MsgEndpoint } from './endpoints';
 import { LedgerConnector } from '@cosmjs/ledger-amino';
+import { Constructor, Realm, Return, UnionToIntersection } from './helpers';
 
 /**
  * GnoWallet is an extension of the TM2 wallet with
  * specific functionality for Gno chains
  */
 export class GnoWallet extends Wallet {
+
+	static realms: Realm[] = [];
   constructor() {
     super();
   }
+  static addRealm<T extends Realm | Realm[]>(realms: T) {
+    const currentRealms = this.realms;
 
+    class AugmentedWallet extends this {
+      static realms = currentRealms.concat(realms);
+    }
+
+    if (Array.isArray(realms)) {
+      type Extension = UnionToIntersection<Return<T>['realm']>
+      return AugmentedWallet as typeof GnoWallet & Constructor<Extension>;  
+    }
+
+    type Extension = Return<T>['realm']
+    return AugmentedWallet as typeof GnoWallet & Constructor<Extension>;
+  }
   /**
    * Generates a private key-based wallet, using a random seed
    * @param {AccountWalletOption} options the account options
