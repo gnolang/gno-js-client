@@ -22,6 +22,11 @@ export class GnoWallet extends Wallet {
 	static realms: Realm[] = [];
   constructor() {
     super();
+    const classConstructor = this.constructor as typeof GnoWallet;
+    classConstructor.realms.forEach(realm => {
+      const realmInstance = realm(this);
+      Object.assign(this, realmInstance.realm);
+    });
   }
   static addRealm<T extends Realm | Realm[]>(realms: T) {
     const currentRealms = this.realms;
