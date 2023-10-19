@@ -2,6 +2,7 @@ import {
   AccountWalletOption,
   BroadcastTransactionMap,
   CreateWalletOptions,
+  Provider,
   Tx,
   TxFee,
   Wallet,
@@ -12,13 +13,14 @@ import { MemPackage, MsgAddPackage, MsgCall, MsgSend } from '../proto';
 import { MsgEndpoint } from './endpoints';
 import { LedgerConnector } from '@cosmjs/ledger-amino';
 import { Constructor, Realm, Return, UnionToIntersection } from './helpers';
+import { GnoProvider } from '../provider';
 
 /**
  * GnoWallet is an extension of the TM2 wallet with
  * specific functionality for Gno chains
  */
 export class GnoWallet extends Wallet {
-
+  protected provider:GnoProvider
 	static realms: Realm[] = [];
   constructor() {
     super();
@@ -107,6 +109,13 @@ export class GnoWallet extends Wallet {
     gnoWallet.signer = wallet.getSigner();
 
     return gnoWallet;
+  };
+  /**
+   * Returns the connected provider, if any
+   * (Here to ensure correct GnoProvider inference)
+   */
+  getProvider = (): GnoProvider => {
+    return this.provider;
   };
 
   /**
