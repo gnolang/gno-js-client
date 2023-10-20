@@ -35,24 +35,8 @@ class RealmModule {
 	public tx: ReturnType<typeof txClient>;
 
 	constructor(wallet: GnoWallet) {		
-		this.updateQuery(wallet);		
-		this.updateTX(wallet);
-	}
-	updateTX(wallet: GnoWallet) {
-		const methods = txClient(wallet);
-		
-		this.tx = methods;
-		for (let m in methods) {
-			this.tx[m as keyof typeof methods] =  methods[m as keyof typeof methods].bind(this.tx);
-		}
-	}
-	updateQuery(wallet: GnoWallet) {
-		const methods = queryClient(wallet);
-		
-		this.query = methods;
-		for (let m in methods) {
-			this.query[m as keyof typeof methods] =  methods[m as keyof typeof methods].bind(this.query);
-		}
+		this.tx = txClient(wallet);		
+		this.query = queryClient(wallet);
 	}
 };
 
