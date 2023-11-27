@@ -48,7 +48,7 @@
     "prepublishOnly": "yarn lint && yarn prettier"
   },
   "dependencies": {
-    "@cosmjs/ledger-amino": "^0.31.0",
+    "@cosmjs/ledger-amino": "^0.32.0",
     "@gnolang/tm2-js-client": "^1.1.4",
     "long": "^5.2.3",
     "protobufjs": "^7.2.3"
