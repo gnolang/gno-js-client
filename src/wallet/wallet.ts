@@ -2,6 +2,7 @@ import {
   AccountWalletOption,
   BroadcastTransactionMap,
   CreateWalletOptions,
+  Provider,
   Tx,
   TxFee,
   Wallet,
@@ -11,16 +12,39 @@ import Long from 'long';
 import { MemPackage, MsgAddPackage, MsgCall, MsgSend } from '../proto';
 import { MsgEndpoint } from './endpoints';
 import { LedgerConnector } from '@cosmjs/ledger-amino';
+import { Constructor, Realm, Return, UnionToIntersection } from './helpers';
+import { GnoProvider } from '../provider';
 
 /**
  * GnoWallet is an extension of the TM2 wallet with
  * specific functionality for Gno chains
  */
 export class GnoWallet extends Wallet {
+  protected provider:GnoProvider
+	static realms: Realm[] = [];
   constructor() {
     super();
+    const classConstructor = this.constructor as typeof GnoWallet;
+    classConstructor.realms.forEach(realm => {
+      const realmInstance = realm(this);
+      Object.assign(this, realmInstance.realm);
+    });
   }
+  static addRealm<T extends Realm | Realm[]>(realms: T) {
+    const currentRealms = this.realms;
 
+    class AugmentedWallet extends this {
+      static realms = currentRealms.concat(realms);
+    }
+
+    if (Array.isArray(realms)) {
+      type Extension = UnionToIntersection<Return<T>['realm']>
+      return AugmentedWallet as typeof GnoWallet & Constructor<Extension>;  
+    }
+
+    type Extension = Return<T>['realm']
+    return AugmentedWallet as typeof GnoWallet & Constructor<Extension>;
+  }
   /**
    * Generates a private key-based wallet, using a random seed
    * @param {AccountWalletOption} options the account options
@@ -85,6 +109,13 @@ export class GnoWallet extends Wallet {
     gnoWallet.signer = wallet.getSigner();
 
     return gnoWallet;
+  };
+  /**
+   * Returns the connected provider, if any
+   * (Here to ensure correct GnoProvider inference)
+   */
+  getProvider = (): GnoProvider => {
+    return this.provider;
   };
 
   /**
