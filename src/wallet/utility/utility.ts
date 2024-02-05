@@ -1,4 +1,5 @@
-import { Any, MsgAddPackage, MsgCall, MsgSend } from '../../proto';
+import { Any, MemPackage, MsgAddPackage, MsgCall, MsgSend } from '../../proto';
+import { MsgRun } from '../../proto/gno/vm';
 import { MsgEndpoint } from '../endpoints';
 
 /**
@@ -49,12 +50,46 @@ export const decodeTxMessages = (messages: Any[]): any[] => {
           ...MsgSend.decode(m.value),
         };
       case MsgEndpoint.MSG_ADD_PKG:
+        const msgAddPkg = MsgAddPackage.decode(m.value);
         return {
           '@type': m.typeUrl,
-          ...MsgAddPackage.decode(m.value),
+          ...msgAddPkg,
+          package: msgAddPkg.package
+            ? mapToStdMemPackage(msgAddPkg.package)
+            : undefined,
+        };
+      case MsgEndpoint.MSG_RUN:
+        const msgRun = MsgRun.decode(m.value);
+        return {
+          '@type': m.typeUrl,
+          ...msgRun,
+          package: msgRun.package
+            ? mapToStdMemPackage(msgRun.package)
+            : undefined,
         };
       default:
         throw new Error(`unsupported message type ${m.typeUrl}`);
     }
   });
+};
+
+interface StdMemPackage {
+  Name: string;
+  Path: string;
+  Files: {
+    Name: string;
+    Body: string;
+  }[];
+}
+
+const mapToStdMemPackage = (memPackage: MemPackage): StdMemPackage => {
+  const { name, path, files } = memPackage;
+  return {
+    Name: name,
+    Path: path,
+    Files: files.map((file) => ({
+      Name: file.name,
+      Body: file.body,
+    })),
+  };
 };

@@ -35,6 +35,19 @@ export interface MsgAddPackage {
 }
 
 /**
+ * MsgRun is the execute arbitrary Gno code tx message,
+ * denoted as "m_run"
+ */
+export interface MsgRun {
+  /** the bech32 address of the caller */
+  caller: string;
+  /** the amount of funds to be deposited to the package, if any ("<amount><denomination>") */
+  send: string;
+  /** the package being execute */
+  package?: MemPackage | undefined;
+}
+
+/**
  * MemPackage is the metadata information tied to
  * package / realm deployment
  */
@@ -287,6 +300,104 @@ export const MsgAddPackage = {
         ? MemPackage.fromPartial(object.package)
         : undefined;
     message.deposit = object.deposit ?? '';
+    return message;
+  },
+};
+
+function createBaseMsgRun(): MsgRun {
+  return { caller: '', send: '', package: undefined };
+}
+
+export const MsgRun = {
+  encode(
+    message: MsgRun,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.caller !== '') {
+      writer.uint32(10).string(message.caller);
+    }
+    if (message.send !== '') {
+      writer.uint32(18).string(message.send);
+    }
+    if (message.package !== undefined) {
+      MemPackage.encode(message.package, writer.uint32(26).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): MsgRun {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMsgRun();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.caller = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.send = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.package = MemPackage.decode(reader, reader.uint32());
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): MsgRun {
+    return {
+      caller: isSet(object.caller) ? String(object.caller) : '',
+      send: isSet(object.send) ? String(object.send) : '',
+      package: isSet(object.package)
+        ? MemPackage.fromJSON(object.package)
+        : undefined,
+    };
+  },
+
+  toJSON(message: MsgRun): unknown {
+    const obj: any = {};
+    if (message.caller !== '') {
+      obj.caller = message.caller;
+    }
+    if (message.send !== '') {
+      obj.send = message.send;
+    }
+    if (message.package !== undefined) {
+      obj.package = MemPackage.toJSON(message.package);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<MsgRun>, I>>(base?: I): MsgRun {
+    return MsgRun.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<MsgRun>, I>>(object: I): MsgRun {
+    const message = createBaseMsgRun();
+    message.caller = object.caller ?? '';
+    message.send = object.send ?? '';
+    message.package =
+      object.package !== undefined && object.package !== null
+        ? MemPackage.fromPartial(object.package)
+        : undefined;
     return message;
   },
 };
