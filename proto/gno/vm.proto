@@ -37,7 +37,7 @@ message MsgRun {
   string caller = 1;
   // the amount of funds to be deposited to the package, if any ("<amount><denomination>")
   string send = 2;
-  // the package being execute
+  // the package being executed
   MemPackage package = 3;
 }
 

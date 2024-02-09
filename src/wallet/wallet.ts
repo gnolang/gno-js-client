@@ -258,7 +258,7 @@ export class GnoWallet extends Wallet {
 
   /**
    * Executes arbitrary Gno code
-   * @param {MemPackage} gnoPackage the package being execute
+   * @param {MemPackage} gnoPackage the gno package being executed
    * @param {TransactionEndpoint} endpoint the transaction broadcast type (sync / commit)
    * @param {Map<string, number>} [funds] the denomination -> value map for funds, if any
    * @param {TxFee} [fee] the custom transaction fee, if any
