@@ -11,6 +11,7 @@ import Long from 'long';
 import { MemPackage, MsgAddPackage, MsgCall, MsgSend } from '../proto';
 import { MsgEndpoint } from './endpoints';
 import { LedgerConnector } from '@cosmjs/ledger-amino';
+import { MsgRun } from '../proto/gno/vm';
 
 /**
  * GnoWallet is an extension of the TM2 wallet with
@@ -241,6 +242,60 @@ export class GnoWallet extends Wallet {
         {
           typeUrl: MsgEndpoint.MSG_ADD_PKG,
           value: MsgAddPackage.encode(addPkgMsg).finish(),
+        },
+      ],
+      fee: txFee,
+      memo: '',
+      signatures: [], // No signature yet
+    };
+
+    // Sign the transaction
+    const signedTx: Tx = await this.signTransaction(tx, decodeTxMessages);
+
+    // Send the transaction
+    return this.sendTransaction(signedTx, endpoint);
+  };
+
+  /**
+   * Executes arbitrary Gno code
+   * @param {MemPackage} gnoPackage the gno package being executed
+   * @param {TransactionEndpoint} endpoint the transaction broadcast type (sync / commit)
+   * @param {Map<string, number>} [funds] the denomination -> value map for funds, if any
+   * @param {TxFee} [fee] the custom transaction fee, if any
+   */
+  executePackage = async <K extends keyof BroadcastTransactionMap>(
+    gnoPackage: MemPackage,
+    endpoint: K,
+    funds?: Map<string, number>,
+    fee?: TxFee
+  ): Promise<BroadcastTransactionMap[K]['result']> => {
+    // Convert the funds into the correct representation
+    const amount: string = fundsToCoins(funds);
+
+    // Fetch the wallet address
+    const caller: string = await this.getAddress();
+
+    // Construct the transaction fee
+    const txFee: TxFee = fee
+      ? fee
+      : {
+          gasWanted: new Long(60000),
+          gasFee: defaultTxFee,
+        };
+
+    // Prepare the Msg
+    const runMsg: MsgRun = {
+      caller,
+      send: amount,
+      package: gnoPackage,
+    };
+
+    // Construct the transfer transaction
+    const tx: Tx = {
+      messages: [
+        {
+          typeUrl: MsgEndpoint.MSG_RUN,
+          value: MsgRun.encode(runMsg).finish(),
         },
       ],
       fee: txFee,
