@@ -30,22 +30,33 @@ message MsgAddPackage {
   string deposit = 3;
 }
 
+// MsgRun is the execute arbitrary Gno code tx message,
+// denoted as "m_run"
+message MsgRun {
+  // the bech32 address of the caller
+  string caller = 1;
+  // the amount of funds to be deposited to the package, if any ("<amount><denomination>")
+  string send = 2;
+  // the package being executed
+  MemPackage package = 3;
+}
+
 // MemPackage is the metadata information tied to
 // package / realm deployment
 message MemPackage {
   // the name of the package
-  string name = 1;
+  string name = 1 [json_name = "Name"];
   // the gno path of the package
-  string path = 2;
+  string path = 2 [json_name = "Path"];
   // the associated package gno source
-  repeated MemFile files = 3;
+  repeated MemFile files = 3 [json_name = "Files"];
 }
 
 // MemFile is the metadata information tied to
 // a single gno package / realm file
 message MemFile {
   // the name of the source gno file
-  string name = 1;
+  string name = 1 [json_name = "Name"];
   // the content of the source gno file
-  string body = 2;
+  string body = 2 [json_name = "Body"];
 }
