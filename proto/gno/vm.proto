@@ -45,18 +45,18 @@ message MsgRun {
 // package / realm deployment
 message MemPackage {
   // the name of the package
-  string name = 1;
+  string name = 1 [json_name = "Name"];
   // the gno path of the package
-  string path = 2;
+  string path = 2 [json_name = "Path"];
   // the associated package gno source
-  repeated MemFile files = 3;
+  repeated MemFile files = 3 [json_name = "Files"];
 }
 
 // MemFile is the metadata information tied to
 // a single gno package / realm file
 message MemFile {
   // the name of the source gno file
-  string name = 1;
+  string name = 1 [json_name = "Name"];
   // the content of the source gno file
-  string body = 2;
+  string body = 2 [json_name = "Body"];
 }

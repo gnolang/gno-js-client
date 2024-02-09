@@ -463,8 +463,8 @@ export const MemPackage = {
 
   fromJSON(object: any): MemPackage {
     return {
-      name: isSet(object.name) ? String(object.name) : '',
-      path: isSet(object.path) ? String(object.path) : '',
+      name: isSet(object.Name) ? String(object.Name) : '',
+      path: isSet(object.Path) ? String(object.Path) : '',
       files: Array.isArray(object?.files)
         ? object.files.map((e: any) => MemFile.fromJSON(e))
         : [],
@@ -474,13 +474,13 @@ export const MemPackage = {
   toJSON(message: MemPackage): unknown {
     const obj: any = {};
     if (message.name !== '') {
-      obj.name = message.name;
+      obj.Name = message.name;
     }
     if (message.path !== '') {
-      obj.path = message.path;
+      obj.Path = message.path;
     }
     if (message.files?.length) {
-      obj.files = message.files.map((e) => MemFile.toJSON(e));
+      obj.Files = message.files.map((e) => MemFile.toJSON(e));
     }
     return obj;
   },
@@ -550,18 +550,18 @@ export const MemFile = {
 
   fromJSON(object: any): MemFile {
     return {
-      name: isSet(object.name) ? String(object.name) : '',
-      body: isSet(object.body) ? String(object.body) : '',
+      name: isSet(object.Name) ? String(object.Name) : '',
+      body: isSet(object.Body) ? String(object.Body) : '',
     };
   },
 
   toJSON(message: MemFile): unknown {
     const obj: any = {};
     if (message.name !== '') {
-      obj.name = message.name;
+      obj.Name = message.name;
     }
     if (message.body !== '') {
-      obj.body = message.body;
+      obj.Body = message.body;
     }
     return obj;
   },
