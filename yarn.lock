@@ -400,10 +400,10 @@
   resolved "https://registry.yarnpkg.com/@eslint/js/-/js-8.56.0.tgz#ef20350fec605a7f7035a01764731b2de0f3782b"
   integrity sha512-gMsVel9D7f2HLkBma9VbtzZRehRogVRfbr++f06nL2vnCGCNlzOD+/MUov/F4p8myyAHspEhVobgjpX64q5m6A==
 
-"@gnolang/tm2-js-client@^1.1.5":
-  version "1.1.5"
-  resolved "https://registry.yarnpkg.com/@gnolang/tm2-js-client/-/tm2-js-client-1.1.5.tgz#2d31fb1b948d5c38fc5c5fdca043331f9358114f"
-  integrity sha512-BgHfGHRLK/xLCl9rZuSUjmF8BBdNTiPMsoQ86A6C/oGOgPoQD1qfwPcTPoZvt5e+HxTtFSizrkvhh9FRDnRp2g==
+"@gnolang/tm2-js-client@^1.1.6":
+  version "1.1.6"
+  resolved "https://registry.yarnpkg.com/@gnolang/tm2-js-client/-/tm2-js-client-1.1.6.tgz#df02152809590a787125c48fb22abb3a534e1823"
+  integrity sha512-q/NdZijNldQDcjqntXaiBmRZdBtnoQ6sHOW6HpxX4pWBkxQyjNLq+Jc+qfFdfl3BqRmq5dHv9RWKdN30gPDdaA==
   dependencies:
     "@cosmjs/amino" "^0.32.0"
     "@cosmjs/crypto" "^0.32.0"
