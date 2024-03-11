@@ -272,12 +272,12 @@ export const MsgAddPackage = {
   },
 
   toJSON(message: MsgAddPackage): unknown {
-    const obj: any = {};
+    const obj = createBaseMsgAddPackage();
     if (message.creator !== '') {
       obj.creator = message.creator;
     }
     if (message.package !== undefined) {
-      obj.package = MemPackage.toJSON(message.package);
+      obj.package = MemPackage.toJSON(message.package) as MemPackage;
     }
     if (message.deposit !== '') {
       obj.deposit = message.deposit;
