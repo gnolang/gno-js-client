@@ -3211,10 +3211,10 @@ ts-proto-descriptors@1.15.0:
     long "^5.2.3"
     protobufjs "^7.2.4"
 
-ts-proto@^1.168.0:
-  version "1.168.0"
-  resolved "https://registry.yarnpkg.com/ts-proto/-/ts-proto-1.168.0.tgz#049895ec546bf729dd5d927866aa967e1fb96257"
-  integrity sha512-3ae1eXY3VCmhIvM/8Q/q4/3bJrdftmtY+5GwrSkhZh+UnHpI1l5rYu0mm1V75qiQJcdAXRc5m7gfnYbdnuQl5g==
+ts-proto@^1.171.0:
+  version "1.171.0"
+  resolved "https://registry.yarnpkg.com/ts-proto/-/ts-proto-1.171.0.tgz#679f9da0d3c9462b4814f422ef63e3f986936fd0"
+  integrity sha512-NMwiqCixlk6MZ3TAIpVQUuWwUktCXhoP+07V7D7Eo2IlEwulZucOGrU82toHhPL/QTd+oMBM2RDeQk9qs8+ZEQ==
   dependencies:
     case-anything "^2.1.13"
     protobufjs "^7.2.4"
