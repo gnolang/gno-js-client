@@ -44,6 +44,7 @@ export const decodeTxMessages = (messages: Any[]): any[] => {
         const messageJson = MsgCall.toJSON(decodedMessage) as object;
         return {
           '@type': m.typeUrl,
+          send: '',
           ...messageJson,
         };
       }
