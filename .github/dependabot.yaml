@@ -1,5 +1,16 @@
 version: 2
 updates:
+  # GitHub actions updates
+  - package-ecosystem: 'github-actions'
+    directory: '/'
+    schedule:
+      interval: 'daily'
+    groups:
+      actions:
+        patterns:
+          - '*'
+
+  # Dependency updates
   - package-ecosystem: npm
     directory: /
     target-branch: 'main'
@@ -13,5 +24,20 @@ updates:
     versioning-strategy: increase
     pull-request-branch-name:
       separator: '-'
+    groups:
+      eslint:
+        patterns:
+          - 'eslint'
+          - 'eslint-config-prettier'
+          - '@typescript-eslint/*'
+      types:
+        patterns:
+          - '@types/*'
+      prettier:
+        patterns:
+          - 'prettier'
+      everything-else:
+        patterns:
+          - '*'
     reviewers:
       - 'zivkovicmilos'
