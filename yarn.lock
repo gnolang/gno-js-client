@@ -566,10 +566,10 @@
   resolved "https://registry.yarnpkg.com/@eslint/js/-/js-8.57.0.tgz#a5417ae8427873f1dd08b70b3574b453e67b5f7f"
   integrity sha512-Ys+3g2TaW7gADOJzPt83SJtCDhMjndcDMFVQ/Tj9iA1BfJzFKD9mAUXT3OenpuPHbI6P/myECxRJrofUsDx/5g==
 
-"@gnolang/tm2-js-client@^1.1.6":
-  version "1.1.6"
-  resolved "https://registry.yarnpkg.com/@gnolang/tm2-js-client/-/tm2-js-client-1.1.6.tgz#df02152809590a787125c48fb22abb3a534e1823"
-  integrity sha512-q/NdZijNldQDcjqntXaiBmRZdBtnoQ6sHOW6HpxX4pWBkxQyjNLq+Jc+qfFdfl3BqRmq5dHv9RWKdN30gPDdaA==
+"@gnolang/tm2-js-client@^1.1.7":
+  version "1.1.7"
+  resolved "https://registry.yarnpkg.com/@gnolang/tm2-js-client/-/tm2-js-client-1.1.7.tgz#848754cfbe53397529e0e52b765c750a6e649191"
+  integrity sha512-Jryxbi5zXurNdgjwCQVyIScf/c9qtaPVKmT+7jE6mkAXWQtuePsRRvx/pLyUyGugV5lVBGTiyYC8Bu8uvGh9Yw==
   dependencies:
     "@cosmjs/amino" "^0.32.0"
     "@cosmjs/crypto" "^0.32.0"
@@ -579,7 +579,7 @@
     long "^5.2.3"
     protobufjs "^7.2.3"
     uuid "^9.0.1"
-    ws "^8.13.0"
+    ws "^8.16.0"
 
 "@humanwhocodes/config-array@^0.11.14":
   version "0.11.14"
@@ -3521,10 +3521,10 @@ write-file-atomic@^4.0.2:
     imurmurhash "^0.1.4"
     signal-exit "^3.0.7"
 
-ws@^8.13.0:
-  version "8.13.0"
-  resolved "https://registry.yarnpkg.com/ws/-/ws-8.13.0.tgz#9a9fb92f93cf41512a0735c8f4dd09b8a1211cd0"
-  integrity sha512-x9vcZYTrFPC7aSIbj7sRCYo7L/Xb8Iy+pW0ng0wt2vCJv7M9HOMy0UoN3rr+IFC7hb7vXoqS+P9ktyLLLhO+LA==
+ws@^8.16.0:
+  version "8.16.0"
+  resolved "https://registry.yarnpkg.com/ws/-/ws-8.16.0.tgz#d1cd774f36fbc07165066a60e40323eab6446fd4"
+  integrity sha512-HS0c//TP7Ina87TfiPUz1rQzMhHrl/SG2guqRcTOIUYD2q8uhUdNHZYJUaQ8aTGPzCh+c6oawMKW35nFl1dxyQ==
 
 y18n@^5.0.5:
   version "5.0.8"
