@@ -35,7 +35,7 @@
     "jest": "^29.7.0",
     "prettier": "^3.2.5",
     "ts-jest": "^29.1.0",
-    "ts-proto": "^1.172.0",
+    "ts-proto": "^1.176.0",
     "typescript": "^5.4.2"
   },
   "scripts": {
@@ -51,6 +51,6 @@
     "@cosmjs/ledger-amino": "^0.32.0",
     "@gnolang/tm2-js-client": "^1.2.0",
     "long": "^5.2.3",
-    "protobufjs": "^7.2.3"
+    "protobufjs": "^7.3.0"
   }
 }
