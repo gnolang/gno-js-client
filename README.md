@@ -25,4 +25,4 @@ npm install @gnolang/gno-js-client
 ## Documentation
 
 For the sake of keeping the README short and sweet, you can find the documentation and usage examples
-for the package [here](https://onbloc.gitbook.io/gnoland-developer-portal/docs/gno-js-client).
+for the package [here](https://docs.gno.land/reference/gno-js-client/).
