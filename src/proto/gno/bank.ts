@@ -76,10 +76,12 @@ export const MsgSend = {
   fromJSON(object: any): MsgSend {
     return {
       from_address: isSet(object.from_address)
-        ? String(object.from_address)
+        ? globalThis.String(object.from_address)
         : '',
-      to_address: isSet(object.to_address) ? String(object.to_address) : '',
-      amount: isSet(object.amount) ? String(object.amount) : '',
+      to_address: isSet(object.to_address)
+        ? globalThis.String(object.to_address)
+        : '',
+      amount: isSet(object.amount) ? globalThis.String(object.amount) : '',
     };
   },
 
@@ -122,8 +124,8 @@ export type DeepPartial<T> = T extends Builtin
   ? T
   : T extends Long
     ? string | number | Long
-    : T extends Array<infer U>
-      ? Array<DeepPartial<U>>
+    : T extends globalThis.Array<infer U>
+      ? globalThis.Array<DeepPartial<U>>
       : T extends ReadonlyArray<infer U>
         ? ReadonlyArray<DeepPartial<U>>
         : T extends {}

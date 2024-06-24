@@ -43,7 +43,7 @@ export interface MsgRun {
   caller: string;
   /** the amount of funds to be deposited to the package, if any ("<amount><denomination>") */
   send: string;
-  /** the package being execute */
+  /** the package being executed */
   package?: MemPackage | undefined;
 }
 
@@ -156,12 +156,14 @@ export const MsgCall = {
 
   fromJSON(object: any): MsgCall {
     return {
-      caller: isSet(object.caller) ? String(object.caller) : '',
-      send: isSet(object.send) ? String(object.send) : '',
-      pkg_path: isSet(object.pkg_path) ? String(object.pkg_path) : '',
-      func: isSet(object.func) ? String(object.func) : '',
-      args: Array.isArray(object?.args)
-        ? object.args.map((e: any) => String(e))
+      caller: isSet(object.caller) ? globalThis.String(object.caller) : '',
+      send: isSet(object.send) ? globalThis.String(object.send) : '',
+      pkg_path: isSet(object.pkg_path)
+        ? globalThis.String(object.pkg_path)
+        : '',
+      func: isSet(object.func) ? globalThis.String(object.func) : '',
+      args: globalThis.Array.isArray(object?.args)
+        ? object.args.map((e: any) => globalThis.String(e))
         : null,
     };
   },
@@ -263,21 +265,21 @@ export const MsgAddPackage = {
 
   fromJSON(object: any): MsgAddPackage {
     return {
-      creator: isSet(object.creator) ? String(object.creator) : '',
+      creator: isSet(object.creator) ? globalThis.String(object.creator) : '',
       package: isSet(object.package)
         ? MemPackage.fromJSON(object.package)
         : undefined,
-      deposit: isSet(object.deposit) ? String(object.deposit) : '',
+      deposit: isSet(object.deposit) ? globalThis.String(object.deposit) : '',
     };
   },
 
   toJSON(message: MsgAddPackage): unknown {
-    const obj = createBaseMsgAddPackage();
+    const obj: any = {};
     if (message.creator !== '') {
       obj.creator = message.creator;
     }
     if (message.package !== undefined) {
-      obj.package = MemPackage.toJSON(message.package) as MemPackage;
+      obj.package = MemPackage.toJSON(message.package);
     }
     if (message.deposit !== '') {
       obj.deposit = message.deposit;
@@ -365,8 +367,8 @@ export const MsgRun = {
 
   fromJSON(object: any): MsgRun {
     return {
-      caller: isSet(object.caller) ? String(object.caller) : '',
-      send: isSet(object.send) ? String(object.send) : '',
+      caller: isSet(object.caller) ? globalThis.String(object.caller) : '',
+      send: isSet(object.send) ? globalThis.String(object.send) : '',
       package: isSet(object.package)
         ? MemPackage.fromJSON(object.package)
         : undefined,
@@ -463,9 +465,9 @@ export const MemPackage = {
 
   fromJSON(object: any): MemPackage {
     return {
-      name: isSet(object.Name) ? String(object.Name) : '',
-      path: isSet(object.Path) ? String(object.Path) : '',
-      files: Array.isArray(object?.files)
+      name: isSet(object.name) ? globalThis.String(object.name) : '',
+      path: isSet(object.path) ? globalThis.String(object.path) : '',
+      files: globalThis.Array.isArray(object?.files)
         ? object.files.map((e: any) => MemFile.fromJSON(e))
         : [],
     };
@@ -474,13 +476,13 @@ export const MemPackage = {
   toJSON(message: MemPackage): unknown {
     const obj: any = {};
     if (message.name !== '') {
-      obj.Name = message.name;
+      obj.name = message.name;
     }
     if (message.path !== '') {
-      obj.Path = message.path;
+      obj.path = message.path;
     }
     if (message.files?.length) {
-      obj.Files = message.files.map((e) => MemFile.toJSON(e));
+      obj.files = message.files.map((e) => MemFile.toJSON(e));
     }
     return obj;
   },
@@ -550,18 +552,18 @@ export const MemFile = {
 
   fromJSON(object: any): MemFile {
     return {
-      name: isSet(object.Name) ? String(object.Name) : '',
-      body: isSet(object.Body) ? String(object.Body) : '',
+      name: isSet(object.name) ? globalThis.String(object.name) : '',
+      body: isSet(object.body) ? globalThis.String(object.body) : '',
     };
   },
 
   toJSON(message: MemFile): unknown {
     const obj: any = {};
     if (message.name !== '') {
-      obj.Name = message.name;
+      obj.name = message.name;
     }
     if (message.body !== '') {
-      obj.Body = message.body;
+      obj.body = message.body;
     }
     return obj;
   },
@@ -590,8 +592,8 @@ export type DeepPartial<T> = T extends Builtin
   ? T
   : T extends Long
     ? string | number | Long
-    : T extends Array<infer U>
-      ? Array<DeepPartial<U>>
+    : T extends globalThis.Array<infer U>
+      ? globalThis.Array<DeepPartial<U>>
       : T extends ReadonlyArray<infer U>
         ? ReadonlyArray<DeepPartial<U>>
         : T extends {}
