@@ -8,7 +8,12 @@ import {
 } from '@gnolang/tm2-js-client';
 import { FunctionSignature } from '../types';
 import { VMEndpoint } from '../endpoints';
-import { extractStringFromResponse, prepareVMABCIQuery } from '../utility';
+import {
+  extractStringFromResponse,
+  prepareVMABCIEvaluateExpressionQuery,
+  prepareVMABCIQuery,
+  prepareVMABCIRenderQuery,
+} from '../utility';
 
 /**
  * Provider based on JSON-RPC HTTP requests
@@ -32,7 +37,7 @@ export class GnoJSONRPCProvider extends JSONRPCProvider implements GnoProvider {
       {
         request: newRequest(ABCIEndpoint.ABCI_QUERY, [
           `vm/${VMEndpoint.EVALUATE}`,
-          prepareVMABCIQuery([packagePath, expression]),
+          prepareVMABCIEvaluateExpressionQuery([packagePath, expression]),
           '0', // Height; not supported > 0 for now
           false,
         ]),
@@ -92,7 +97,7 @@ export class GnoJSONRPCProvider extends JSONRPCProvider implements GnoProvider {
       {
         request: newRequest(ABCIEndpoint.ABCI_QUERY, [
           `vm/${VMEndpoint.RENDER}`,
-          prepareVMABCIQuery([packagePath, path]),
+          prepareVMABCIRenderQuery([packagePath, path]),
           '0', // Height; not supported > 0 for now
           false,
         ]),
