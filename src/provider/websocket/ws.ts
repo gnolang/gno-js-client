@@ -7,7 +7,12 @@ import {
 } from '@gnolang/tm2-js-client';
 import { FunctionSignature } from '../types';
 import { VMEndpoint } from '../endpoints';
-import { extractStringFromResponse, prepareVMABCIQuery } from '../utility';
+import {
+  extractStringFromResponse,
+  prepareVMABCIEvaluateExpressionQuery,
+  prepareVMABCIQuery,
+  prepareVMABCIRenderQuery,
+} from '../utility';
 
 export class GnoWSProvider extends WSProvider implements GnoProvider {
   /**
@@ -27,7 +32,7 @@ export class GnoWSProvider extends WSProvider implements GnoProvider {
     const response = await this.sendRequest<ABCIResponse>(
       newRequest(ABCIEndpoint.ABCI_QUERY, [
         `vm/${VMEndpoint.EVALUATE}`,
-        prepareVMABCIQuery([packagePath, expression]),
+        prepareVMABCIEvaluateExpressionQuery([packagePath, expression]),
         '0', // Height; not supported > 0 for now
         false,
       ])
@@ -87,7 +92,7 @@ export class GnoWSProvider extends WSProvider implements GnoProvider {
     const response = await this.sendRequest<ABCIResponse>(
       newRequest(ABCIEndpoint.ABCI_QUERY, [
         `vm/${VMEndpoint.RENDER}`,
-        prepareVMABCIQuery([packagePath, path]),
+        prepareVMABCIRenderQuery([packagePath, path]),
         '0', // Height; not supported > 0 for now
         false,
       ])
