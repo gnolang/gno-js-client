@@ -308,7 +308,7 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@cosmjs/amino@^0.32.0", "@cosmjs/amino@^0.32.4":
+"@cosmjs/amino@^0.32.4":
   version "0.32.4"
   resolved "https://registry.yarnpkg.com/@cosmjs/amino/-/amino-0.32.4.tgz#3908946c0394e6d431694c8992c5147079a1c860"
   integrity sha512-zKYOt6hPy8obIFtLie/xtygCkH9ZROiQ12UHfKsOkWaZfPQUvVbtgmu6R4Kn1tFLI/SRkw7eqhaogmW/3NYu/Q==
@@ -318,7 +318,7 @@
     "@cosmjs/math" "^0.32.4"
     "@cosmjs/utils" "^0.32.4"
 
-"@cosmjs/crypto@^0.32.0", "@cosmjs/crypto@^0.32.4":
+"@cosmjs/crypto@^0.32.4":
   version "0.32.4"
   resolved "https://registry.yarnpkg.com/@cosmjs/crypto/-/crypto-0.32.4.tgz#5d29633b661eaf092ddb3e7ea6299cfd6f4507a2"
   integrity sha512-zicjGU051LF1V9v7bp8p7ovq+VyC91xlaHdsFOTo2oVry3KQikp8L/81RkXmUIT8FxMwdx1T7DmFwVQikcSDIw==
@@ -340,7 +340,7 @@
     bech32 "^1.1.4"
     readonly-date "^1.0.0"
 
-"@cosmjs/ledger-amino@^0.32.0":
+"@cosmjs/ledger-amino@^0.32.4":
   version "0.32.4"
   resolved "https://registry.yarnpkg.com/@cosmjs/ledger-amino/-/ledger-amino-0.32.4.tgz#fa2fba0390b0e4fab73491fbc57bc9f3e77a1160"
   integrity sha512-Toys0CD/4pBfYDQmhQbmWualKJT98YVPpE8Ilkx1Rx0dcFtm57Mg7R4BgRFiL1sSoff5RWcDY6Chqp6zwAbrjA==
@@ -397,14 +397,14 @@
   resolved "https://registry.yarnpkg.com/@eslint/js/-/js-8.57.0.tgz#a5417ae8427873f1dd08b70b3574b453e67b5f7f"
   integrity sha512-Ys+3g2TaW7gADOJzPt83SJtCDhMjndcDMFVQ/Tj9iA1BfJzFKD9mAUXT3OenpuPHbI6P/myECxRJrofUsDx/5g==
 
-"@gnolang/tm2-js-client@^1.2.0":
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/@gnolang/tm2-js-client/-/tm2-js-client-1.2.0.tgz#cc8b4e038202cf2feaee688cef2888c9a983b01e"
-  integrity sha512-PjE2QT6tb1SGeY4lkT0MCh7S1aowJBj519NoaQWG9lK3VIYi4DbrVpuplg/e4RSb4b2g1Zo/6rWCtsLHdXT9Jg==
+"@gnolang/tm2-js-client@^1.2.1":
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/@gnolang/tm2-js-client/-/tm2-js-client-1.2.1.tgz#850b8e1f1d90226d5047c097f27fce25366c1dd8"
+  integrity sha512-zjQ5vFw7tyRJAyXdc9Z++x5Yp9qtWuHXhFBEAV0SkHcuBuKmv71Y4qo/0J3aVgHYnri4pc5YEmgX9KVeDgf9Og==
   dependencies:
-    "@cosmjs/amino" "^0.32.0"
-    "@cosmjs/crypto" "^0.32.0"
-    "@cosmjs/ledger-amino" "^0.32.0"
+    "@cosmjs/amino" "^0.32.4"
+    "@cosmjs/crypto" "^0.32.4"
+    "@cosmjs/ledger-amino" "^0.32.4"
     "@types/uuid" "^9.0.4"
     axios "^1.4.0"
     long "^5.2.3"
