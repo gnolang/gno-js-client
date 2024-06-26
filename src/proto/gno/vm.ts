@@ -170,16 +170,16 @@ export const MsgCall = {
 
   toJSON(message: MsgCall): unknown {
     const obj: any = {};
-    if (message.caller !== '') {
+    if (message.caller !== undefined) {
       obj.caller = message.caller;
     }
-    if (message.send !== '') {
+    if (message.send !== undefined) {
       obj.send = message.send;
     }
-    if (message.pkg_path !== '') {
+    if (message.pkg_path !== undefined) {
       obj.pkg_path = message.pkg_path;
     }
-    if (message.func !== '') {
+    if (message.func !== undefined) {
       obj.func = message.func;
     }
     if (message.args?.length) {
@@ -275,13 +275,13 @@ export const MsgAddPackage = {
 
   toJSON(message: MsgAddPackage): unknown {
     const obj: any = {};
-    if (message.creator !== '') {
+    if (message.creator !== undefined) {
       obj.creator = message.creator;
     }
     if (message.package !== undefined) {
       obj.package = MemPackage.toJSON(message.package);
     }
-    if (message.deposit !== '') {
+    if (message.deposit !== undefined) {
       obj.deposit = message.deposit;
     }
     return obj;
@@ -377,10 +377,10 @@ export const MsgRun = {
 
   toJSON(message: MsgRun): unknown {
     const obj: any = {};
-    if (message.caller !== '') {
+    if (message.caller !== undefined) {
       obj.caller = message.caller;
     }
-    if (message.send !== '') {
+    if (message.send !== undefined) {
       obj.send = message.send;
     }
     if (message.package !== undefined) {
@@ -475,10 +475,10 @@ export const MemPackage = {
 
   toJSON(message: MemPackage): unknown {
     const obj: any = {};
-    if (message.name !== '') {
+    if (message.name !== undefined) {
       obj.name = message.name;
     }
-    if (message.path !== '') {
+    if (message.path !== undefined) {
       obj.path = message.path;
     }
     if (message.files?.length) {
@@ -559,10 +559,10 @@ export const MemFile = {
 
   toJSON(message: MemFile): unknown {
     const obj: any = {};
-    if (message.name !== '') {
+    if (message.name !== undefined) {
       obj.name = message.name;
     }
-    if (message.body !== '') {
+    if (message.body !== undefined) {
       obj.body = message.body;
     }
     return obj;

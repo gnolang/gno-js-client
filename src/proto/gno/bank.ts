@@ -87,13 +87,13 @@ export const MsgSend = {
 
   toJSON(message: MsgSend): unknown {
     const obj: any = {};
-    if (message.from_address !== '') {
+    if (message.from_address !== undefined) {
       obj.from_address = message.from_address;
     }
-    if (message.to_address !== '') {
+    if (message.to_address !== undefined) {
       obj.to_address = message.to_address;
     }
-    if (message.amount !== '') {
+    if (message.amount !== undefined) {
       obj.amount = message.amount;
     }
     return obj;
