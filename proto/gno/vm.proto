@@ -60,6 +60,7 @@ message MemFile {
 }
 
 // MsgNoop is the message for sponsor service
+// denoted as "m_noop"
 message MsgNoop {
   // the bech32 address of the caller
   string caller = 1;

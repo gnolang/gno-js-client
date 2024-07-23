@@ -73,6 +73,7 @@ export interface MemFile {
 
 /**
  * MsgNoop is the message for sponsor service
+ * denoted as "m_noop"
  */
 export interface MsgNoop {
   /** the bech32 address of the caller */
