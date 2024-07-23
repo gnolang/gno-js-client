@@ -71,6 +71,14 @@ export interface MemFile {
   body: string;
 }
 
+/**
+ * MsgNoop is the message for sponsor service
+ */
+export interface MsgNoop {
+  /** the bech32 address of the caller */
+  caller: string;
+}
+
 function createBaseMsgCall(): MsgCall {
   return { caller: '', send: '', pkg_path: '', func: '', args: null };
 }
@@ -575,6 +583,63 @@ export const MemFile = {
     const message = createBaseMemFile();
     message.name = object.name ?? '';
     message.body = object.body ?? '';
+    return message;
+  },
+};
+
+function createBaseMsgNoop(): MsgNoop {
+  return { caller: '' };
+}
+
+export const MsgNoop = {
+  encode(message: MsgNoop, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.caller !== '') {
+      writer.uint32(10).string(message.caller);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): MsgNoop {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMsgNoop();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.caller = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): MsgNoop {
+    return { caller: isSet(object.caller) ? globalThis.String(object.caller) : '' };
+  },
+
+  toJSON(message: MsgNoop): unknown {
+    const obj: any = {};
+    if (message.caller !== undefined) {
+      obj.caller = message.caller;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<MsgNoop>, I>>(base?: I): MsgNoop {
+    return MsgNoop.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<MsgNoop>, I>>(object: I): MsgNoop {
+    const message = createBaseMsgNoop();
+    message.caller = object.caller ?? '';
     return message;
   },
 };
