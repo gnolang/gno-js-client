@@ -3,4 +3,5 @@ export enum MsgEndpoint {
   MSG_ADD_PKG = '/vm.m_addpkg',
   MSG_CALL = '/vm.m_call',
   MSG_RUN = '/vm.m_run',
+  MSG_NOOP = '/vm.m_noop',
 }
