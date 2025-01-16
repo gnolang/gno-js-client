@@ -52,7 +52,7 @@
   },
   "dependencies": {
     "@cosmjs/ledger-amino": "^0.32.4",
-    "@gnolang/tm2-js-client": "^1.2.2",
+    "@gnolang/tm2-js-client": "^1.2.4",
     "long": "^5.2.3",
     "protobufjs": "^7.4.0"
   }
