@@ -2,6 +2,7 @@ import {
   AccountWalletOption,
   BroadcastTransactionMap,
   CreateWalletOptions,
+  Signer,
   Tx,
   TxFee,
   Wallet,
@@ -30,6 +31,20 @@ export class GnoWallet extends Wallet {
     options?: AccountWalletOption
   ): Promise<GnoWallet> => {
     const wallet = await Wallet.createRandom(options);
+
+    const gnoWallet: GnoWallet = new GnoWallet();
+    gnoWallet.signer = wallet.getSigner();
+
+    return gnoWallet;
+  };
+
+  /**
+   * Generates a custom signer-based wallet
+   * @param {Signer} signer the custom signer implementing the Signer interface
+   * @param {CreateWalletOptions} options the wallet generation options
+   */
+  static override fromSigner = async (signer: Signer): Promise<GnoWallet> => {
+    const wallet = await Wallet.fromSigner(signer);
 
     const gnoWallet: GnoWallet = new GnoWallet();
     gnoWallet.signer = wallet.getSigner();
