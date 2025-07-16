@@ -38,12 +38,12 @@ export const defaultTxFee = '1000000ugnot'; // 1 GNOT
  */
 export const decodeTxMessages = (messages: Any[]): any[] => {
   return messages.map((m: Any) => {
-    switch (m.typeUrl) {
+    switch (m.type_url) {
       case MsgEndpoint.MSG_CALL: {
         const decodedMessage = MsgCall.decode(m.value);
         const messageJson = MsgCall.toJSON(decodedMessage) as object;
         return {
-          '@type': m.typeUrl,
+          '@type': m.type_url,
           send: '',
           ...messageJson,
         };
@@ -52,7 +52,7 @@ export const decodeTxMessages = (messages: Any[]): any[] => {
         const decodedMessage = MsgSend.decode(m.value);
         const messageJson = MsgSend.toJSON(decodedMessage) as object;
         return {
-          '@type': m.typeUrl,
+          '@type': m.type_url,
           ...messageJson,
         };
       }
@@ -60,7 +60,7 @@ export const decodeTxMessages = (messages: Any[]): any[] => {
         const decodedMessage = MsgAddPackage.decode(m.value);
         const messageJson = MsgAddPackage.toJSON(decodedMessage) as object;
         return {
-          '@type': m.typeUrl,
+          '@type': m.type_url,
           ...messageJson,
         };
       }
@@ -68,12 +68,12 @@ export const decodeTxMessages = (messages: Any[]): any[] => {
         const decodedMessage = MsgRun.decode(m.value);
         const messageJson = MsgRun.toJSON(decodedMessage) as object;
         return {
-          '@type': m.typeUrl,
+          '@type': m.type_url,
           ...messageJson,
         };
       }
       default:
-        throw new Error(`unsupported message type ${m.typeUrl}`);
+        throw new Error(`unsupported message type ${m.type_url}`);
     }
   });
 };
