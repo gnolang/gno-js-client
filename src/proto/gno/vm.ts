@@ -119,8 +119,10 @@ export const MsgCall: MessageFns<MsgCall> = {
     if (message.func !== '') {
       writer.uint32(42).string(message.func);
     }
-    for (const v of message.args) {
-      writer.uint32(50).string(v!);
+    if (message.args) {
+      for (const v of message.args) {
+        writer.uint32(42).string(v!);
+      }
     }
     return writer;
   },
@@ -176,6 +178,10 @@ export const MsgCall: MessageFns<MsgCall> = {
         case 6: {
           if (tag !== 50) {
             break;
+          }
+
+          if (!message.args) {
+            message.args = [];
           }
 
           message.args.push(reader.string());
