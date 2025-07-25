@@ -823,7 +823,7 @@ __metadata:
   dependencies:
     "@cosmjs/ledger-amino": "npm:^0.34.0"
     "@eslint/js": "npm:^9.31.0"
-    "@gnolang/tm2-js-client": "npm:^1.2.5"
+    "@gnolang/tm2-js-client": "npm:^1.3.0"
     "@types/jest": "npm:^30.0.0"
     "@types/node": "npm:^24.0.14"
     "@typescript-eslint/eslint-plugin": "npm:^8.37.0"
@@ -843,9 +843,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@gnolang/tm2-js-client@npm:^1.2.5":
-  version: 1.2.5
-  resolution: "@gnolang/tm2-js-client@npm:1.2.5"
+"@gnolang/tm2-js-client@npm:^1.3.0":
+  version: 1.3.0
+  resolution: "@gnolang/tm2-js-client@npm:1.3.0"
   dependencies:
     "@cosmjs/amino": "npm:^0.34.0"
     "@cosmjs/crypto": "npm:^0.34.0"
@@ -856,7 +856,7 @@ __metadata:
     protobufjs: "npm:^7.5.3"
     uuid: "npm:^11.1.0"
     ws: "npm:^8.18.0"
-  checksum: 10c0/a96339770ea38f744555572916bff2def0aadd95996d9cb6e9d40a985aa3e454682a571403fad816f19bea50b5797d9df98a7b36a3a1a76c432e2db4ccabf408
+  checksum: 10c0/4bc9300749ff037a0282efa6027282d15131abb9f7ef07397723a8c709f0f6a6df43783b1c4103d486ff7ebebdee7f0507fbf442f5e0bc155ca51f6f21c8346d
   languageName: node
   linkType: hard
 
