@@ -20,14 +20,14 @@ export interface MsgCall {
   caller: string;
   /** the amount of funds to be deposited to the package, if any ("<amount><denomination>") */
   send: string;
+  /** the amount of funds to lock for the storage, if any ("<amount><denomination>") */
+  max_deposit: string;
   /** the gno package path */
   pkg_path: string;
   /** the function name being invoked */
   func: string;
   /** the function arguments */
   args: string[] | null;
-  /** the amount of funds to lock for the storage, if any ("<amount><denomination>") */
-  max_deposit: string;
 }
 
 /**
@@ -54,10 +54,10 @@ export interface MsgRun {
   caller: string;
   /** the amount of funds to be deposited to the package, if any ("<amount><denomination>") */
   send: string;
-  /** the package being executed */
-  package?: MemPackage | undefined;
   /** the amount of funds to put down for the storage fee, if any ("<amount><denomination>") */
   max_deposit: string;
+  /** the package being executed */
+  package?: MemPackage | undefined;
 }
 
 /**
@@ -92,10 +92,10 @@ function createBaseMsgCall(): MsgCall {
   return {
     caller: '',
     send: '',
+    max_deposit: '',
     pkg_path: '',
     func: '',
     args: null,
-    max_deposit: '',
   };
 }
 
@@ -110,19 +110,19 @@ export const MsgCall: MessageFns<MsgCall> = {
     if (message.send !== '') {
       writer.uint32(18).string(message.send);
     }
+    if (message.max_deposit !== '') {
+      writer.uint32(26).string(message.max_deposit);
+    }
     if (message.pkg_path !== '') {
-      writer.uint32(26).string(message.pkg_path);
+      writer.uint32(34).string(message.pkg_path);
     }
     if (message.func !== '') {
-      writer.uint32(34).string(message.func);
+      writer.uint32(42).string(message.func);
     }
     if (message.args) {
       for (const v of message.args) {
         writer.uint32(42).string(v!);
       }
-    }
-    if (message.max_deposit !== '') {
-      writer.uint32(50).string(message.max_deposit);
     }
     return writer;
   },
@@ -156,7 +156,7 @@ export const MsgCall: MessageFns<MsgCall> = {
             break;
           }
 
-          message.pkg_path = reader.string();
+          message.max_deposit = reader.string();
           continue;
         }
         case 4: {
@@ -164,11 +164,19 @@ export const MsgCall: MessageFns<MsgCall> = {
             break;
           }
 
-          message.func = reader.string();
+          message.pkg_path = reader.string();
           continue;
         }
         case 5: {
           if (tag !== 42) {
+            break;
+          }
+
+          message.func = reader.string();
+          continue;
+        }
+        case 6: {
+          if (tag !== 50) {
             break;
           }
 
@@ -177,14 +185,6 @@ export const MsgCall: MessageFns<MsgCall> = {
           }
 
           message.args.push(reader.string());
-          continue;
-        }
-        case 6: {
-          if (tag !== 50) {
-            break;
-          }
-
-          message.max_deposit = reader.string();
           continue;
         }
       }
@@ -200,16 +200,16 @@ export const MsgCall: MessageFns<MsgCall> = {
     return {
       caller: isSet(object.caller) ? globalThis.String(object.caller) : '',
       send: isSet(object.send) ? globalThis.String(object.send) : '',
+      max_deposit: isSet(object.max_deposit)
+        ? globalThis.String(object.max_deposit)
+        : '',
       pkg_path: isSet(object.pkg_path)
         ? globalThis.String(object.pkg_path)
         : '',
       func: isSet(object.func) ? globalThis.String(object.func) : '',
       args: globalThis.Array.isArray(object?.args)
         ? object.args.map((e: any) => globalThis.String(e))
-        : null,
-      max_deposit: isSet(object.max_deposit)
-        ? globalThis.String(object.max_deposit)
-        : '',
+        : [],
     };
   },
 
@@ -220,6 +220,9 @@ export const MsgCall: MessageFns<MsgCall> = {
     }
     if (message.send !== undefined) {
       obj.send = message.send;
+    }
+    if (message.max_deposit !== undefined) {
+      obj.max_deposit = message.max_deposit;
     }
     if (message.pkg_path !== undefined) {
       obj.pkg_path = message.pkg_path;
@@ -232,9 +235,6 @@ export const MsgCall: MessageFns<MsgCall> = {
     } else {
       obj.args = null;
     }
-    if (message.max_deposit !== undefined) {
-      obj.max_deposit = message.max_deposit;
-    }
     return obj;
   },
 
@@ -245,10 +245,10 @@ export const MsgCall: MessageFns<MsgCall> = {
     const message = createBaseMsgCall();
     message.caller = object.caller ?? '';
     message.send = object.send ?? '';
+    message.max_deposit = object.max_deposit ?? '';
     message.pkg_path = object.pkg_path ?? '';
     message.func = object.func ?? '';
     message.args = object.args?.map((e) => e) || [];
-    message.max_deposit = object.max_deposit ?? '';
     return message;
   },
 };
@@ -377,7 +377,7 @@ export const MsgAddPackage: MessageFns<MsgAddPackage> = {
 };
 
 function createBaseMsgRun(): MsgRun {
-  return { caller: '', send: '', package: undefined, max_deposit: '' };
+  return { caller: '', send: '', max_deposit: '', package: undefined };
 }
 
 export const MsgRun: MessageFns<MsgRun> = {
@@ -391,11 +391,11 @@ export const MsgRun: MessageFns<MsgRun> = {
     if (message.send !== '') {
       writer.uint32(18).string(message.send);
     }
-    if (message.package !== undefined) {
-      MemPackage.encode(message.package, writer.uint32(26).fork()).join();
-    }
     if (message.max_deposit !== '') {
-      writer.uint32(34).string(message.max_deposit);
+      writer.uint32(26).string(message.max_deposit);
+    }
+    if (message.package !== undefined) {
+      MemPackage.encode(message.package, writer.uint32(34).fork()).join();
     }
     return writer;
   },
@@ -429,7 +429,7 @@ export const MsgRun: MessageFns<MsgRun> = {
             break;
           }
 
-          message.package = MemPackage.decode(reader, reader.uint32());
+          message.max_deposit = reader.string();
           continue;
         }
         case 4: {
@@ -437,7 +437,7 @@ export const MsgRun: MessageFns<MsgRun> = {
             break;
           }
 
-          message.max_deposit = reader.string();
+          message.package = MemPackage.decode(reader, reader.uint32());
           continue;
         }
       }
@@ -453,12 +453,12 @@ export const MsgRun: MessageFns<MsgRun> = {
     return {
       caller: isSet(object.caller) ? globalThis.String(object.caller) : '',
       send: isSet(object.send) ? globalThis.String(object.send) : '',
-      package: isSet(object.package)
-        ? MemPackage.fromJSON(object.package)
-        : undefined,
       max_deposit: isSet(object.max_deposit)
         ? globalThis.String(object.max_deposit)
         : '',
+      package: isSet(object.package)
+        ? MemPackage.fromJSON(object.package)
+        : undefined,
     };
   },
 
@@ -470,11 +470,11 @@ export const MsgRun: MessageFns<MsgRun> = {
     if (message.send !== undefined) {
       obj.send = message.send;
     }
-    if (message.package !== undefined) {
-      obj.package = MemPackage.toJSON(message.package);
-    }
     if (message.max_deposit !== undefined) {
       obj.max_deposit = message.max_deposit;
+    }
+    if (message.package !== undefined) {
+      obj.package = MemPackage.toJSON(message.package);
     }
     return obj;
   },
@@ -486,11 +486,11 @@ export const MsgRun: MessageFns<MsgRun> = {
     const message = createBaseMsgRun();
     message.caller = object.caller ?? '';
     message.send = object.send ?? '';
+    message.max_deposit = object.max_deposit ?? '';
     message.package =
       object.package !== undefined && object.package !== null
         ? MemPackage.fromPartial(object.package)
         : undefined;
-    message.max_deposit = object.max_deposit ?? '';
     return message;
   },
 };

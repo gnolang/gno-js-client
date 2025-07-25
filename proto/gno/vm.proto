@@ -11,14 +11,14 @@ message MsgCall {
   string caller = 1;
   // the amount of funds to be deposited to the package, if any ("<amount><denomination>")
   string send = 2;
-  // the gno package path
-  string pkg_path = 3;
-  // the function name being invoked
-  string func = 4;
-  // the function arguments
-  repeated string args = 5; // null | string[]
   // the amount of funds to lock for the storage, if any ("<amount><denomination>")
-  string max_deposit = 6;
+  string max_deposit = 3;
+  // the gno package path
+  string pkg_path = 4;
+  // the function name being invoked
+  string func = 5;
+  // the function arguments
+  repeated string args = 6; // null | string[]
 }
 
 // MsgAddPackage is the package deployment tx message,
@@ -41,10 +41,10 @@ message MsgRun {
   string caller = 1;
   // the amount of funds to be deposited to the package, if any ("<amount><denomination>")
   string send = 2;
-  // the package being executed
-  MemPackage package = 3;
   // the amount of funds to put down for the storage fee, if any ("<amount><denomination>")
-  string max_deposit = 4;
+  string max_deposit = 3;
+  // the package being executed
+  MemPackage package = 4;
 }
 
 // MemPackage is the metadata information tied to
