@@ -72,9 +72,9 @@ export interface MemPackage {
   /** the associated package gno source */
   files: MemFile[];
   /** the (user defined) package type */
-  type?: Any | undefined;
+  type?: Any | null ;
   /** the (user defined) extra information */
-  info?: Any | undefined;
+  info?: Any | null;
 }
 
 /**
