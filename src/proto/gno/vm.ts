@@ -496,7 +496,7 @@ export const MsgRun: MessageFns<MsgRun> = {
 };
 
 function createBaseMemPackage(): MemPackage {
-  return { name: '', path: '', files: [], type: undefined, info: undefined };
+  return { name: '', path: '', files: [], type: null, info: null };
 }
 
 export const MemPackage: MessageFns<MemPackage> = {
@@ -513,10 +513,10 @@ export const MemPackage: MessageFns<MemPackage> = {
     for (const v of message.files) {
       MemFile.encode(v!, writer.uint32(26).fork()).join();
     }
-    if (message.type !== undefined) {
+    if (message.type !== undefined && message.type !== null) {
       Any.encode(message.type, writer.uint32(34).fork()).join();
     }
-    if (message.info !== undefined) {
+    if (message.info !== undefined && message.info !== null) {
       Any.encode(message.info, writer.uint32(42).fork()).join();
     }
     return writer;
@@ -556,6 +556,7 @@ export const MemPackage: MessageFns<MemPackage> = {
         }
         case 4: {
           if (tag !== 34) {
+            message.type = null;
             break;
           }
 
@@ -564,6 +565,7 @@ export const MemPackage: MessageFns<MemPackage> = {
         }
         case 5: {
           if (tag !== 42) {
+            message.info = null;
             break;
           }
 
@@ -586,8 +588,8 @@ export const MemPackage: MessageFns<MemPackage> = {
       files: globalThis.Array.isArray(object?.files)
         ? object.files.map((e: any) => MemFile.fromJSON(e))
         : [],
-      type: isSet(object.type) ? Any.fromJSON(object.type) : undefined,
-      info: isSet(object.info) ? Any.fromJSON(object.info) : undefined,
+      type: isSet(object.type) ? Any.fromJSON(object.type) : null,
+      info: isSet(object.info) ? Any.fromJSON(object.info) : null,
     };
   },
 
@@ -602,11 +604,15 @@ export const MemPackage: MessageFns<MemPackage> = {
     if (message.files?.length) {
       obj.files = message.files.map((e) => MemFile.toJSON(e));
     }
-    if (message.type !== undefined) {
+    if (message.type !== undefined && message.type !== null) {
       obj.type = Any.toJSON(message.type);
+    }else{
+      obj.type = null;
     }
-    if (message.info !== undefined) {
+    if (message.info !== undefined && message.info !== null) {
       obj.info = Any.toJSON(message.info);
+    }else{
+      obj.info = null;
     }
     return obj;
   },
@@ -624,11 +630,11 @@ export const MemPackage: MessageFns<MemPackage> = {
     message.type =
       object.type !== undefined && object.type !== null
         ? Any.fromPartial(object.type)
-        : undefined;
+        : null;
     message.info =
       object.info !== undefined && object.info !== null
         ? Any.fromPartial(object.info)
-        : undefined;
+        : null;
     return message;
   },
 };
