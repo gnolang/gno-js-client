@@ -221,7 +221,7 @@ export const MsgCall: MessageFns<MsgCall> = {
     if (message.send !== undefined) {
       obj.send = message.send;
     }
-    if (message.max_deposit !== undefined && message.max_deposit !== "")  {
+    if (message.max_deposit !== undefined && message.max_deposit !== '') {
       obj.max_deposit = message.max_deposit;
     }
     if (message.pkg_path !== undefined) {
@@ -314,7 +314,7 @@ export const MsgAddPackage: MessageFns<MsgAddPackage> = {
             break;
           }
           const max_deposit = reader.string();
-          if (max_deposit!=='') {
+          if (max_deposit !== '') {
             message.max_deposit = max_deposit;
           }
           continue;
