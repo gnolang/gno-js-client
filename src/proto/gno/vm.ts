@@ -42,7 +42,7 @@ export interface MsgAddPackage {
   /** the amount of funds to be deposited at deployment, if any ("<amount><denomination>") */
   send: string;
   /** the amount of funds to put down for the storage fee, if any ("<amount><denomination>") */
-  max_deposit: string;
+  max_deposit?: string;
 }
 
 /**
@@ -72,7 +72,7 @@ export interface MemPackage {
   /** the associated package gno source */
   files: MemFile[];
   /** the (user defined) package type */
-  type?: Any | null ;
+  type?: Any | null;
   /** the (user defined) extra information */
   info?: Any | null;
 }
@@ -221,7 +221,7 @@ export const MsgCall: MessageFns<MsgCall> = {
     if (message.send !== undefined) {
       obj.send = message.send;
     }
-    if (message.max_deposit !== undefined) {
+    if (message.max_deposit !== undefined && message.max_deposit !== "")  {
       obj.max_deposit = message.max_deposit;
     }
     if (message.pkg_path !== undefined) {
@@ -254,7 +254,7 @@ export const MsgCall: MessageFns<MsgCall> = {
 };
 
 function createBaseMsgAddPackage(): MsgAddPackage {
-  return { creator: '', package: undefined, send: '', max_deposit: '' };
+  return { creator: '', package: undefined, send: '', max_deposit: undefined };
 }
 
 export const MsgAddPackage: MessageFns<MsgAddPackage> = {
@@ -271,7 +271,7 @@ export const MsgAddPackage: MessageFns<MsgAddPackage> = {
     if (message.send !== '') {
       writer.uint32(26).string(message.send);
     }
-    if (message.max_deposit !== '') {
+    if (message.max_deposit !== '' && message.max_deposit !== undefined) {
       writer.uint32(34).string(message.max_deposit);
     }
     return writer;
@@ -313,8 +313,10 @@ export const MsgAddPackage: MessageFns<MsgAddPackage> = {
           if (tag !== 34) {
             break;
           }
-
-          message.max_deposit = reader.string();
+          const max_deposit = reader.string();
+          if (max_deposit!=='') {
+            message.max_deposit = max_deposit;
+          }
           continue;
         }
       }
@@ -335,7 +337,7 @@ export const MsgAddPackage: MessageFns<MsgAddPackage> = {
       send: isSet(object.send) ? globalThis.String(object.send) : '',
       max_deposit: isSet(object.max_deposit)
         ? globalThis.String(object.max_deposit)
-        : '',
+        : undefined,
     };
   },
 
@@ -371,7 +373,7 @@ export const MsgAddPackage: MessageFns<MsgAddPackage> = {
         ? MemPackage.fromPartial(object.package)
         : undefined;
     message.send = object.send ?? '';
-    message.max_deposit = object.max_deposit ?? '';
+    message.max_deposit = object.max_deposit ?? undefined;
     return message;
   },
 };
@@ -606,12 +608,12 @@ export const MemPackage: MessageFns<MemPackage> = {
     }
     if (message.type !== undefined && message.type !== null) {
       obj.type = Any.toJSON(message.type);
-    }else{
+    } else {
       obj.type = null;
     }
     if (message.info !== undefined && message.info !== null) {
       obj.info = Any.toJSON(message.info);
-    }else{
+    } else {
       obj.info = null;
     }
     return obj;
