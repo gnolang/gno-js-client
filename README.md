@@ -15,11 +15,30 @@
 To install `@gnolang/gno-js-client`, use your preferred package manager:
 
 ```bash
-yarn add @gnolang/gno-js-client
+bun add @gnolang/gno-js-client
 ```
 
 ```bash
 npm install @gnolang/gno-js-client
+```
+
+```bash
+yarn add @gnolang/gno-js-client
+```
+
+## Testing
+
+This project uses [Bun](https://bun.sh/) for testing. To run the tests:
+
+```bash
+# Run all tests
+bun test
+
+# Run tests in watch mode
+bun test --watch
+
+# Run tests with coverage
+bun test --coverage
 ```
 
 ## Documentation
