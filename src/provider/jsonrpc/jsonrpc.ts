@@ -1,12 +1,12 @@
-import { GnoProvider } from '../provider';
+import type { GnoProvider } from '../provider';
 import {
   ABCIEndpoint,
-  ABCIResponse,
+  type ABCIResponse,
   JSONRPCProvider,
   newRequest,
   RestService,
 } from '@gnolang/tm2-js-client';
-import { FunctionSignature } from '../types';
+import type { FunctionSignature } from '../types';
 import { VMEndpoint } from '../endpoints';
 import {
   extractStringFromResponse,
@@ -30,7 +30,7 @@ export class GnoJSONRPCProvider extends JSONRPCProvider implements GnoProvider {
   async evaluateExpression(
     packagePath: string,
     expression: string,
-    height?: number
+    _height?: number
   ): Promise<string> {
     const abciResponse: ABCIResponse = await RestService.post<ABCIResponse>(
       this.baseURL,
@@ -47,7 +47,7 @@ export class GnoJSONRPCProvider extends JSONRPCProvider implements GnoProvider {
     return extractStringFromResponse(abciResponse.response.ResponseBase.Data);
   }
 
-  async getFileContent(packagePath: string, height?: number): Promise<string> {
+  async getFileContent(packagePath: string, _height?: number): Promise<string> {
     const abciResponse: ABCIResponse = await RestService.post<ABCIResponse>(
       this.baseURL,
       {
@@ -65,7 +65,7 @@ export class GnoJSONRPCProvider extends JSONRPCProvider implements GnoProvider {
 
   async getFunctionSignatures(
     packagePath: string,
-    height?: number
+    _height?: number
   ): Promise<FunctionSignature[]> {
     const abciResponse: ABCIResponse = await RestService.post<ABCIResponse>(
       this.baseURL,
@@ -90,7 +90,7 @@ export class GnoJSONRPCProvider extends JSONRPCProvider implements GnoProvider {
   async getRenderOutput(
     packagePath: string,
     path: string,
-    height?: number
+    _height?: number
   ): Promise<string> {
     const abciResponse: ABCIResponse = await RestService.post<ABCIResponse>(
       this.baseURL,
