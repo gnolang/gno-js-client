@@ -1,4 +1,4 @@
-import { Any, MsgAddPackage, MsgCall, MsgSend } from '../../proto';
+import { type Any, MsgAddPackage, MsgCall, MsgSend } from '../../proto';
 import { MsgRun } from '../../proto/gno/vm';
 import { MsgEndpoint } from '../endpoints';
 
