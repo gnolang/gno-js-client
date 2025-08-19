@@ -10,6 +10,10 @@
 - Provides the ability to interact with Gno Realms / Packages
 - Easy interaction with VM-specific ABCI queries
 
+## Requirements
+
+This project uses [Bun](https://bun.sh/). If you haven't installed Bun yet, you can get it from [bun.com/get](https://bun.com/get).
+
 ## Installation
 
 To install `@gnolang/gno-js-client`, use your preferred package manager:
