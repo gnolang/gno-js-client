@@ -9,15 +9,20 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+
       - name: Cache dependencies
         uses: actions/cache@v4
         with:
-          path: ~/.yarn
-          key: yarn-${{ hashFiles('yarn.lock') }}
-          restore-keys: yarn-
+          path: ~/.bun/install/cache
+          key: bun-${{ hashFiles('bun.lock') }}
+          restore-keys: bun-
 
       - name: Install modules
-        run: yarn install
+        run: bun install
 
       - name: Tests
-        run: ./node_modules/.bin/jest --passWithNoTests
+        run: bun test
