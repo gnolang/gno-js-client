@@ -121,7 +121,7 @@ export const MsgCall: MessageFns<MsgCall> = {
     }
     if (message.args) {
       for (const v of message.args) {
-        writer.uint32(42).string(v!);
+        writer.uint32(50).string(v!);
       }
     }
     return writer;
