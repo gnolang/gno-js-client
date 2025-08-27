@@ -1,10 +1,10 @@
 import {
-  AccountWalletOption,
-  BroadcastTransactionMap,
-  CreateWalletOptions,
-  Signer,
-  Tx,
-  TxFee,
+  type AccountWalletOption,
+  type BroadcastTransactionMap,
+  type CreateWalletOptions,
+  type Signer,
+  type Tx,
+  type TxFee,
   Wallet,
 } from '@gnolang/tm2-js-client';
 import { decodeTxMessages, defaultTxFee, fundsToCoins } from './utility';

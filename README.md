@@ -10,16 +10,39 @@
 - Provides the ability to interact with Gno Realms / Packages
 - Easy interaction with VM-specific ABCI queries
 
+## Requirements
+
+This project uses [Bun](https://bun.sh/). If you haven't installed Bun yet, you can get it from [bun.com/get](https://bun.com/get).
+
 ## Installation
 
 To install `@gnolang/gno-js-client`, use your preferred package manager:
 
 ```bash
-yarn add @gnolang/gno-js-client
+bun add @gnolang/gno-js-client
 ```
 
 ```bash
 npm install @gnolang/gno-js-client
+```
+
+```bash
+yarn add @gnolang/gno-js-client
+```
+
+## Testing
+
+This project uses [Bun](https://bun.sh/) for testing. To run the tests:
+
+```bash
+# Run all tests
+bun test
+
+# Run tests in watch mode
+bun test --watch
+
+# Run tests with coverage
+bun test --coverage
 ```
 
 ## Documentation

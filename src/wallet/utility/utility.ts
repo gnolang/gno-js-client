@@ -1,4 +1,4 @@
-import { Any, MsgAddPackage, MsgCall, MsgSend } from '../../proto';
+import { type Any, MsgAddPackage, MsgCall, MsgSend } from '../../proto';
 import { MsgRun } from '../../proto/gno/vm';
 import { MsgEndpoint } from '../endpoints';
 
@@ -32,11 +32,17 @@ export const fundsToCoins = (funds?: Map<string, number>): string => {
  */
 export const defaultTxFee = '1000000ugnot'; // 1 GNOT
 
+export type DecodedMessage<
+  T extends Record<string, unknown> = Record<string, unknown>,
+> = T & {
+  '@type': MsgEndpoint;
+};
+
 /**
  * Decodes (and unrolls) Transaction messages into full objects
  * @param {Any[]} messages the encoded transaction messages
  */
-export const decodeTxMessages = (messages: Any[]): any[] => {
+export const decodeTxMessages = (messages: Any[]): DecodedMessage[] => {
   return messages.map((m: Any) => {
     switch (m.type_url) {
       case MsgEndpoint.MSG_CALL: {

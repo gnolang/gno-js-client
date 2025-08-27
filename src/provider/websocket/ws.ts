@@ -1,11 +1,11 @@
-import { GnoProvider } from '../provider';
+import type { GnoProvider } from '../provider';
 import {
+  type ABCIResponse,
   ABCIEndpoint,
-  ABCIResponse,
   newRequest,
   WSProvider,
 } from '@gnolang/tm2-js-client';
-import { FunctionSignature } from '../types';
+import type { FunctionSignature } from '../types';
 import { VMEndpoint } from '../endpoints';
 import {
   extractStringFromResponse,
@@ -27,7 +27,7 @@ export class GnoWSProvider extends WSProvider implements GnoProvider {
   async evaluateExpression(
     packagePath: string,
     expression: string,
-    height?: number
+    _height?: number
   ): Promise<string> {
     const response = await this.sendRequest<ABCIResponse>(
       newRequest(ABCIEndpoint.ABCI_QUERY, [
@@ -44,7 +44,7 @@ export class GnoWSProvider extends WSProvider implements GnoProvider {
     return extractStringFromResponse(abciResponse.response.ResponseBase.Data);
   }
 
-  async getFileContent(packagePath: string, height?: number): Promise<string> {
+  async getFileContent(packagePath: string, _height?: number): Promise<string> {
     const response = await this.sendRequest<ABCIResponse>(
       newRequest(ABCIEndpoint.ABCI_QUERY, [
         `vm/${VMEndpoint.FILE_CONTENT}`,
@@ -62,7 +62,7 @@ export class GnoWSProvider extends WSProvider implements GnoProvider {
 
   async getFunctionSignatures(
     packagePath: string,
-    height?: number
+    _height?: number
   ): Promise<FunctionSignature[]> {
     const response = await this.sendRequest<ABCIResponse>(
       newRequest(ABCIEndpoint.ABCI_QUERY, [
@@ -87,7 +87,7 @@ export class GnoWSProvider extends WSProvider implements GnoProvider {
   async getRenderOutput(
     packagePath: string,
     path: string,
-    height?: number
+    _height?: number
   ): Promise<string> {
     const response = await this.sendRequest<ABCIResponse>(
       newRequest(ABCIEndpoint.ABCI_QUERY, [
