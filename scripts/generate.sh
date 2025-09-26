@@ -8,6 +8,7 @@ FILES=$(find proto -type f -name "*.proto")
 
 mkdir -p ${OUT_DIR}
 
+echo "Generating TypeScript files from proto definitions..."
 for x in ${FILES}; do
   protoc \
     --plugin="./node_modules/.bin/protoc-gen-ts_proto" \
@@ -17,7 +18,7 @@ for x in ${FILES}; do
     ${x}
 done
 
-# Prettify the generated files
+echo "Prettifying generated files..."
 if [ $? -eq 0 ]; then
-  ${PRETTIER} --write ${OUT_DIR}/gno/bank.ts ${OUT_DIR}/gno/vm.ts
+  find ${OUT_DIR} -name "*.ts" -exec ${PRETTIER} --write {} +
 fi
