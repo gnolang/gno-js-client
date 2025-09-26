@@ -17,18 +17,7 @@ for x in ${FILES}; do
     ${x}
 done
 
-# Apply amino JSON compatibility changes to patch proto generated files.
-# Patch fixes two issues:
-# - Empty `max_deposit` is represented in JSON as an empty string in proto while omitted completely in Amino JSON
-# - Empty `google.protobuf.Any` fields are omitted in proto JSON while explicitly set to null in Amino JSON
-#
-# See:
-#   https://github.com/gnolang/gno-js-client/pull/184
-#   https://github.com/gnolang/gno-js-client/pull/46
-#
-# This is a short term solution that potentially requires maintaining the patch updated.
+# Prettify the generated files
 if [ $? -eq 0 ]; then
-  # First prettify generated code to allow the patch to be applied
-  ${PRETTIER} --write ${OUT_DIR}/gno/bank.ts ${OUT_DIR}/gno/vm.ts && \
-  git apply ./scripts/amino-json-compatibility.patch
+  ${PRETTIER} --write ${OUT_DIR}/gno/bank.ts ${OUT_DIR}/gno/vm.ts
 fi
