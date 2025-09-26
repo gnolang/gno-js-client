@@ -27,7 +27,7 @@ export interface MsgCall {
   /** the function name being invoked */
   func: string;
   /** the function arguments */
-  args: string[] | null;
+  args: string[];
 }
 
 /**
@@ -42,7 +42,7 @@ export interface MsgAddPackage {
   /** the amount of funds to be deposited at deployment, if any ("<amount><denomination>") */
   send: string;
   /** the amount of funds to put down for the storage fee, if any ("<amount><denomination>") */
-  max_deposit?: string;
+  max_deposit: string;
 }
 
 /**
@@ -72,9 +72,9 @@ export interface MemPackage {
   /** the associated package gno source */
   files: MemFile[];
   /** the (user defined) package type */
-  type?: Any | null;
+  type?: Any | undefined;
   /** the (user defined) extra information */
-  info?: Any | null;
+  info?: Any | undefined;
 }
 
 /**
@@ -95,7 +95,7 @@ function createBaseMsgCall(): MsgCall {
     max_deposit: '',
     pkg_path: '',
     func: '',
-    args: null,
+    args: [],
   };
 }
 
@@ -119,10 +119,8 @@ export const MsgCall: MessageFns<MsgCall> = {
     if (message.func !== '') {
       writer.uint32(42).string(message.func);
     }
-    if (message.args) {
-      for (const v of message.args) {
-        writer.uint32(50).string(v!);
-      }
+    for (const v of message.args) {
+      writer.uint32(50).string(v!);
     }
     return writer;
   },
@@ -180,10 +178,6 @@ export const MsgCall: MessageFns<MsgCall> = {
             break;
           }
 
-          if (!message.args) {
-            message.args = [];
-          }
-
           message.args.push(reader.string());
           continue;
         }
@@ -221,7 +215,7 @@ export const MsgCall: MessageFns<MsgCall> = {
     if (message.send !== undefined) {
       obj.send = message.send;
     }
-    if (message.max_deposit !== undefined && message.max_deposit !== '') {
+    if (message.max_deposit !== undefined) {
       obj.max_deposit = message.max_deposit;
     }
     if (message.pkg_path !== undefined) {
@@ -232,8 +226,6 @@ export const MsgCall: MessageFns<MsgCall> = {
     }
     if (message.args?.length) {
       obj.args = message.args;
-    } else {
-      obj.args = null;
     }
     return obj;
   },
@@ -254,7 +246,7 @@ export const MsgCall: MessageFns<MsgCall> = {
 };
 
 function createBaseMsgAddPackage(): MsgAddPackage {
-  return { creator: '', package: undefined, send: '', max_deposit: undefined };
+  return { creator: '', package: undefined, send: '', max_deposit: '' };
 }
 
 export const MsgAddPackage: MessageFns<MsgAddPackage> = {
@@ -271,7 +263,7 @@ export const MsgAddPackage: MessageFns<MsgAddPackage> = {
     if (message.send !== '') {
       writer.uint32(26).string(message.send);
     }
-    if (message.max_deposit !== '' && message.max_deposit !== undefined) {
+    if (message.max_deposit !== '') {
       writer.uint32(34).string(message.max_deposit);
     }
     return writer;
@@ -313,10 +305,8 @@ export const MsgAddPackage: MessageFns<MsgAddPackage> = {
           if (tag !== 34) {
             break;
           }
-          const max_deposit = reader.string();
-          if (max_deposit !== '') {
-            message.max_deposit = max_deposit;
-          }
+
+          message.max_deposit = reader.string();
           continue;
         }
       }
@@ -337,7 +327,7 @@ export const MsgAddPackage: MessageFns<MsgAddPackage> = {
       send: isSet(object.send) ? globalThis.String(object.send) : '',
       max_deposit: isSet(object.max_deposit)
         ? globalThis.String(object.max_deposit)
-        : undefined,
+        : '',
     };
   },
 
@@ -373,7 +363,7 @@ export const MsgAddPackage: MessageFns<MsgAddPackage> = {
         ? MemPackage.fromPartial(object.package)
         : undefined;
     message.send = object.send ?? '';
-    message.max_deposit = object.max_deposit ?? undefined;
+    message.max_deposit = object.max_deposit ?? '';
     return message;
   },
 };
@@ -498,7 +488,7 @@ export const MsgRun: MessageFns<MsgRun> = {
 };
 
 function createBaseMemPackage(): MemPackage {
-  return { name: '', path: '', files: [], type: null, info: null };
+  return { name: '', path: '', files: [], type: undefined, info: undefined };
 }
 
 export const MemPackage: MessageFns<MemPackage> = {
@@ -515,10 +505,10 @@ export const MemPackage: MessageFns<MemPackage> = {
     for (const v of message.files) {
       MemFile.encode(v!, writer.uint32(26).fork()).join();
     }
-    if (message.type !== undefined && message.type !== null) {
+    if (message.type !== undefined) {
       Any.encode(message.type, writer.uint32(34).fork()).join();
     }
-    if (message.info !== undefined && message.info !== null) {
+    if (message.info !== undefined) {
       Any.encode(message.info, writer.uint32(42).fork()).join();
     }
     return writer;
@@ -558,7 +548,6 @@ export const MemPackage: MessageFns<MemPackage> = {
         }
         case 4: {
           if (tag !== 34) {
-            message.type = null;
             break;
           }
 
@@ -567,7 +556,6 @@ export const MemPackage: MessageFns<MemPackage> = {
         }
         case 5: {
           if (tag !== 42) {
-            message.info = null;
             break;
           }
 
@@ -590,8 +578,8 @@ export const MemPackage: MessageFns<MemPackage> = {
       files: globalThis.Array.isArray(object?.files)
         ? object.files.map((e: any) => MemFile.fromJSON(e))
         : [],
-      type: isSet(object.type) ? Any.fromJSON(object.type) : null,
-      info: isSet(object.info) ? Any.fromJSON(object.info) : null,
+      type: isSet(object.type) ? Any.fromJSON(object.type) : undefined,
+      info: isSet(object.info) ? Any.fromJSON(object.info) : undefined,
     };
   },
 
@@ -606,15 +594,11 @@ export const MemPackage: MessageFns<MemPackage> = {
     if (message.files?.length) {
       obj.files = message.files.map((e) => MemFile.toJSON(e));
     }
-    if (message.type !== undefined && message.type !== null) {
+    if (message.type !== undefined) {
       obj.type = Any.toJSON(message.type);
-    } else {
-      obj.type = null;
     }
-    if (message.info !== undefined && message.info !== null) {
+    if (message.info !== undefined) {
       obj.info = Any.toJSON(message.info);
-    } else {
-      obj.info = null;
     }
     return obj;
   },
@@ -632,11 +616,11 @@ export const MemPackage: MessageFns<MemPackage> = {
     message.type =
       object.type !== undefined && object.type !== null
         ? Any.fromPartial(object.type)
-        : null;
+        : undefined;
     message.info =
       object.info !== undefined && object.info !== null
         ? Any.fromPartial(object.info)
-        : null;
+        : undefined;
     return message;
   },
 };
@@ -755,14 +739,9 @@ function isSet(value: any): boolean {
 
 export interface MessageFns<T> {
   encode(message: T, writer?: BinaryWriter): BinaryWriter;
-
   decode(input: BinaryReader | Uint8Array, length?: number): T;
-
   fromJSON(object: any): T;
-
   toJSON(message: T): unknown;
-
   create<I extends Exact<DeepPartial<T>, I>>(base?: I): T;
-
   fromPartial<I extends Exact<DeepPartial<T>, I>>(object: I): T;
 }
