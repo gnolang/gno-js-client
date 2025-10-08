@@ -198,7 +198,7 @@ export class GnoWallet extends Wallet {
       max_deposit: maxDepositAmount,
       pkg_path: path,
       func: method,
-      args: args ? (args.length === 0 ? null : args) : null,
+      args: args || [],
     };
 
     // Construct the transfer transaction
