@@ -1,0 +1,16 @@
+# Dependencies
+node_modules
+
+# Build files
+bin
+
+# Dev environment metadata
+.idea
+.DS_Store
+*.log
+
+# Yarn leftovers
+.yarn/cache
+.pnp.*
+.yarn/install-state.gz
+.yarn/unplugged

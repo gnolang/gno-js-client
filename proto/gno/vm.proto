@@ -1,0 +1,72 @@
+syntax = "proto3";
+
+package gno.vm;
+
+import "google/protobuf/any.proto";
+
+// MsgCall is the method invocation tx message,
+// denoted as "m_call"
+message MsgCall {
+  // the bech32 address of the caller
+  string caller = 1;
+  // the amount of funds to be deposited to the package, if any ("<amount><denomination>")
+  string send = 2;
+  // the amount of funds to lock for the storage, if any ("<amount><denomination>")
+  string max_deposit = 3;
+  // the gno package path
+  string pkg_path = 4;
+  // the function name being invoked
+  string func = 5;
+  // the function arguments
+  repeated string args = 6; // null | string[]
+}
+
+// MsgAddPackage is the package deployment tx message,
+// denoted as "m_addpkg"
+message MsgAddPackage {
+  // the package deployer
+  string creator = 1;
+  // the package being deployed
+  MemPackage package = 2;
+  // the amount of funds to be deposited at deployment, if any ("<amount><denomination>")
+  string send = 3;
+  // the amount of funds to put down for the storage fee, if any ("<amount><denomination>")
+  string max_deposit = 4;
+}
+
+// MsgRun is the execute arbitrary Gno code tx message,
+// denoted as "m_run"
+message MsgRun {
+  // the bech32 address of the caller
+  string caller = 1;
+  // the amount of funds to be deposited to the package, if any ("<amount><denomination>")
+  string send = 2;
+  // the amount of funds to put down for the storage fee, if any ("<amount><denomination>")
+  string max_deposit = 3;
+  // the package being executed
+  MemPackage package = 4;
+}
+
+// MemPackage is the metadata information tied to
+// package / realm deployment
+message MemPackage {
+  // the name of the package
+  string name = 1;
+  // the gno path of the package
+  string path = 2;
+  // the associated package gno source
+  repeated MemFile files = 3;
+  // the (user defined) package type
+  google.protobuf.Any type = 4;
+  // the (user defined) extra information
+  google.protobuf.Any info = 5;
+}
+
+// MemFile is the metadata information tied to
+// a single gno package / realm file
+message MemFile {
+  // the name of the source gno file
+  string name = 1;
+  // the content of the source gno file
+  string body = 2;
+}
