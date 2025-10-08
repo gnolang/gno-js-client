@@ -19,5 +19,14 @@ jobs:
       - name: Install modules
         run: yarn install
 
+      - name: Install Go
+        uses: actions/setup-go@v6
+        with:
+          go-version: '1.23'
+
+      # Install gnodev only when this PR will be merged: https://github.com/gnolang/gno/pull/4763
+      - name: Install gnodev
+        run: curl -sSL https://raw.githubusercontent.com/gnolang/gno/master/misc/install.sh | bash
+
       - name: Tests
-        run: ./node_modules/.bin/jest --passWithNoTests
+        run: ./node_modules/.bin/jest
