@@ -1,4 +1,4 @@
-import { BroadcastTransactionMap, TransactionEndpoint, TxFee } from "@gnolang/tm2-js-client";
+import { TransactionEndpoint, TxFee } from "@gnolang/tm2-js-client";
 import { GnoWallet } from "../wallet";
 import { parseGnoReturns } from "../wallet/helpers";
 
@@ -15,7 +15,7 @@ const queryClient = (wallet: GnoWallet) => {
 }
 const txClient = (wallet: GnoWallet) => {
 	return {
-		async GetBoardIDFromName(params: { name: string }, funds: Map<string,number>, fee: TxFee):Promise<GetBoardIDFromNameReturn> {
+		async GetBoardIDFromName(params: { name: string }, funds: Map<string,number>, maxDeposit: Map<string,number>, fee: TxFee):Promise<GetBoardIDFromNameReturn> {
 			
 			const resp = (await wallet.callMethod(
 				realm,
@@ -23,6 +23,7 @@ const txClient = (wallet: GnoWallet) => {
 				[params.name],
 				TransactionEndpoint.BROADCAST_TX_COMMIT,
 				funds,
+				maxDeposit,
 				fee
 			  ));
 			const result = atob(resp.deliver_tx.ResponseBase.Data as string)
