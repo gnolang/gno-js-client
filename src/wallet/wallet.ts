@@ -1,8 +1,8 @@
 import {
   AccountWalletOption,
   BroadcastTransactionMap,
-  CreateWalletOptions,
-  Provider,
+  CreateWalletOptions,  
+  Signer,
   Tx,
   TxFee,
   Wallet,
@@ -14,6 +14,7 @@ import { MsgEndpoint } from './endpoints';
 import { LedgerConnector } from '@cosmjs/ledger-amino';
 import { Constructor, Realm, Return, UnionToIntersection } from './helpers';
 import { GnoProvider } from '../provider';
+import { MsgRun } from '../proto/gno/vm';
 
 /**
  * GnoWallet is an extension of the TM2 wallet with
@@ -53,6 +54,20 @@ export class GnoWallet extends Wallet {
     options?: AccountWalletOption
   ): Promise<GnoWallet> => {
     const wallet = await Wallet.createRandom(options);
+
+    const gnoWallet: GnoWallet = new GnoWallet();
+    gnoWallet.signer = wallet.getSigner();
+
+    return gnoWallet;
+  };
+
+  /**
+   * Generates a custom signer-based wallet
+   * @param {Signer} signer the custom signer implementing the Signer interface
+   * @param {CreateWalletOptions} options the wallet generation options
+   */
+  static override fromSigner = async (signer: Signer): Promise<GnoWallet> => {
+    const wallet = await Wallet.fromSigner(signer);
 
     const gnoWallet: GnoWallet = new GnoWallet();
     gnoWallet.signer = wallet.getSigner();
@@ -141,8 +156,8 @@ export class GnoWallet extends Wallet {
     const txFee: TxFee = fee
       ? fee
       : {
-          gasWanted: new Long(60000),
-          gasFee: defaultTxFee,
+          gas_wanted: new Long(60000),
+          gas_fee: defaultTxFee,
         };
 
     // Prepare the Msg
@@ -156,7 +171,7 @@ export class GnoWallet extends Wallet {
     const tx: Tx = {
       messages: [
         {
-          typeUrl: MsgEndpoint.MSG_SEND,
+          type_url: MsgEndpoint.MSG_SEND,
           value: MsgSend.encode(sendMsg).finish(),
         },
       ],
@@ -179,6 +194,7 @@ export class GnoWallet extends Wallet {
    * @param {string[]} args the method arguments, if any
    * @param {TransactionEndpoint} endpoint the transaction broadcast type (sync / commit)
    * @param {Map<string, number>} [funds] the denomination -> value map for funds, if any
+   * @param {Map<string, number>} [maxDeposit] the denomination -> value map for max storage deposit, if any
    * @param {TxFee} [fee] the custom transaction fee, if any
    */
   callMethod = async <K extends keyof BroadcastTransactionMap>(
@@ -187,10 +203,12 @@ export class GnoWallet extends Wallet {
     args: string[] | null,
     endpoint: K,
     funds?: Map<string, number>,
+    maxDeposit?: Map<string, number>,
     fee?: TxFee
   ): Promise<BroadcastTransactionMap[K]['result']> => {
     // Convert the funds into the correct representation
     const amount: string = fundsToCoins(funds);
+    const maxDepositAmount: string = fundsToCoins(maxDeposit);
 
     // Fetch the wallet address
     const caller: string = await this.getAddress();
@@ -199,24 +217,25 @@ export class GnoWallet extends Wallet {
     const txFee: TxFee = fee
       ? fee
       : {
-          gasWanted: new Long(60000),
-          gasFee: defaultTxFee,
+          gas_wanted: new Long(60000),
+          gas_fee: defaultTxFee,
         };
 
     // Prepare the Msg
     const callMsg: MsgCall = {
       caller: caller,
       send: amount,
+      max_deposit: maxDepositAmount,
       pkg_path: path,
       func: method,
-      args: args ? (args.length === 0 ? null : args) : null,
+      args: args || [],
     };
 
     // Construct the transfer transaction
     const tx: Tx = {
       messages: [
         {
-          typeUrl: MsgEndpoint.MSG_CALL,
+          type_url: MsgEndpoint.MSG_CALL,
           value: MsgCall.encode(callMsg).finish(),
         },
       ],
@@ -237,16 +256,19 @@ export class GnoWallet extends Wallet {
    * @param {MemPackage} gnoPackage the package / realm to be deployed
    * @param {TransactionEndpoint} endpoint the transaction broadcast type (sync / commit)
    * @param {Map<string, number>} [funds] the denomination -> value map for funds, if any
+   * @param {Map<string, number>} [maxDeposit] the denomination -> value map for max storage deposit, if any
    * @param {TxFee} [fee] the custom transaction fee, if any
    */
   deployPackage = async <K extends keyof BroadcastTransactionMap>(
     gnoPackage: MemPackage,
     endpoint: K,
     funds?: Map<string, number>,
+    maxDeposit?: Map<string, number>,
     fee?: TxFee
   ): Promise<BroadcastTransactionMap[K]['result']> => {
     // Convert the funds into the correct representation
     const amount: string = fundsToCoins(funds);
+    const maxDepositAmount: string = fundsToCoins(maxDeposit);
 
     // Fetch the wallet address
     const caller: string = await this.getAddress();
@@ -255,23 +277,82 @@ export class GnoWallet extends Wallet {
     const txFee: TxFee = fee
       ? fee
       : {
-          gasWanted: new Long(60000),
-          gasFee: defaultTxFee,
+          gas_wanted: new Long(60000),
+          gas_fee: defaultTxFee,
         };
 
     // Prepare the Msg
     const addPkgMsg: MsgAddPackage = {
       creator: caller,
       package: gnoPackage,
-      deposit: amount,
+      send: amount,
+      max_deposit: maxDepositAmount,
     };
 
     // Construct the transfer transaction
     const tx: Tx = {
       messages: [
         {
-          typeUrl: MsgEndpoint.MSG_ADD_PKG,
+          type_url: MsgEndpoint.MSG_ADD_PKG,
           value: MsgAddPackage.encode(addPkgMsg).finish(),
+        },
+      ],
+      fee: txFee,
+      memo: '',
+      signatures: [], // No signature yet
+    };
+
+    // Sign the transaction
+    const signedTx: Tx = await this.signTransaction(tx, decodeTxMessages);
+
+    // Send the transaction
+    return this.sendTransaction(signedTx, endpoint);
+  };
+
+  /**
+   * Executes arbitrary Gno code
+   * @param {MemPackage} gnoPackage the gno package being executed
+   * @param {TransactionEndpoint} endpoint the transaction broadcast type (sync / commit)
+   * @param {Map<string, number>} [funds] the denomination -> value map for funds, if any
+   * @param {Map<string, number>} [maxDeposit] the denomination -> value map for max storage deposit, if any
+   * @param {TxFee} [fee] the custom transaction fee, if any
+   */
+  executePackage = async <K extends keyof BroadcastTransactionMap>(
+    gnoPackage: MemPackage,
+    endpoint: K,
+    funds?: Map<string, number>,
+    maxDeposit?: Map<string, number>,
+    fee?: TxFee
+  ): Promise<BroadcastTransactionMap[K]['result']> => {
+    // Convert the funds into the correct representation
+    const amount: string = fundsToCoins(funds);
+    const maxDepositAmount: string = fundsToCoins(maxDeposit);
+
+    // Fetch the wallet address
+    const caller: string = await this.getAddress();
+
+    // Construct the transaction fee
+    const txFee: TxFee = fee
+      ? fee
+      : {
+          gas_wanted: new Long(60000),
+          gas_fee: defaultTxFee,
+        };
+
+    // Prepare the Msg
+    const runMsg: MsgRun = {
+      caller,
+      send: amount,
+      package: gnoPackage,
+      max_deposit: maxDepositAmount,
+    };
+
+    // Construct the transfer transaction
+    const tx: Tx = {
+      messages: [
+        {
+          type_url: MsgEndpoint.MSG_RUN,
+          value: MsgRun.encode(runMsg).finish(),
         },
       ],
       fee: txFee,
