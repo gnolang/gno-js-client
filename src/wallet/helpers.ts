@@ -22,12 +22,23 @@ export type Return<T> =
 export type RealmInterface = { [key: string]: any }
 export type Realm = (instance: GnoWallet) => { realm: RealmInterface}
 
+const bigIntTypes = new Set(['int', 'int64', 'uint', 'uint64']);
+
 export const parseGnoReturns = (result: string):Array<unknown> => {
   const ret=[];
-  const values = result.split("\n");
+  const values = result.split("\n").filter(v => v.length > 0);
   for (let i=0; i<values.length; i++) {
-    let value=JSON.parse(values[i].substring(1).split(" ").slice(0,-1).join(" "));
-    ret.push(value);
+    // Format: "(value type)" — strip parens, split type from value
+    const inner = values[i].slice(1, -1);
+    const lastSpace = inner.lastIndexOf(" ");
+    const rawValue = inner.substring(0, lastSpace);
+    const gnoType = inner.substring(lastSpace + 1);
+
+    if (bigIntTypes.has(gnoType)) {
+      ret.push(BigInt(rawValue));
+    } else {
+      ret.push(JSON.parse(rawValue));
+    }
   }
   return ret;
 }

@@ -16,6 +16,23 @@ import { Constructor, Realm, Return, UnionToIntersection } from './helpers';
 import { GnoProvider } from '../provider';
 import { MsgRun } from '../proto/gno/vm';
 
+function deepAssign(target: any, source: any): void {
+  for (const key of Object.keys(source)) {
+    const srcVal = source[key];
+    const tgtVal = target[key];
+    if (
+      tgtVal && srcVal &&
+      typeof tgtVal === 'object' && typeof srcVal === 'object' &&
+      Object.getPrototypeOf(srcVal) === Object.prototype &&
+      Object.getPrototypeOf(tgtVal) === Object.prototype
+    ) {
+      deepAssign(tgtVal, srcVal);
+    } else {
+      target[key] = srcVal;
+    }
+  }
+}
+
 /**
  * GnoWallet is an extension of the TM2 wallet with
  * specific functionality for Gno chains
@@ -28,7 +45,7 @@ export class GnoWallet extends Wallet {
     const classConstructor = this.constructor as typeof GnoWallet;
     classConstructor.realms.forEach(realm => {
       const realmInstance = realm(this);
-      Object.assign(this, realmInstance.realm);
+      deepAssign(this, realmInstance.realm);
     });
   }
   static addRealm<T extends Realm | Realm[]>(realms: T) {
