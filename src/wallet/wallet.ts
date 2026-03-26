@@ -1,7 +1,7 @@
 import {
   AccountWalletOption,
   BroadcastTransactionMap,
-  CreateWalletOptions,  
+  CreateWalletOptions,
   Signer,
   Tx,
   TxFee,
@@ -21,8 +21,10 @@ function deepAssign(target: any, source: any): void {
     const srcVal = source[key];
     const tgtVal = target[key];
     if (
-      tgtVal && srcVal &&
-      typeof tgtVal === 'object' && typeof srcVal === 'object' &&
+      tgtVal &&
+      srcVal &&
+      typeof tgtVal === 'object' &&
+      typeof srcVal === 'object' &&
       Object.getPrototypeOf(srcVal) === Object.prototype &&
       Object.getPrototypeOf(tgtVal) === Object.prototype
     ) {
@@ -38,12 +40,12 @@ function deepAssign(target: any, source: any): void {
  * specific functionality for Gno chains
  */
 export class GnoWallet extends Wallet {
-  protected provider:GnoProvider
-	static realms: Realm[] = [];
+  protected provider: GnoProvider;
+  static realms: Realm[] = [];
   constructor() {
     super();
     const classConstructor = this.constructor as typeof GnoWallet;
-    classConstructor.realms.forEach(realm => {
+    classConstructor.realms.forEach((realm) => {
       const realmInstance = realm(this);
       deepAssign(this, realmInstance.realm);
     });
@@ -56,11 +58,11 @@ export class GnoWallet extends Wallet {
     }
 
     if (Array.isArray(realms)) {
-      type Extension = UnionToIntersection<Return<T>['realm']>
-      return AugmentedWallet as typeof GnoWallet & Constructor<Extension>;  
+      type Extension = UnionToIntersection<Return<T>['realm']>;
+      return AugmentedWallet as typeof GnoWallet & Constructor<Extension>;
     }
 
-    type Extension = Return<T>['realm']
+    type Extension = Return<T>['realm'];
     return AugmentedWallet as typeof GnoWallet & Constructor<Extension>;
   }
   /**

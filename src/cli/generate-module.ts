@@ -109,10 +109,7 @@ function buildParamsType(params: NamedType[]): string {
   return `params: { ${fields} }`;
 }
 
-function buildEvalExpression(
-  funcName: string,
-  params: NamedType[]
-): string {
+function buildEvalExpression(funcName: string, params: NamedType[]): string {
   if (params.length === 0) {
     return `\`${funcName}()\``;
   }
@@ -194,9 +191,7 @@ function generateModule(
       `\t\t\tconst result = await wallet.getProvider().evaluateExpression(realm, ${evalExpr}, height);`
     );
     if (hasReturn) {
-      lines.push(
-        `\t\t\treturn parseGnoReturns(result) as ${returnTypeStr};`
-      );
+      lines.push(`\t\t\treturn parseGnoReturns(result) as ${returnTypeStr};`);
     }
     lines.push('\t\t}' + (i < processed.length - 1 ? ',' : ''));
   }
@@ -248,10 +243,12 @@ function generateModule(
 
   // Factory function — build nested realms object from path segments
   const opening = segments.map((seg) => `{ ${seg}: `).join('');
-  const closing = ' }' .repeat(segments.length);
+  const closing = ' }'.repeat(segments.length);
   lines.push('const Realm = (wallet: GnoWallet) => {');
   lines.push('\treturn {');
-  lines.push(`\t\trealm: { realms: ${opening}new RealmModule(wallet)${closing} }`);
+  lines.push(
+    `\t\trealm: { realms: ${opening}new RealmModule(wallet)${closing} }`
+  );
   lines.push('\t}');
   lines.push('}');
   lines.push('');
@@ -277,10 +274,7 @@ async function listRealmPaths(
 
   const { ResponseBase } = abciResponse.response;
   if (ResponseBase.Error) {
-    throw new Error(
-      ResponseBase.Log ||
-        JSON.stringify(ResponseBase.Error)
-    );
+    throw new Error(ResponseBase.Log || JSON.stringify(ResponseBase.Error));
   }
   if (!ResponseBase.Data) {
     return [];
@@ -348,8 +342,7 @@ async function main() {
   const argv = await yargs(hideBin(process.argv))
     .option('realm', {
       type: 'string',
-      describe:
-        'Realm path, e.g. gno.land/r/demo/boards or /r/demo/boards',
+      describe: 'Realm path, e.g. gno.land/r/demo/boards or /r/demo/boards',
     })
     .option('prefix', {
       type: 'string',

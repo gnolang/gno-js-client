@@ -88,9 +88,7 @@ export class GnoJSONRPCProvider extends JSONRPCProvider implements GnoProvider {
     }
 
     // Function signatures encoded in JSON
-    const responseRaw: string = extractStringFromResponse(
-      ResponseBase.Data
-    );
+    const responseRaw: string = extractStringFromResponse(ResponseBase.Data);
 
     return JSON.parse(responseRaw);
   }

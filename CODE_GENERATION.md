@@ -31,11 +31,11 @@ Options:
   --help    Show help
 ```
 
-| Mode | Behavior |
-|------|----------|
-| `--realm /r/demo/boards` | Generate one module for that realm |
-| `--prefix /r/gnoland` | Discover all realms under the prefix via `vm/qpaths` and generate each |
-| *(neither)* | Discover ALL realms on the chain (`gno.land/r/` prefix) and generate each |
+| Mode                     | Behavior                                                                  |
+| ------------------------ | ------------------------------------------------------------------------- |
+| `--realm /r/demo/boards` | Generate one module for that realm                                        |
+| `--prefix /r/gnoland`    | Discover all realms under the prefix via `vm/qpaths` and generate each    |
+| _(neither)_              | Discover ALL realms on the chain (`gno.land/r/` prefix) and generate each |
 
 `--realm` and `--prefix` are mutually exclusive.
 
@@ -87,7 +87,9 @@ const MyWallet = GnoWallet.addRealm([
 ### 3. Instantiate and connect
 
 ```ts
-const wallet = await MyWallet.fromMnemonic('your mnemonic here ...') as InstanceType<typeof MyWallet>;
+const wallet = (await MyWallet.fromMnemonic(
+  'your mnemonic here ...'
+)) as InstanceType<typeof MyWallet>;
 wallet.connect(new GnoJSONRPCProvider('https://rpc.betanet.testnets.gno.land'));
 ```
 
@@ -99,9 +101,15 @@ Queries call `evaluateExpression` — no transaction, no gas, no signing require
 
 ```ts
 // Nested dot-syntax mirrors the realm path: wallet.realms.r.<namespace>.<realm>
-const [exists] = await wallet.realms.r.gnoland.blog.query.PostExists({ slug: 'hello' });
-const [balance] = await wallet.realms.r.gnoland.wugnot.query.BalanceOf({ owner: myAddr });
-const [name, found] = await wallet.realms.r.sys.users.query.ResolveName({ name: 'test1' });
+const [exists] = await wallet.realms.r.gnoland.blog.query.PostExists({
+  slug: 'hello',
+});
+const [balance] = await wallet.realms.r.gnoland.wugnot.query.BalanceOf({
+  owner: myAddr,
+});
+const [name, found] = await wallet.realms.r.sys.users.query.ResolveName({
+  name: 'test1',
+});
 ```
 
 An optional `height` parameter is available on every query method to read state at a specific block height.
@@ -116,9 +124,9 @@ const fee = { gas_wanted: Long.fromNumber(2_000_000), gas_fee: '1000000ugnot' };
 
 const result = await wallet.realms.r.gnoland.wugnot.tx.Transfer(
   { to: 'g1addr...', amount: BigInt(500_000) },
-  noFunds,    // funds to send with the call
-  noFunds,    // max storage deposit
-  fee,
+  noFunds, // funds to send with the call
+  noFunds, // max storage deposit
+  fee
 );
 console.log('TX hash:', result.hash);
 console.log('Block height:', result.height);
@@ -137,24 +145,24 @@ const [returnValue] = parseGnoReturns(data);
 
 Each `module.ts` contains:
 
-| Section | Purpose |
-|---------|---------|
-| **Return type aliases** | e.g. `type GetBalanceReturn = [bigint]` — typed tuples from Gno results |
-| **`queryClient`** | Read-only methods using `evaluateExpression` |
-| **`txClient`** | Transaction methods using `callMethod`, returning `BroadcastTxCommitResult` |
-| **`RealmModule`** | Class exposing `.query` and `.tx` |
-| **`Realm` factory** | Default export — returns `{ realm: { realms: { r: { ... } } } }` for `addRealm` |
+| Section                 | Purpose                                                                         |
+| ----------------------- | ------------------------------------------------------------------------------- |
+| **Return type aliases** | e.g. `type GetBalanceReturn = [bigint]` — typed tuples from Gno results         |
+| **`queryClient`**       | Read-only methods using `evaluateExpression`                                    |
+| **`txClient`**          | Transaction methods using `callMethod`, returning `BroadcastTxCommitResult`     |
+| **`RealmModule`**       | Class exposing `.query` and `.tx`                                               |
+| **`Realm` factory**     | Default export — returns `{ realm: { realms: { r: { ... } } } }` for `addRealm` |
 
 ## Type Mapping
 
-| Gno Type | TypeScript Type |
-|----------|----------------|
-| `string` | `string` |
-| `bool` | `boolean` |
-| `int`, `int64`, `uint`, `uint64` | `bigint` |
-| `int8`–`int32`, `uint8`–`uint32`, `float32`, `float64`, `byte`, `rune` | `number` |
-| `error` | `string` |
-| Structs, interfaces, other | `unknown` |
+| Gno Type                                                               | TypeScript Type |
+| ---------------------------------------------------------------------- | --------------- |
+| `string`                                                               | `string`        |
+| `bool`                                                                 | `boolean`       |
+| `int`, `int64`, `uint`, `uint64`                                       | `bigint`        |
+| `int8`–`int32`, `uint8`–`uint32`, `float32`, `float64`, `byte`, `rune` | `number`        |
+| `error`                                                                | `string`        |
+| Structs, interfaces, other                                             | `unknown`       |
 
 ## How `addRealm` and Deep Merge Work
 
@@ -162,7 +170,17 @@ Each generated realm factory returns a nested object mirroring the realm path:
 
 ```ts
 // gno.land/r/gnoland/blog factory returns:
-{ realm: { realms: { r: { gnoland: { blog: new RealmModule(wallet) } } } } }
+{
+  realm: {
+    realms: {
+      r: {
+        gnoland: {
+          blog: new RealmModule(wallet);
+        }
+      }
+    }
+  }
+}
 ```
 
 When multiple realms are added via `addRealm([...])`, the wallet constructor uses `deepAssign` (recursive merge of plain objects) instead of `Object.assign` (shallow). This means two realms like `r/gnoland/blog` and `r/gnoland/wugnot` correctly merge under `wallet.realms.r.gnoland` without overwriting each other.
