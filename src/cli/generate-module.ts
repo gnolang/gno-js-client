@@ -141,7 +141,7 @@ function generateModule(
 
   // Imports
   lines.push(
-    'import { BroadcastTxCommitResult, TransactionEndpoint, TxFee } from "@gnolang/tm2-js-client";'
+    'import { TransactionEndpoint, TxFee } from "@gnolang/tm2-js-client";'
   );
   lines.push('import { GnoWallet } from "@gnolang/gno-js-client";');
   lines.push(
@@ -205,6 +205,9 @@ function generateModule(
   for (let i = 0; i < processed.length; i++) {
     const sig = processed[i];
     const paramsType = buildParamsType(sig.Params);
+    const returnType = buildReturnType(sig.Results);
+    const hasReturn = returnType !== 'void';
+    const returnTypeStr = hasReturn ? `${sig.FuncName}Return` : 'void';
     const callArgs = buildCallArgs(sig.Params);
 
     const paramsList = paramsType
@@ -212,9 +215,9 @@ function generateModule(
       : 'funds: Map<string, number>, maxDeposit: Map<string, number>, fee: TxFee';
 
     lines.push(
-      `\t\tasync ${sig.FuncName}(${paramsList}):Promise<BroadcastTxCommitResult> {`
+      `\t\tasync ${sig.FuncName}(${paramsList}):Promise<${returnTypeStr}> {`
     );
-    lines.push('\t\t\treturn wallet.callMethod(');
+    lines.push('\t\t\tconst resp = await wallet.callMethod(');
     lines.push('\t\t\t\trealm,');
     lines.push(`\t\t\t\t"${sig.FuncName}",`);
     lines.push(`\t\t\t\t${callArgs},`);
@@ -223,6 +226,17 @@ function generateModule(
     lines.push('\t\t\t\tmaxDeposit,');
     lines.push('\t\t\t\tfee');
     lines.push('\t\t\t);');
+    lines.push('\t\t\tif (resp.deliver_tx.ResponseBase.Error) {');
+    lines.push(
+      '\t\t\t\tthrow new Error(resp.deliver_tx.ResponseBase.Log || JSON.stringify(resp.deliver_tx.ResponseBase.Error));'
+    );
+    lines.push('\t\t\t}');
+    if (hasReturn) {
+      lines.push(
+        '\t\t\tconst result = atob(resp.deliver_tx.ResponseBase.Data as string);'
+      );
+      lines.push(`\t\t\treturn parseGnoReturns(result) as ${returnTypeStr};`);
+    }
     lines.push('\t\t}' + (i < processed.length - 1 ? ',' : ''));
   }
   lines.push('\t}');

@@ -116,29 +116,41 @@ An optional `height` parameter is available on every query method to read state 
 
 ### 5. Transact (on-chain)
 
-Transaction methods call `callMethod` and return `BroadcastTxCommitResult` containing the tx `hash`, `height`, `check_tx`, and `deliver_tx`:
+Transaction methods call `callMethod`, check for errors in `deliver_tx.ResponseBase.Error` (throwing if present), then decode and parse the return values. They share the same return types as their query counterparts:
 
 ```ts
 const noFunds = new Map<string, number>();
 const fee = { gas_wanted: Long.fromNumber(2_000_000), gas_fee: '1000000ugnot' };
 
-const result = await wallet.realms.r.gnoland.wugnot.tx.Transfer(
+// Returns the same typed tuple as the query method — e.g. Promise<void> here
+await wallet.realms.r.gnoland.wugnot.tx.Transfer(
   { to: 'g1addr...', amount: BigInt(500_000) },
   noFunds, // funds to send with the call
   noFunds, // max storage deposit
   fee
 );
-console.log('TX hash:', result.hash);
-console.log('Block height:', result.height);
+
+// Functions with Gno return values return parsed results — e.g. Promise<[bigint]>
+const [supply] = await wallet.realms.r.gnoland.wugnot.tx.TotalSupply(
+  noFunds,
+  noFunds,
+  fee
+);
 ```
 
-To extract Gno return values from a transaction response:
+If the transaction fails on-chain, the method throws with the error message from `deliver_tx.ResponseBase`:
 
 ```ts
-import { parseGnoReturns } from '@gnolang/gno-js-client/bin/wallet/helpers';
-
-const data = atob(result.deliver_tx.ResponseBase.Data as string);
-const [returnValue] = parseGnoReturns(data);
+try {
+  await wallet.realms.r.gnoland.blog.tx.ModRemovePost(
+    { slug: 'nonexistent' },
+    noFunds,
+    noFunds,
+    fee
+  );
+} catch (err) {
+  console.error('TX failed:', err.message); // on-chain error from ResponseBase.Log
+}
 ```
 
 ## Generated Module Anatomy
@@ -149,7 +161,7 @@ Each `module.ts` contains:
 | ----------------------- | ------------------------------------------------------------------------------- |
 | **Return type aliases** | e.g. `type GetBalanceReturn = [bigint]` — typed tuples from Gno results         |
 | **`queryClient`**       | Read-only methods using `evaluateExpression`                                    |
-| **`txClient`**          | Transaction methods using `callMethod`, returning `BroadcastTxCommitResult`     |
+| **`txClient`**          | Transaction methods using `callMethod`, with error checking and parsed returns  |
 | **`RealmModule`**       | Class exposing `.query` and `.tx`                                               |
 | **`Realm` factory**     | Default export — returns `{ realm: { realms: { r: { ... } } } }` for `addRealm` |
 
@@ -189,6 +201,7 @@ When multiple realms are added via `addRealm([...])`, the wallet constructor use
 
 - **Unnamed parameters** — The Gno VM returns names like `.arg_0` for unnamed function parameters. These are sanitized to valid identifiers (`arg_0`).
 - **VM-injected context parameters** — Parameters with `interface {` types (e.g. `std.Caller`) are filtered out of the generated signatures.
+- **Transaction error handling** — tx methods check `deliver_tx.ResponseBase.Error` after broadcast and throw with the on-chain error message, so callers can use standard try/catch.
 - **Null/empty signatures** — Realms with no exported functions are skipped during batch generation.
 - **Batch error resilience** — When generating multiple realms (`--prefix` or default mode), a failure on one realm logs a warning and continues to the next.
 
