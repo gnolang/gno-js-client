@@ -22,7 +22,7 @@ jobs:
       - name: Install Go
         uses: actions/setup-go@v6
         with:
-          go-version: '1.23'
+          go-version: '1.24'
 
       # Install gnodev only when this PR will be merged: https://github.com/gnolang/gno/pull/4763
       - name: Install gnodev
