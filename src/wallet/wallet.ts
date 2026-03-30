@@ -61,7 +61,7 @@ function deepAssign(target: any, source: any): void {
  * specific functionality for Gno chains
  */
 export class GnoWallet extends Wallet {
-  protected provider: GnoProvider;
+  protected declare provider: GnoProvider;
   static realms: Realm[] = [];
   constructor() {
     super();
