@@ -87,13 +87,11 @@ const MyWallet = GnoWallet.addRealm([
 ### 3. Instantiate and connect
 
 ```ts
-const wallet = (await MyWallet.fromMnemonic(
-  'your mnemonic here ...'
-)) as InstanceType<typeof MyWallet>;
+const wallet = await MyWallet.fromMnemonic('your mnemonic here ...');
 wallet.connect(new GnoJSONRPCProvider('https://rpc.betanet.testnets.gno.land'));
 ```
 
-> **Note:** The `as InstanceType<typeof MyWallet>` cast is needed because static factory methods (`fromMnemonic`, `createRandom`, etc.) return `Promise<GnoWallet>` — TypeScript doesn't propagate the augmented type through inherited statics.
+Static factory methods (`fromMnemonic`, `createRandom`, `fromSigner`, `fromPrivateKey`, `fromLedger`) automatically return the augmented type — no cast needed.
 
 ### 4. Query (read-only)
 
