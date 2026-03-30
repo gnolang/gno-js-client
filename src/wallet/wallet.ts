@@ -61,7 +61,7 @@ function deepAssign(target: any, source: any): void {
  * specific functionality for Gno chains
  */
 export class GnoWallet extends Wallet {
-  protected declare provider: GnoProvider;
+  declare protected provider: GnoProvider;
   static realms: Realm[] = [];
   constructor() {
     super();
@@ -94,9 +94,7 @@ export class GnoWallet extends Wallet {
    * Generates a private key-based wallet, using a random seed
    * @param {AccountWalletOption} options the account options
    */
-  static async createRandom(
-    options?: AccountWalletOption
-  ): Promise<GnoWallet> {
+  static async createRandom(options?: AccountWalletOption): Promise<GnoWallet> {
     const wallet = await Wallet.createRandom(options);
 
     const gnoWallet = new this();
