@@ -79,10 +79,16 @@ export class GnoJSONRPCProvider extends JSONRPCProvider implements GnoProvider {
       }
     );
 
+    const { ResponseBase } = abciResponse.response;
+
+    if (ResponseBase.Error) {
+      throw new Error(
+        `ABCI error querying ${packagePath}: ${ResponseBase.Log || JSON.stringify(ResponseBase.Error)}`
+      );
+    }
+
     // Function signatures encoded in JSON
-    const responseRaw: string = extractStringFromResponse(
-      abciResponse.response.ResponseBase.Data
-    );
+    const responseRaw: string = extractStringFromResponse(ResponseBase.Data);
 
     return JSON.parse(responseRaw);
   }

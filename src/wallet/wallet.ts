@@ -12,95 +12,166 @@ import Long from 'long';
 import { MemPackage, MsgAddPackage, MsgCall, MsgSend } from '../proto';
 import { MsgEndpoint } from './endpoints';
 import { LedgerConnector } from '@cosmjs/ledger-amino';
+import { Constructor, Realm, Return, UnionToIntersection } from './helpers';
+import { GnoProvider } from '../provider';
 import { MsgRun } from '../proto/gno/vm';
+
+/**
+ * Remaps factory method return types so that calling e.g.
+ * `AugmentedWallet.fromMnemonic(...)` returns `GnoWallet & Ext`.
+ */
+type AugmentedWalletStatics<Ext> = {
+  createRandom(options?: AccountWalletOption): Promise<GnoWallet & Ext>;
+  fromSigner(signer: Signer): Promise<GnoWallet & Ext>;
+  fromMnemonic(
+    mnemonic: string,
+    options?: CreateWalletOptions
+  ): Promise<GnoWallet & Ext>;
+  fromPrivateKey(
+    privateKey: Uint8Array,
+    options?: AccountWalletOption
+  ): Promise<GnoWallet & Ext>;
+  fromLedger(
+    connector: LedgerConnector,
+    options?: CreateWalletOptions
+  ): GnoWallet & Ext;
+};
+
+function deepAssign(target: any, source: any): void {
+  for (const key of Object.keys(source)) {
+    const srcVal = source[key];
+    const tgtVal = target[key];
+    if (
+      tgtVal &&
+      srcVal &&
+      typeof tgtVal === 'object' &&
+      typeof srcVal === 'object' &&
+      Object.getPrototypeOf(srcVal) === Object.prototype &&
+      Object.getPrototypeOf(tgtVal) === Object.prototype
+    ) {
+      deepAssign(tgtVal, srcVal);
+    } else {
+      target[key] = srcVal;
+    }
+  }
+}
 
 /**
  * GnoWallet is an extension of the TM2 wallet with
  * specific functionality for Gno chains
  */
 export class GnoWallet extends Wallet {
+  declare protected provider: GnoProvider;
+  static realms: Realm[] = [];
   constructor() {
     super();
+    const classConstructor = this.constructor as typeof GnoWallet;
+    classConstructor.realms.forEach((realm) => {
+      const realmInstance = realm(this);
+      deepAssign(this, realmInstance.realm);
+    });
   }
+  static addRealm<T extends Realm | Realm[]>(realms: T) {
+    const currentRealms = this.realms;
 
+    class AugmentedWallet extends this {
+      static realms = currentRealms.concat(realms);
+    }
+
+    if (Array.isArray(realms)) {
+      type Extension = UnionToIntersection<Return<T>['realm']>;
+      return AugmentedWallet as Constructor<GnoWallet & Extension> &
+        AugmentedWalletStatics<Extension> &
+        typeof GnoWallet;
+    }
+
+    type Extension = Return<T>['realm'];
+    return AugmentedWallet as Constructor<GnoWallet & Extension> &
+      AugmentedWalletStatics<Extension> &
+      typeof GnoWallet;
+  }
   /**
    * Generates a private key-based wallet, using a random seed
    * @param {AccountWalletOption} options the account options
    */
-  static override createRandom = async (
-    options?: AccountWalletOption
-  ): Promise<GnoWallet> => {
+  static async createRandom(options?: AccountWalletOption): Promise<GnoWallet> {
     const wallet = await Wallet.createRandom(options);
 
-    const gnoWallet: GnoWallet = new GnoWallet();
+    const gnoWallet = new this();
     gnoWallet.signer = wallet.getSigner();
 
     return gnoWallet;
-  };
+  }
 
   /**
    * Generates a custom signer-based wallet
    * @param {Signer} signer the custom signer implementing the Signer interface
-   * @param {CreateWalletOptions} options the wallet generation options
    */
-  static override fromSigner = async (signer: Signer): Promise<GnoWallet> => {
+  static async fromSigner(signer: Signer): Promise<GnoWallet> {
     const wallet = await Wallet.fromSigner(signer);
 
-    const gnoWallet: GnoWallet = new GnoWallet();
+    const gnoWallet = new this();
     gnoWallet.signer = wallet.getSigner();
 
     return gnoWallet;
-  };
+  }
 
   /**
    * Generates a bip39 mnemonic-based wallet
    * @param {string} mnemonic the bip39 mnemonic
    * @param {CreateWalletOptions} options the wallet generation options
    */
-  static override fromMnemonic = async (
+  static async fromMnemonic(
     mnemonic: string,
     options?: CreateWalletOptions
-  ): Promise<GnoWallet> => {
+  ): Promise<GnoWallet> {
     const wallet = await Wallet.fromMnemonic(mnemonic, options);
 
-    const gnoWallet: GnoWallet = new GnoWallet();
+    const gnoWallet = new this();
     gnoWallet.signer = wallet.getSigner();
 
     return gnoWallet;
-  };
+  }
 
   /**
    * Generates a private key-based wallet
    * @param {string} privateKey the private key
    * @param {AccountWalletOption} options the account options
    */
-  static override fromPrivateKey = async (
+  static async fromPrivateKey(
     privateKey: Uint8Array,
     options?: AccountWalletOption
-  ): Promise<GnoWallet> => {
+  ): Promise<GnoWallet> {
     const wallet = await Wallet.fromPrivateKey(privateKey, options);
 
-    const gnoWallet: GnoWallet = new GnoWallet();
+    const gnoWallet = new this();
     gnoWallet.signer = wallet.getSigner();
 
     return gnoWallet;
-  };
+  }
 
   /**
    * Creates a Ledger-based wallet
    * @param {LedgerConnector} connector the Ledger device connector
    * @param {CreateWalletOptions} options the wallet generation options
    */
-  static override fromLedger = (
+  static fromLedger(
     connector: LedgerConnector,
     options?: CreateWalletOptions
-  ): GnoWallet => {
+  ): GnoWallet {
     const wallet = Wallet.fromLedger(connector, options);
 
-    const gnoWallet: GnoWallet = new GnoWallet();
+    const gnoWallet = new this();
     gnoWallet.signer = wallet.getSigner();
 
     return gnoWallet;
+  }
+  /**
+   * Returns the connected provider, if any
+   * (Here to ensure correct GnoProvider inference)
+   */
+  getProvider = (): GnoProvider => {
+    return this.provider;
   };
 
   /**
