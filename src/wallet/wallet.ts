@@ -1,4 +1,7 @@
 import {
+  LedgerConnector,
+} from "@cosmjs/ledger-amino";
+import {
   AccountWalletOption,
   BroadcastTransactionMap,
   CreateWalletOptions,
@@ -6,51 +9,64 @@ import {
   Tx,
   TxFee,
   Wallet,
-} from '@gnolang/tm2-js-client';
-import { decodeTxMessages, defaultTxFee, fundsToCoins } from './utility';
-import Long from 'long';
-import { MemPackage, MsgAddPackage, MsgCall, MsgSend } from '../proto';
-import { MsgEndpoint } from './endpoints';
-import { LedgerConnector } from '@cosmjs/ledger-amino';
-import { Constructor, Realm, Return, UnionToIntersection } from './helpers';
-import { GnoProvider } from '../provider';
-import { MsgRun } from '../proto/gno/vm';
+} from "@gnolang/tm2-js-client";
+
+import {
+  MemPackage, MsgAddPackage, MsgCall, MsgSend,
+} from "../proto";
+import {
+  MsgRun,
+} from "../proto/gno/vm";
+import {
+  GnoProvider,
+} from "../provider";
+import {
+  MsgEndpoint,
+} from "./endpoints";
+import {
+  Constructor, Realm, Return, UnionToIntersection,
+} from "./helpers";
+import {
+  decodeTxMessages, defaultTxFee, fundsToCoins,
+} from "./utility";
 
 /**
  * Remaps factory method return types so that calling e.g.
  * `AugmentedWallet.fromMnemonic(...)` returns `GnoWallet & Ext`.
  */
 type AugmentedWalletStatics<Ext> = {
-  createRandom(options?: AccountWalletOption): Promise<GnoWallet & Ext>;
-  fromSigner(signer: Signer): Promise<GnoWallet & Ext>;
+  createRandom(options?: AccountWalletOption): Promise<GnoWallet & Ext>
+  fromSigner(signer: Signer): Promise<GnoWallet & Ext>
   fromMnemonic(
     mnemonic: string,
     options?: CreateWalletOptions
-  ): Promise<GnoWallet & Ext>;
+  ): Promise<GnoWallet & Ext>
   fromPrivateKey(
     privateKey: Uint8Array,
     options?: AccountWalletOption
-  ): Promise<GnoWallet & Ext>;
+  ): Promise<GnoWallet & Ext>
   fromLedger(
     connector: LedgerConnector,
     options?: CreateWalletOptions
-  ): GnoWallet & Ext;
+  ): GnoWallet & Ext
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function deepAssign(target: any, source: any): void {
   for (const key of Object.keys(source)) {
     const srcVal = source[key];
     const tgtVal = target[key];
     if (
-      tgtVal &&
-      srcVal &&
-      typeof tgtVal === 'object' &&
-      typeof srcVal === 'object' &&
-      Object.getPrototypeOf(srcVal) === Object.prototype &&
-      Object.getPrototypeOf(tgtVal) === Object.prototype
+      tgtVal
+      && srcVal
+      && typeof tgtVal === "object"
+      && typeof srcVal === "object"
+      && Object.getPrototypeOf(srcVal) === Object.prototype
+      && Object.getPrototypeOf(tgtVal) === Object.prototype
     ) {
       deepAssign(tgtVal, srcVal);
-    } else {
+    }
+    else {
       target[key] = srcVal;
     }
   }
@@ -71,6 +87,7 @@ export class GnoWallet extends Wallet {
       deepAssign(this, realmInstance.realm);
     });
   }
+
   static addRealm<T extends Realm | Realm[]>(realms: T) {
     const currentRealms = this.realms;
 
@@ -79,17 +96,18 @@ export class GnoWallet extends Wallet {
     }
 
     if (Array.isArray(realms)) {
-      type Extension = UnionToIntersection<Return<T>['realm']>;
-      return AugmentedWallet as Constructor<GnoWallet & Extension> &
-        AugmentedWalletStatics<Extension> &
-        typeof GnoWallet;
+      type Extension = UnionToIntersection<Return<T>["realm"]>;
+      return AugmentedWallet as Constructor<GnoWallet & Extension>
+        & AugmentedWalletStatics<Extension>
+        & typeof GnoWallet;
     }
 
-    type Extension = Return<T>['realm'];
-    return AugmentedWallet as Constructor<GnoWallet & Extension> &
-      AugmentedWalletStatics<Extension> &
-      typeof GnoWallet;
+    type Extension = Return<T>["realm"];
+    return AugmentedWallet as Constructor<GnoWallet & Extension>
+      & AugmentedWalletStatics<Extension>
+      & typeof GnoWallet;
   }
+
   /**
    * Generates a private key-based wallet, using a random seed
    * @param {AccountWalletOption} options the account options
@@ -123,7 +141,7 @@ export class GnoWallet extends Wallet {
    */
   static async fromMnemonic(
     mnemonic: string,
-    options?: CreateWalletOptions
+    options?: CreateWalletOptions,
   ): Promise<GnoWallet> {
     const wallet = await Wallet.fromMnemonic(mnemonic, options);
 
@@ -140,7 +158,7 @@ export class GnoWallet extends Wallet {
    */
   static async fromPrivateKey(
     privateKey: Uint8Array,
-    options?: AccountWalletOption
+    options?: AccountWalletOption,
   ): Promise<GnoWallet> {
     const wallet = await Wallet.fromPrivateKey(privateKey, options);
 
@@ -157,7 +175,7 @@ export class GnoWallet extends Wallet {
    */
   static fromLedger(
     connector: LedgerConnector,
-    options?: CreateWalletOptions
+    options?: CreateWalletOptions,
   ): GnoWallet {
     const wallet = Wallet.fromLedger(connector, options);
 
@@ -166,6 +184,7 @@ export class GnoWallet extends Wallet {
 
     return gnoWallet;
   }
+
   /**
    * Returns the connected provider, if any
    * (Here to ensure correct GnoProvider inference)
@@ -185,8 +204,8 @@ export class GnoWallet extends Wallet {
     to: string,
     funds: Map<string, number>,
     endpoint: K,
-    fee?: TxFee
-  ): Promise<BroadcastTransactionMap[K]['result']> => {
+    fee?: TxFee,
+  ): Promise<BroadcastTransactionMap[K]["result"]> => {
     // Convert the funds into the correct representation
     const amount: string = fundsToCoins(funds);
 
@@ -197,9 +216,9 @@ export class GnoWallet extends Wallet {
     const txFee: TxFee = fee
       ? fee
       : {
-          gas_wanted: new Long(60000),
-          gas_fee: defaultTxFee,
-        };
+        gas_wanted: 60000n,
+        gas_fee: defaultTxFee,
+      };
 
     // Prepare the Msg
     const sendMsg: MsgSend = {
@@ -217,7 +236,7 @@ export class GnoWallet extends Wallet {
         },
       ],
       fee: txFee,
-      memo: '',
+      memo: "",
       signatures: [], // No signature yet
     };
 
@@ -245,8 +264,8 @@ export class GnoWallet extends Wallet {
     endpoint: K,
     funds?: Map<string, number>,
     maxDeposit?: Map<string, number>,
-    fee?: TxFee
-  ): Promise<BroadcastTransactionMap[K]['result']> => {
+    fee?: TxFee,
+  ): Promise<BroadcastTransactionMap[K]["result"]> => {
     // Convert the funds into the correct representation
     const amount: string = fundsToCoins(funds);
     const maxDepositAmount: string = fundsToCoins(maxDeposit);
@@ -258,9 +277,9 @@ export class GnoWallet extends Wallet {
     const txFee: TxFee = fee
       ? fee
       : {
-          gas_wanted: new Long(60000),
-          gas_fee: defaultTxFee,
-        };
+        gas_wanted: 60000n,
+        gas_fee: defaultTxFee,
+      };
 
     // Prepare the Msg
     const callMsg: MsgCall = {
@@ -281,7 +300,7 @@ export class GnoWallet extends Wallet {
         },
       ],
       fee: txFee,
-      memo: '',
+      memo: "",
       signatures: [], // No signature yet
     };
 
@@ -305,8 +324,8 @@ export class GnoWallet extends Wallet {
     endpoint: K,
     funds?: Map<string, number>,
     maxDeposit?: Map<string, number>,
-    fee?: TxFee
-  ): Promise<BroadcastTransactionMap[K]['result']> => {
+    fee?: TxFee,
+  ): Promise<BroadcastTransactionMap[K]["result"]> => {
     // Convert the funds into the correct representation
     const amount: string = fundsToCoins(funds);
     const maxDepositAmount: string = fundsToCoins(maxDeposit);
@@ -318,9 +337,9 @@ export class GnoWallet extends Wallet {
     const txFee: TxFee = fee
       ? fee
       : {
-          gas_wanted: new Long(60000),
-          gas_fee: defaultTxFee,
-        };
+        gas_wanted: 60000n,
+        gas_fee: defaultTxFee,
+      };
 
     // Prepare the Msg
     const addPkgMsg: MsgAddPackage = {
@@ -339,7 +358,7 @@ export class GnoWallet extends Wallet {
         },
       ],
       fee: txFee,
-      memo: '',
+      memo: "",
       signatures: [], // No signature yet
     };
 
@@ -363,8 +382,8 @@ export class GnoWallet extends Wallet {
     endpoint: K,
     funds?: Map<string, number>,
     maxDeposit?: Map<string, number>,
-    fee?: TxFee
-  ): Promise<BroadcastTransactionMap[K]['result']> => {
+    fee?: TxFee,
+  ): Promise<BroadcastTransactionMap[K]["result"]> => {
     // Convert the funds into the correct representation
     const amount: string = fundsToCoins(funds);
     const maxDepositAmount: string = fundsToCoins(maxDeposit);
@@ -376,9 +395,9 @@ export class GnoWallet extends Wallet {
     const txFee: TxFee = fee
       ? fee
       : {
-          gas_wanted: new Long(60000),
-          gas_fee: defaultTxFee,
-        };
+        gas_wanted: 60000n,
+        gas_fee: defaultTxFee,
+      };
 
     // Prepare the Msg
     const runMsg: MsgRun = {
@@ -397,7 +416,7 @@ export class GnoWallet extends Wallet {
         },
       ],
       fee: txFee,
-      memo: '',
+      memo: "",
       signatures: [], // No signature yet
     };
 
