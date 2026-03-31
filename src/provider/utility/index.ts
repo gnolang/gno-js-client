@@ -1,1 +1,1 @@
-export * from "./provider.utility";
+export * from "./provider.utility.js";

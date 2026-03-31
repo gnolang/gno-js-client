@@ -1,12 +1,12 @@
 import {
-  Any, MsgAddPackage, MsgCall, MsgSend,
-} from "../../proto";
-import {
   MsgRun,
-} from "../../proto/gno/vm";
+} from "../../proto/gno/vm.js";
+import {
+  Any, MsgAddPackage, MsgCall, MsgSend,
+} from "../../proto/index.js";
 import {
   MsgEndpoint,
-} from "../endpoints";
+} from "../endpoints.js";
 
 /**
  * Converts a fund map to a concatenated string representation ("<value><denomination>")

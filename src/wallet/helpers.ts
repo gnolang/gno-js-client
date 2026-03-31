@@ -1,6 +1,6 @@
 import {
   GnoWallet,
-} from "./wallet";
+} from "./wallet.js";
 
 export type Constructor<T> = new (...args: unknown[]) => T;
 

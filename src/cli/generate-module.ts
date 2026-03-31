@@ -9,10 +9,10 @@ import {
 
 import {
   GnoJSONRPCProvider,
-} from "../provider/jsonrpc/jsonrpc";
+} from "../provider/jsonrpc/jsonrpc.js";
 import {
   FunctionSignature, NamedType,
-} from "../provider/types/vm";
+} from "../provider/types/vm.js";
 
 function gnoTypeToTS(gnoType: string): string {
   switch (gnoType) {
@@ -327,7 +327,7 @@ function writeIndex(outRoot: string, realmPaths: string[]): void {
   for (const realmPath of realmPaths) {
     const segments = realmPathToSegments(realmPath);
     const alias = segments.join("_");
-    const importPath = "./" + segments.join("/") + "/module";
+    const importPath = "./" + segments.join("/") + "/module.js";
     lines.push(`export { default as ${alias} } from '${importPath}';`);
   }
   lines.push("");

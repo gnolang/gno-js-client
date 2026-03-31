@@ -12,23 +12,23 @@ import {
 } from "@gnolang/tm2-js-client";
 
 import {
-  MemPackage, MsgAddPackage, MsgCall, MsgSend,
-} from "../proto";
-import {
   MsgRun,
-} from "../proto/gno/vm";
+} from "../proto/gno/vm.js";
+import {
+  MemPackage, MsgAddPackage, MsgCall, MsgSend,
+} from "../proto/index.js";
 import {
   GnoProvider,
-} from "../provider";
+} from "../provider/index.js";
 import {
   MsgEndpoint,
-} from "./endpoints";
+} from "./endpoints.js";
 import {
   Constructor, Realm, Return, UnionToIntersection,
-} from "./helpers";
+} from "./helpers.js";
 import {
   decodeTxMessages, defaultTxFee, fundsToCoins,
-} from "./utility";
+} from "./utility/index.js";
 
 /**
  * Remaps factory method return types so that calling e.g.

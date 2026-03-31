@@ -4,7 +4,7 @@ import {
 
 import {
   BaseGnoProvider,
-} from "../provider";
+} from "../provider.js";
 
 /**
  * Provider based on WebSocket connections

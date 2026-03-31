@@ -14,7 +14,7 @@ import {
   GnoWallet,
   MemFile,
   MemPackage,
-} from "..";
+} from "../index.js";
 
 describe("E2E Tests", () => {
   const txFee: TxFee = {

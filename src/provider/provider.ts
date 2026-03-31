@@ -7,14 +7,14 @@ import {
 
 import {
   VMEndpoint,
-} from "./endpoints";
+} from "./endpoints.js";
 import {
   FunctionSignature,
-} from "./types";
+} from "./types/index.js";
 import {
   encodeVMQueryData,
   extractStringFromResponse,
-} from "./utility";
+} from "./utility/index.js";
 
 /**
  * GnoProvider is the Provider interface for Gno-specific functionality
