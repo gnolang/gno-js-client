@@ -1,6 +1,6 @@
 {
   "name": "@gnolang/gno-js-client",
-  "version": "2.0.0",
+  "version": "2.0.2",
   "description": "Gno JS / TS Client",
   "bin": {
     "gno-gen-module": "./dist/generate-module.cjs"
@@ -58,7 +58,7 @@
   "dependencies": {
     "@bufbuild/protobuf": "^2.11.0",
     "@cosmjs/ledger-amino": "^0.38.1",
-    "@gnolang/tm2-js-client": "^2.0.2",
+    "@gnolang/tm2-js-client": "^2.0.4",
     "@gnolang/tm2-rpc": "^1.0.0",
     "protobufjs": "^8.0.0",
     "yargs": "^18.0.0"
