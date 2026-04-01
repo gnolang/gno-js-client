@@ -1,8 +1,16 @@
-import { TransactionEndpoint, TxFee } from '@gnolang/tm2-js-client';
-import { GnoWallet } from '@gnolang/gno-js-client';
-import { parseGnoReturns } from '@gnolang/gno-js-client/bin/wallet/helpers';
+// Auto-generated module for gno.land/r/sys/params — DO NOT EDIT
+import {
+  GnoWallet,
+} from "@gnolang/gno-js-client";
+// Imported with leading underscore to avoid linting errors about unused imports in void-returning functions
+import {
+  parseGnoReturns as _parseGnoReturns,
+} from "@gnolang/gno-js-client";
+import {
+  TransactionEndpoint, TxFee,
+} from "@gnolang/tm2-js-client";
 
-const realm = 'gno.land/r/sys/params';
+const realm = "gno.land/r/sys/params";
 
 type NewSetFeeCollectorRequestReturn = [unknown];
 type NewSysParamStringPropRequestReturn = [unknown];
@@ -21,680 +29,398 @@ type ProposeRemoveUnrestrictedAcctsRequestReturn = [unknown];
 
 const queryClient = (wallet: GnoWallet) => {
   return {
-    async NewSetFeeCollectorRequest(
-      params: { addr: string },
-      height?: number
-    ): Promise<NewSetFeeCollectorRequestReturn> {
-      const result = await wallet
-        .getProvider()
-        .evaluateExpression(
-          realm,
-          `NewSetFeeCollectorRequest("${params.addr}")`,
-          height
-        );
-      return parseGnoReturns(result) as NewSetFeeCollectorRequestReturn;
+    async NewSetFeeCollectorRequest(params: {
+      addr: string
+    }, height?: number): Promise<NewSetFeeCollectorRequestReturn> {
+      const result = await wallet.getProvider().evaluateExpression(realm, `NewSetFeeCollectorRequest("${params.addr}")`, height);
+      return _parseGnoReturns(result) as NewSetFeeCollectorRequestReturn;
     },
-    async NewSysParamStringPropRequest(
-      params: {
-        module: string;
-        submodule: string;
-        name: string;
-        value: string;
-      },
-      height?: number
-    ): Promise<NewSysParamStringPropRequestReturn> {
-      const result = await wallet
-        .getProvider()
-        .evaluateExpression(
-          realm,
-          `NewSysParamStringPropRequest("${params.module}","${params.submodule}","${params.name}","${params.value}")`,
-          height
-        );
-      return parseGnoReturns(result) as NewSysParamStringPropRequestReturn;
+    async NewSysParamStringPropRequest(params: {
+      module: string
+      submodule: string
+      name: string
+      value: string
+    }, height?: number): Promise<NewSysParamStringPropRequestReturn> {
+      const result = await wallet.getProvider().evaluateExpression(realm, `NewSysParamStringPropRequest("${params.module}","${params.submodule}","${params.name}","${params.value}")`, height);
+      return _parseGnoReturns(result) as NewSysParamStringPropRequestReturn;
     },
-    async NewSysParamInt64PropRequest(
-      params: {
-        module: string;
-        submodule: string;
-        name: string;
-        value: bigint;
-      },
-      height?: number
-    ): Promise<NewSysParamInt64PropRequestReturn> {
-      const result = await wallet
-        .getProvider()
-        .evaluateExpression(
-          realm,
-          `NewSysParamInt64PropRequest("${params.module}","${params.submodule}","${params.name}",${params.value})`,
-          height
-        );
-      return parseGnoReturns(result) as NewSysParamInt64PropRequestReturn;
+    async NewSysParamInt64PropRequest(params: {
+      module: string
+      submodule: string
+      name: string
+      value: bigint
+    }, height?: number): Promise<NewSysParamInt64PropRequestReturn> {
+      const result = await wallet.getProvider().evaluateExpression(realm, `NewSysParamInt64PropRequest("${params.module}","${params.submodule}","${params.name}",${params.value})`, height);
+      return _parseGnoReturns(result) as NewSysParamInt64PropRequestReturn;
     },
-    async NewSysParamUint64PropRequest(
-      params: {
-        module: string;
-        submodule: string;
-        name: string;
-        value: bigint;
-      },
-      height?: number
-    ): Promise<NewSysParamUint64PropRequestReturn> {
-      const result = await wallet
-        .getProvider()
-        .evaluateExpression(
-          realm,
-          `NewSysParamUint64PropRequest("${params.module}","${params.submodule}","${params.name}",${params.value})`,
-          height
-        );
-      return parseGnoReturns(result) as NewSysParamUint64PropRequestReturn;
+    async NewSysParamUint64PropRequest(params: {
+      module: string
+      submodule: string
+      name: string
+      value: bigint
+    }, height?: number): Promise<NewSysParamUint64PropRequestReturn> {
+      const result = await wallet.getProvider().evaluateExpression(realm, `NewSysParamUint64PropRequest("${params.module}","${params.submodule}","${params.name}",${params.value})`, height);
+      return _parseGnoReturns(result) as NewSysParamUint64PropRequestReturn;
     },
-    async NewSysParamBoolPropRequest(
-      params: {
-        module: string;
-        submodule: string;
-        name: string;
-        value: boolean;
-      },
-      height?: number
-    ): Promise<NewSysParamBoolPropRequestReturn> {
-      const result = await wallet
-        .getProvider()
-        .evaluateExpression(
-          realm,
-          `NewSysParamBoolPropRequest("${params.module}","${params.submodule}","${params.name}",${params.value})`,
-          height
-        );
-      return parseGnoReturns(result) as NewSysParamBoolPropRequestReturn;
+    async NewSysParamBoolPropRequest(params: {
+      module: string
+      submodule: string
+      name: string
+      value: boolean
+    }, height?: number): Promise<NewSysParamBoolPropRequestReturn> {
+      const result = await wallet.getProvider().evaluateExpression(realm, `NewSysParamBoolPropRequest("${params.module}","${params.submodule}","${params.name}",${params.value})`, height);
+      return _parseGnoReturns(result) as NewSysParamBoolPropRequestReturn;
     },
-    async NewSysParamBytesPropRequest(
-      params: {
-        module: string;
-        submodule: string;
-        name: string;
-        value: unknown;
-      },
-      height?: number
-    ): Promise<NewSysParamBytesPropRequestReturn> {
-      const result = await wallet
-        .getProvider()
-        .evaluateExpression(
-          realm,
-          `NewSysParamBytesPropRequest("${params.module}","${params.submodule}","${params.name}",${params.value})`,
-          height
-        );
-      return parseGnoReturns(result) as NewSysParamBytesPropRequestReturn;
+    async NewSysParamBytesPropRequest(params: {
+      module: string
+      submodule: string
+      name: string
+      value: unknown
+    }, height?: number): Promise<NewSysParamBytesPropRequestReturn> {
+      const result = await wallet.getProvider().evaluateExpression(realm, `NewSysParamBytesPropRequest("${params.module}","${params.submodule}","${params.name}",${params.value})`, height);
+      return _parseGnoReturns(result) as NewSysParamBytesPropRequestReturn;
     },
-    async NewSysParamStringsPropRequest(
-      params: {
-        module: string;
-        submodule: string;
-        name: string;
-        value: unknown;
-      },
-      height?: number
-    ): Promise<NewSysParamStringsPropRequestReturn> {
-      const result = await wallet
-        .getProvider()
-        .evaluateExpression(
-          realm,
-          `NewSysParamStringsPropRequest("${params.module}","${params.submodule}","${params.name}",${params.value})`,
-          height
-        );
-      return parseGnoReturns(result) as NewSysParamStringsPropRequestReturn;
+    async NewSysParamStringsPropRequest(params: {
+      module: string
+      submodule: string
+      name: string
+      value: unknown
+    }, height?: number): Promise<NewSysParamStringsPropRequestReturn> {
+      const result = await wallet.getProvider().evaluateExpression(realm, `NewSysParamStringsPropRequest("${params.module}","${params.submodule}","${params.name}",${params.value})`, height);
+      return _parseGnoReturns(result) as NewSysParamStringsPropRequestReturn;
     },
-    async NewSysParamStringsPropRequestWithTitle(
-      params: {
-        module: string;
-        submodule: string;
-        name: string;
-        title: string;
-        value: unknown;
-      },
-      height?: number
-    ): Promise<NewSysParamStringsPropRequestWithTitleReturn> {
-      const result = await wallet
-        .getProvider()
-        .evaluateExpression(
-          realm,
-          `NewSysParamStringsPropRequestWithTitle("${params.module}","${params.submodule}","${params.name}","${params.title}",${params.value})`,
-          height
-        );
-      return parseGnoReturns(
-        result
-      ) as NewSysParamStringsPropRequestWithTitleReturn;
+    async NewSysParamStringsPropRequestWithTitle(params: {
+      module: string
+      submodule: string
+      name: string
+      title: string
+      value: unknown
+    }, height?: number): Promise<NewSysParamStringsPropRequestWithTitleReturn> {
+      const result = await wallet.getProvider().evaluateExpression(realm, `NewSysParamStringsPropRequestWithTitle("${params.module}","${params.submodule}","${params.name}","${params.title}",${params.value})`, height);
+      return _parseGnoReturns(result) as NewSysParamStringsPropRequestWithTitleReturn;
     },
-    async NewSysParamStringsPropRequestAddWithTitle(
-      params: {
-        module: string;
-        submodule: string;
-        name: string;
-        title: string;
-        value: unknown;
-      },
-      height?: number
-    ): Promise<NewSysParamStringsPropRequestAddWithTitleReturn> {
-      const result = await wallet
-        .getProvider()
-        .evaluateExpression(
-          realm,
-          `NewSysParamStringsPropRequestAddWithTitle("${params.module}","${params.submodule}","${params.name}","${params.title}",${params.value})`,
-          height
-        );
-      return parseGnoReturns(
-        result
-      ) as NewSysParamStringsPropRequestAddWithTitleReturn;
+    async NewSysParamStringsPropRequestAddWithTitle(params: {
+      module: string
+      submodule: string
+      name: string
+      title: string
+      value: unknown
+    }, height?: number): Promise<NewSysParamStringsPropRequestAddWithTitleReturn> {
+      const result = await wallet.getProvider().evaluateExpression(realm, `NewSysParamStringsPropRequestAddWithTitle("${params.module}","${params.submodule}","${params.name}","${params.title}",${params.value})`, height);
+      return _parseGnoReturns(result) as NewSysParamStringsPropRequestAddWithTitleReturn;
     },
-    async NewSysParamStringsPropRequestRemoveWithTitle(
-      params: {
-        module: string;
-        submodule: string;
-        name: string;
-        title: string;
-        value: unknown;
-      },
-      height?: number
-    ): Promise<NewSysParamStringsPropRequestRemoveWithTitleReturn> {
-      const result = await wallet
-        .getProvider()
-        .evaluateExpression(
-          realm,
-          `NewSysParamStringsPropRequestRemoveWithTitle("${params.module}","${params.submodule}","${params.name}","${params.title}",${params.value})`,
-          height
-        );
-      return parseGnoReturns(
-        result
-      ) as NewSysParamStringsPropRequestRemoveWithTitleReturn;
+    async NewSysParamStringsPropRequestRemoveWithTitle(params: {
+      module: string
+      submodule: string
+      name: string
+      title: string
+      value: unknown
+    }, height?: number): Promise<NewSysParamStringsPropRequestRemoveWithTitleReturn> {
+      const result = await wallet.getProvider().evaluateExpression(realm, `NewSysParamStringsPropRequestRemoveWithTitle("${params.module}","${params.submodule}","${params.name}","${params.title}",${params.value})`, height);
+      return _parseGnoReturns(result) as NewSysParamStringsPropRequestRemoveWithTitleReturn;
     },
-    async ProposeUnlockTransferRequest(
-      height?: number
-    ): Promise<ProposeUnlockTransferRequestReturn> {
-      const result = await wallet
-        .getProvider()
-        .evaluateExpression(realm, `ProposeUnlockTransferRequest()`, height);
-      return parseGnoReturns(result) as ProposeUnlockTransferRequestReturn;
+    async ProposeUnlockTransferRequest(height?: number): Promise<ProposeUnlockTransferRequestReturn> {
+      const result = await wallet.getProvider().evaluateExpression(realm, "ProposeUnlockTransferRequest()", height);
+      return _parseGnoReturns(result) as ProposeUnlockTransferRequestReturn;
     },
-    async ProposeLockTransferRequest(
-      height?: number
-    ): Promise<ProposeLockTransferRequestReturn> {
-      const result = await wallet
-        .getProvider()
-        .evaluateExpression(realm, `ProposeLockTransferRequest()`, height);
-      return parseGnoReturns(result) as ProposeLockTransferRequestReturn;
+    async ProposeLockTransferRequest(height?: number): Promise<ProposeLockTransferRequestReturn> {
+      const result = await wallet.getProvider().evaluateExpression(realm, "ProposeLockTransferRequest()", height);
+      return _parseGnoReturns(result) as ProposeLockTransferRequestReturn;
     },
-    async ProposeAddUnrestrictedAcctsRequest(
-      params: { addrs: unknown },
-      height?: number
-    ): Promise<ProposeAddUnrestrictedAcctsRequestReturn> {
-      const result = await wallet
-        .getProvider()
-        .evaluateExpression(
-          realm,
-          `ProposeAddUnrestrictedAcctsRequest(${params.addrs})`,
-          height
-        );
-      return parseGnoReturns(
-        result
-      ) as ProposeAddUnrestrictedAcctsRequestReturn;
+    async ProposeAddUnrestrictedAcctsRequest(params: {
+      addrs: unknown
+    }, height?: number): Promise<ProposeAddUnrestrictedAcctsRequestReturn> {
+      const result = await wallet.getProvider().evaluateExpression(realm, `ProposeAddUnrestrictedAcctsRequest(${params.addrs})`, height);
+      return _parseGnoReturns(result) as ProposeAddUnrestrictedAcctsRequestReturn;
     },
-    async ProposeRemoveUnrestrictedAcctsRequest(
-      params: { addrs: unknown },
-      height?: number
-    ): Promise<ProposeRemoveUnrestrictedAcctsRequestReturn> {
-      const result = await wallet
-        .getProvider()
-        .evaluateExpression(
-          realm,
-          `ProposeRemoveUnrestrictedAcctsRequest(${params.addrs})`,
-          height
-        );
-      return parseGnoReturns(
-        result
-      ) as ProposeRemoveUnrestrictedAcctsRequestReturn;
+    async ProposeRemoveUnrestrictedAcctsRequest(params: {
+      addrs: unknown
+    }, height?: number): Promise<ProposeRemoveUnrestrictedAcctsRequestReturn> {
+      const result = await wallet.getProvider().evaluateExpression(realm, `ProposeRemoveUnrestrictedAcctsRequest(${params.addrs})`, height);
+      return _parseGnoReturns(result) as ProposeRemoveUnrestrictedAcctsRequestReturn;
     },
   };
 };
 
 const txClient = (wallet: GnoWallet) => {
   return {
-    async NewSetFeeCollectorRequest(
-      params: { addr: string },
-      funds: Map<string, number>,
-      maxDeposit: Map<string, number>,
-      fee: TxFee
-    ): Promise<NewSetFeeCollectorRequestReturn> {
+    async NewSetFeeCollectorRequest(params: {
+      addr: string
+    }, funds: Map<string, number>, maxDeposit: Map<string, number>, fee: TxFee): Promise<NewSetFeeCollectorRequestReturn> {
       const resp = await wallet.callMethod(
         realm,
-        'NewSetFeeCollectorRequest',
+        "NewSetFeeCollectorRequest",
         [String(params.addr)],
         TransactionEndpoint.BROADCAST_TX_COMMIT,
         funds,
         maxDeposit,
-        fee
+        fee,
       );
       if (resp.deliver_tx.ResponseBase.Error) {
-        throw new Error(
-          resp.deliver_tx.ResponseBase.Log ||
-            JSON.stringify(resp.deliver_tx.ResponseBase.Error)
-        );
+        throw new Error(resp.deliver_tx.ResponseBase.Log || JSON.stringify(resp.deliver_tx.ResponseBase.Error));
       }
       const result = atob(resp.deliver_tx.ResponseBase.Data as string);
-      return parseGnoReturns(result) as NewSetFeeCollectorRequestReturn;
+      return _parseGnoReturns(result) as NewSetFeeCollectorRequestReturn;
     },
-    async NewSysParamStringPropRequest(
-      params: {
-        module: string;
-        submodule: string;
-        name: string;
-        value: string;
-      },
-      funds: Map<string, number>,
-      maxDeposit: Map<string, number>,
-      fee: TxFee
-    ): Promise<NewSysParamStringPropRequestReturn> {
+    async NewSysParamStringPropRequest(params: {
+      module: string
+      submodule: string
+      name: string
+      value: string
+    }, funds: Map<string, number>, maxDeposit: Map<string, number>, fee: TxFee): Promise<NewSysParamStringPropRequestReturn> {
       const resp = await wallet.callMethod(
         realm,
-        'NewSysParamStringPropRequest',
-        [
-          String(params.module),
-          String(params.submodule),
-          String(params.name),
-          String(params.value),
-        ],
+        "NewSysParamStringPropRequest",
+        [String(params.module), String(params.submodule), String(params.name), String(params.value)],
         TransactionEndpoint.BROADCAST_TX_COMMIT,
         funds,
         maxDeposit,
-        fee
+        fee,
       );
       if (resp.deliver_tx.ResponseBase.Error) {
-        throw new Error(
-          resp.deliver_tx.ResponseBase.Log ||
-            JSON.stringify(resp.deliver_tx.ResponseBase.Error)
-        );
+        throw new Error(resp.deliver_tx.ResponseBase.Log || JSON.stringify(resp.deliver_tx.ResponseBase.Error));
       }
       const result = atob(resp.deliver_tx.ResponseBase.Data as string);
-      return parseGnoReturns(result) as NewSysParamStringPropRequestReturn;
+      return _parseGnoReturns(result) as NewSysParamStringPropRequestReturn;
     },
-    async NewSysParamInt64PropRequest(
-      params: {
-        module: string;
-        submodule: string;
-        name: string;
-        value: bigint;
-      },
-      funds: Map<string, number>,
-      maxDeposit: Map<string, number>,
-      fee: TxFee
-    ): Promise<NewSysParamInt64PropRequestReturn> {
+    async NewSysParamInt64PropRequest(params: {
+      module: string
+      submodule: string
+      name: string
+      value: bigint
+    }, funds: Map<string, number>, maxDeposit: Map<string, number>, fee: TxFee): Promise<NewSysParamInt64PropRequestReturn> {
       const resp = await wallet.callMethod(
         realm,
-        'NewSysParamInt64PropRequest',
-        [
-          String(params.module),
-          String(params.submodule),
-          String(params.name),
-          String(params.value),
-        ],
+        "NewSysParamInt64PropRequest",
+        [String(params.module), String(params.submodule), String(params.name), String(params.value)],
         TransactionEndpoint.BROADCAST_TX_COMMIT,
         funds,
         maxDeposit,
-        fee
+        fee,
       );
       if (resp.deliver_tx.ResponseBase.Error) {
-        throw new Error(
-          resp.deliver_tx.ResponseBase.Log ||
-            JSON.stringify(resp.deliver_tx.ResponseBase.Error)
-        );
+        throw new Error(resp.deliver_tx.ResponseBase.Log || JSON.stringify(resp.deliver_tx.ResponseBase.Error));
       }
       const result = atob(resp.deliver_tx.ResponseBase.Data as string);
-      return parseGnoReturns(result) as NewSysParamInt64PropRequestReturn;
+      return _parseGnoReturns(result) as NewSysParamInt64PropRequestReturn;
     },
-    async NewSysParamUint64PropRequest(
-      params: {
-        module: string;
-        submodule: string;
-        name: string;
-        value: bigint;
-      },
-      funds: Map<string, number>,
-      maxDeposit: Map<string, number>,
-      fee: TxFee
-    ): Promise<NewSysParamUint64PropRequestReturn> {
+    async NewSysParamUint64PropRequest(params: {
+      module: string
+      submodule: string
+      name: string
+      value: bigint
+    }, funds: Map<string, number>, maxDeposit: Map<string, number>, fee: TxFee): Promise<NewSysParamUint64PropRequestReturn> {
       const resp = await wallet.callMethod(
         realm,
-        'NewSysParamUint64PropRequest',
-        [
-          String(params.module),
-          String(params.submodule),
-          String(params.name),
-          String(params.value),
-        ],
+        "NewSysParamUint64PropRequest",
+        [String(params.module), String(params.submodule), String(params.name), String(params.value)],
         TransactionEndpoint.BROADCAST_TX_COMMIT,
         funds,
         maxDeposit,
-        fee
+        fee,
       );
       if (resp.deliver_tx.ResponseBase.Error) {
-        throw new Error(
-          resp.deliver_tx.ResponseBase.Log ||
-            JSON.stringify(resp.deliver_tx.ResponseBase.Error)
-        );
+        throw new Error(resp.deliver_tx.ResponseBase.Log || JSON.stringify(resp.deliver_tx.ResponseBase.Error));
       }
       const result = atob(resp.deliver_tx.ResponseBase.Data as string);
-      return parseGnoReturns(result) as NewSysParamUint64PropRequestReturn;
+      return _parseGnoReturns(result) as NewSysParamUint64PropRequestReturn;
     },
-    async NewSysParamBoolPropRequest(
-      params: {
-        module: string;
-        submodule: string;
-        name: string;
-        value: boolean;
-      },
-      funds: Map<string, number>,
-      maxDeposit: Map<string, number>,
-      fee: TxFee
-    ): Promise<NewSysParamBoolPropRequestReturn> {
+    async NewSysParamBoolPropRequest(params: {
+      module: string
+      submodule: string
+      name: string
+      value: boolean
+    }, funds: Map<string, number>, maxDeposit: Map<string, number>, fee: TxFee): Promise<NewSysParamBoolPropRequestReturn> {
       const resp = await wallet.callMethod(
         realm,
-        'NewSysParamBoolPropRequest',
-        [
-          String(params.module),
-          String(params.submodule),
-          String(params.name),
-          String(params.value),
-        ],
+        "NewSysParamBoolPropRequest",
+        [String(params.module), String(params.submodule), String(params.name), String(params.value)],
         TransactionEndpoint.BROADCAST_TX_COMMIT,
         funds,
         maxDeposit,
-        fee
+        fee,
       );
       if (resp.deliver_tx.ResponseBase.Error) {
-        throw new Error(
-          resp.deliver_tx.ResponseBase.Log ||
-            JSON.stringify(resp.deliver_tx.ResponseBase.Error)
-        );
+        throw new Error(resp.deliver_tx.ResponseBase.Log || JSON.stringify(resp.deliver_tx.ResponseBase.Error));
       }
       const result = atob(resp.deliver_tx.ResponseBase.Data as string);
-      return parseGnoReturns(result) as NewSysParamBoolPropRequestReturn;
+      return _parseGnoReturns(result) as NewSysParamBoolPropRequestReturn;
     },
-    async NewSysParamBytesPropRequest(
-      params: {
-        module: string;
-        submodule: string;
-        name: string;
-        value: unknown;
-      },
-      funds: Map<string, number>,
-      maxDeposit: Map<string, number>,
-      fee: TxFee
-    ): Promise<NewSysParamBytesPropRequestReturn> {
+    async NewSysParamBytesPropRequest(params: {
+      module: string
+      submodule: string
+      name: string
+      value: unknown
+    }, funds: Map<string, number>, maxDeposit: Map<string, number>, fee: TxFee): Promise<NewSysParamBytesPropRequestReturn> {
       const resp = await wallet.callMethod(
         realm,
-        'NewSysParamBytesPropRequest',
-        [
-          String(params.module),
-          String(params.submodule),
-          String(params.name),
-          String(params.value),
-        ],
+        "NewSysParamBytesPropRequest",
+        [String(params.module), String(params.submodule), String(params.name), String(params.value)],
         TransactionEndpoint.BROADCAST_TX_COMMIT,
         funds,
         maxDeposit,
-        fee
+        fee,
       );
       if (resp.deliver_tx.ResponseBase.Error) {
-        throw new Error(
-          resp.deliver_tx.ResponseBase.Log ||
-            JSON.stringify(resp.deliver_tx.ResponseBase.Error)
-        );
+        throw new Error(resp.deliver_tx.ResponseBase.Log || JSON.stringify(resp.deliver_tx.ResponseBase.Error));
       }
       const result = atob(resp.deliver_tx.ResponseBase.Data as string);
-      return parseGnoReturns(result) as NewSysParamBytesPropRequestReturn;
+      return _parseGnoReturns(result) as NewSysParamBytesPropRequestReturn;
     },
-    async NewSysParamStringsPropRequest(
-      params: {
-        module: string;
-        submodule: string;
-        name: string;
-        value: unknown;
-      },
-      funds: Map<string, number>,
-      maxDeposit: Map<string, number>,
-      fee: TxFee
-    ): Promise<NewSysParamStringsPropRequestReturn> {
+    async NewSysParamStringsPropRequest(params: {
+      module: string
+      submodule: string
+      name: string
+      value: unknown
+    }, funds: Map<string, number>, maxDeposit: Map<string, number>, fee: TxFee): Promise<NewSysParamStringsPropRequestReturn> {
       const resp = await wallet.callMethod(
         realm,
-        'NewSysParamStringsPropRequest',
-        [
-          String(params.module),
-          String(params.submodule),
-          String(params.name),
-          String(params.value),
-        ],
+        "NewSysParamStringsPropRequest",
+        [String(params.module), String(params.submodule), String(params.name), String(params.value)],
         TransactionEndpoint.BROADCAST_TX_COMMIT,
         funds,
         maxDeposit,
-        fee
+        fee,
       );
       if (resp.deliver_tx.ResponseBase.Error) {
-        throw new Error(
-          resp.deliver_tx.ResponseBase.Log ||
-            JSON.stringify(resp.deliver_tx.ResponseBase.Error)
-        );
+        throw new Error(resp.deliver_tx.ResponseBase.Log || JSON.stringify(resp.deliver_tx.ResponseBase.Error));
       }
       const result = atob(resp.deliver_tx.ResponseBase.Data as string);
-      return parseGnoReturns(result) as NewSysParamStringsPropRequestReturn;
+      return _parseGnoReturns(result) as NewSysParamStringsPropRequestReturn;
     },
-    async NewSysParamStringsPropRequestWithTitle(
-      params: {
-        module: string;
-        submodule: string;
-        name: string;
-        title: string;
-        value: unknown;
-      },
-      funds: Map<string, number>,
-      maxDeposit: Map<string, number>,
-      fee: TxFee
-    ): Promise<NewSysParamStringsPropRequestWithTitleReturn> {
+    async NewSysParamStringsPropRequestWithTitle(params: {
+      module: string
+      submodule: string
+      name: string
+      title: string
+      value: unknown
+    }, funds: Map<string, number>, maxDeposit: Map<string, number>, fee: TxFee): Promise<NewSysParamStringsPropRequestWithTitleReturn> {
       const resp = await wallet.callMethod(
         realm,
-        'NewSysParamStringsPropRequestWithTitle',
-        [
-          String(params.module),
-          String(params.submodule),
-          String(params.name),
-          String(params.title),
-          String(params.value),
-        ],
+        "NewSysParamStringsPropRequestWithTitle",
+        [String(params.module), String(params.submodule), String(params.name), String(params.title), String(params.value)],
         TransactionEndpoint.BROADCAST_TX_COMMIT,
         funds,
         maxDeposit,
-        fee
+        fee,
       );
       if (resp.deliver_tx.ResponseBase.Error) {
-        throw new Error(
-          resp.deliver_tx.ResponseBase.Log ||
-            JSON.stringify(resp.deliver_tx.ResponseBase.Error)
-        );
+        throw new Error(resp.deliver_tx.ResponseBase.Log || JSON.stringify(resp.deliver_tx.ResponseBase.Error));
       }
       const result = atob(resp.deliver_tx.ResponseBase.Data as string);
-      return parseGnoReturns(
-        result
-      ) as NewSysParamStringsPropRequestWithTitleReturn;
+      return _parseGnoReturns(result) as NewSysParamStringsPropRequestWithTitleReturn;
     },
-    async NewSysParamStringsPropRequestAddWithTitle(
-      params: {
-        module: string;
-        submodule: string;
-        name: string;
-        title: string;
-        value: unknown;
-      },
-      funds: Map<string, number>,
-      maxDeposit: Map<string, number>,
-      fee: TxFee
-    ): Promise<NewSysParamStringsPropRequestAddWithTitleReturn> {
+    async NewSysParamStringsPropRequestAddWithTitle(params: {
+      module: string
+      submodule: string
+      name: string
+      title: string
+      value: unknown
+    }, funds: Map<string, number>, maxDeposit: Map<string, number>, fee: TxFee): Promise<NewSysParamStringsPropRequestAddWithTitleReturn> {
       const resp = await wallet.callMethod(
         realm,
-        'NewSysParamStringsPropRequestAddWithTitle',
-        [
-          String(params.module),
-          String(params.submodule),
-          String(params.name),
-          String(params.title),
-          String(params.value),
-        ],
+        "NewSysParamStringsPropRequestAddWithTitle",
+        [String(params.module), String(params.submodule), String(params.name), String(params.title), String(params.value)],
         TransactionEndpoint.BROADCAST_TX_COMMIT,
         funds,
         maxDeposit,
-        fee
+        fee,
       );
       if (resp.deliver_tx.ResponseBase.Error) {
-        throw new Error(
-          resp.deliver_tx.ResponseBase.Log ||
-            JSON.stringify(resp.deliver_tx.ResponseBase.Error)
-        );
+        throw new Error(resp.deliver_tx.ResponseBase.Log || JSON.stringify(resp.deliver_tx.ResponseBase.Error));
       }
       const result = atob(resp.deliver_tx.ResponseBase.Data as string);
-      return parseGnoReturns(
-        result
-      ) as NewSysParamStringsPropRequestAddWithTitleReturn;
+      return _parseGnoReturns(result) as NewSysParamStringsPropRequestAddWithTitleReturn;
     },
-    async NewSysParamStringsPropRequestRemoveWithTitle(
-      params: {
-        module: string;
-        submodule: string;
-        name: string;
-        title: string;
-        value: unknown;
-      },
-      funds: Map<string, number>,
-      maxDeposit: Map<string, number>,
-      fee: TxFee
-    ): Promise<NewSysParamStringsPropRequestRemoveWithTitleReturn> {
+    async NewSysParamStringsPropRequestRemoveWithTitle(params: {
+      module: string
+      submodule: string
+      name: string
+      title: string
+      value: unknown
+    }, funds: Map<string, number>, maxDeposit: Map<string, number>, fee: TxFee): Promise<NewSysParamStringsPropRequestRemoveWithTitleReturn> {
       const resp = await wallet.callMethod(
         realm,
-        'NewSysParamStringsPropRequestRemoveWithTitle',
-        [
-          String(params.module),
-          String(params.submodule),
-          String(params.name),
-          String(params.title),
-          String(params.value),
-        ],
+        "NewSysParamStringsPropRequestRemoveWithTitle",
+        [String(params.module), String(params.submodule), String(params.name), String(params.title), String(params.value)],
         TransactionEndpoint.BROADCAST_TX_COMMIT,
         funds,
         maxDeposit,
-        fee
+        fee,
       );
       if (resp.deliver_tx.ResponseBase.Error) {
-        throw new Error(
-          resp.deliver_tx.ResponseBase.Log ||
-            JSON.stringify(resp.deliver_tx.ResponseBase.Error)
-        );
+        throw new Error(resp.deliver_tx.ResponseBase.Log || JSON.stringify(resp.deliver_tx.ResponseBase.Error));
       }
       const result = atob(resp.deliver_tx.ResponseBase.Data as string);
-      return parseGnoReturns(
-        result
-      ) as NewSysParamStringsPropRequestRemoveWithTitleReturn;
+      return _parseGnoReturns(result) as NewSysParamStringsPropRequestRemoveWithTitleReturn;
     },
-    async ProposeUnlockTransferRequest(
-      funds: Map<string, number>,
-      maxDeposit: Map<string, number>,
-      fee: TxFee
-    ): Promise<ProposeUnlockTransferRequestReturn> {
+    async ProposeUnlockTransferRequest(funds: Map<string, number>, maxDeposit: Map<string, number>, fee: TxFee): Promise<ProposeUnlockTransferRequestReturn> {
       const resp = await wallet.callMethod(
         realm,
-        'ProposeUnlockTransferRequest',
+        "ProposeUnlockTransferRequest",
         [],
         TransactionEndpoint.BROADCAST_TX_COMMIT,
         funds,
         maxDeposit,
-        fee
+        fee,
       );
       if (resp.deliver_tx.ResponseBase.Error) {
-        throw new Error(
-          resp.deliver_tx.ResponseBase.Log ||
-            JSON.stringify(resp.deliver_tx.ResponseBase.Error)
-        );
+        throw new Error(resp.deliver_tx.ResponseBase.Log || JSON.stringify(resp.deliver_tx.ResponseBase.Error));
       }
       const result = atob(resp.deliver_tx.ResponseBase.Data as string);
-      return parseGnoReturns(result) as ProposeUnlockTransferRequestReturn;
+      return _parseGnoReturns(result) as ProposeUnlockTransferRequestReturn;
     },
-    async ProposeLockTransferRequest(
-      funds: Map<string, number>,
-      maxDeposit: Map<string, number>,
-      fee: TxFee
-    ): Promise<ProposeLockTransferRequestReturn> {
+    async ProposeLockTransferRequest(funds: Map<string, number>, maxDeposit: Map<string, number>, fee: TxFee): Promise<ProposeLockTransferRequestReturn> {
       const resp = await wallet.callMethod(
         realm,
-        'ProposeLockTransferRequest',
+        "ProposeLockTransferRequest",
         [],
         TransactionEndpoint.BROADCAST_TX_COMMIT,
         funds,
         maxDeposit,
-        fee
+        fee,
       );
       if (resp.deliver_tx.ResponseBase.Error) {
-        throw new Error(
-          resp.deliver_tx.ResponseBase.Log ||
-            JSON.stringify(resp.deliver_tx.ResponseBase.Error)
-        );
+        throw new Error(resp.deliver_tx.ResponseBase.Log || JSON.stringify(resp.deliver_tx.ResponseBase.Error));
       }
       const result = atob(resp.deliver_tx.ResponseBase.Data as string);
-      return parseGnoReturns(result) as ProposeLockTransferRequestReturn;
+      return _parseGnoReturns(result) as ProposeLockTransferRequestReturn;
     },
-    async ProposeAddUnrestrictedAcctsRequest(
-      params: { addrs: unknown },
-      funds: Map<string, number>,
-      maxDeposit: Map<string, number>,
-      fee: TxFee
-    ): Promise<ProposeAddUnrestrictedAcctsRequestReturn> {
+    async ProposeAddUnrestrictedAcctsRequest(params: {
+      addrs: unknown
+    }, funds: Map<string, number>, maxDeposit: Map<string, number>, fee: TxFee): Promise<ProposeAddUnrestrictedAcctsRequestReturn> {
       const resp = await wallet.callMethod(
         realm,
-        'ProposeAddUnrestrictedAcctsRequest',
+        "ProposeAddUnrestrictedAcctsRequest",
         [String(params.addrs)],
         TransactionEndpoint.BROADCAST_TX_COMMIT,
         funds,
         maxDeposit,
-        fee
+        fee,
       );
       if (resp.deliver_tx.ResponseBase.Error) {
-        throw new Error(
-          resp.deliver_tx.ResponseBase.Log ||
-            JSON.stringify(resp.deliver_tx.ResponseBase.Error)
-        );
+        throw new Error(resp.deliver_tx.ResponseBase.Log || JSON.stringify(resp.deliver_tx.ResponseBase.Error));
       }
       const result = atob(resp.deliver_tx.ResponseBase.Data as string);
-      return parseGnoReturns(
-        result
-      ) as ProposeAddUnrestrictedAcctsRequestReturn;
+      return _parseGnoReturns(result) as ProposeAddUnrestrictedAcctsRequestReturn;
     },
-    async ProposeRemoveUnrestrictedAcctsRequest(
-      params: { addrs: unknown },
-      funds: Map<string, number>,
-      maxDeposit: Map<string, number>,
-      fee: TxFee
-    ): Promise<ProposeRemoveUnrestrictedAcctsRequestReturn> {
+    async ProposeRemoveUnrestrictedAcctsRequest(params: {
+      addrs: unknown
+    }, funds: Map<string, number>, maxDeposit: Map<string, number>, fee: TxFee): Promise<ProposeRemoveUnrestrictedAcctsRequestReturn> {
       const resp = await wallet.callMethod(
         realm,
-        'ProposeRemoveUnrestrictedAcctsRequest',
+        "ProposeRemoveUnrestrictedAcctsRequest",
         [String(params.addrs)],
         TransactionEndpoint.BROADCAST_TX_COMMIT,
         funds,
         maxDeposit,
-        fee
+        fee,
       );
       if (resp.deliver_tx.ResponseBase.Error) {
-        throw new Error(
-          resp.deliver_tx.ResponseBase.Log ||
-            JSON.stringify(resp.deliver_tx.ResponseBase.Error)
-        );
+        throw new Error(resp.deliver_tx.ResponseBase.Log || JSON.stringify(resp.deliver_tx.ResponseBase.Error));
       }
       const result = atob(resp.deliver_tx.ResponseBase.Data as string);
-      return parseGnoReturns(
-        result
-      ) as ProposeRemoveUnrestrictedAcctsRequestReturn;
+      return _parseGnoReturns(result) as ProposeRemoveUnrestrictedAcctsRequestReturn;
     },
   };
 };
@@ -711,7 +437,15 @@ class RealmModule {
 
 const Realm = (wallet: GnoWallet) => {
   return {
-    realm: { realms: { r: { sys: { params: new RealmModule(wallet) } } } },
+    realm: {
+      realms: {
+        r: {
+          sys: {
+            params: new RealmModule(wallet),
+          },
+        },
+      },
+    },
   };
 };
 

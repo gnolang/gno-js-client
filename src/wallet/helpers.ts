@@ -1,11 +1,14 @@
-import { GnoWallet } from './wallet';
+import {
+  GnoWallet,
+} from "./wallet.js";
 
-export type Constructor<T> = new (...args: any[]) => T;
+export type Constructor<T> = new (...args: unknown[]) => T;
 
-export type AnyFunction = (...args: any) => any;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type AnyFunction = (...args: unknown[]) => any;
 
 export type UnionToIntersection<Union> = (
-  Union extends any ? (argument: Union) => void : never
+  Union extends unknown ? (argument: Union) => void : never
 ) extends (argument: infer Intersection) => void
   ? Intersection
   : never;
@@ -16,24 +19,29 @@ export type Return<T> = T extends AnyFunction
     ? UnionToIntersection<ReturnType<T[number]>>
     : never;
 
-export type RealmInterface = { [key: string]: any };
-export type Realm = (instance: GnoWallet) => { realm: RealmInterface };
+export type RealmInterface = {
+  [key: string]: unknown
+};
+export type Realm = (instance: GnoWallet) => {
+  realm: RealmInterface
+};
 
-const bigIntTypes = new Set(['int', 'int64', 'uint', 'uint64']);
+const bigIntTypes = new Set(["int", "int64", "uint", "uint64"]);
 
 export const parseGnoReturns = (result: string): Array<unknown> => {
   const ret = [];
-  const values = result.split('\n').filter((v) => v.length > 0);
+  const values = result.split("\n").filter(v => v.length > 0);
   for (let i = 0; i < values.length; i++) {
     // Format: "(value type)" — strip parens, split type from value
     const inner = values[i].slice(1, -1);
-    const lastSpace = inner.lastIndexOf(' ');
+    const lastSpace = inner.lastIndexOf(" ");
     const rawValue = inner.substring(0, lastSpace);
     const gnoType = inner.substring(lastSpace + 1);
 
     if (bigIntTypes.has(gnoType)) {
       ret.push(BigInt(rawValue));
-    } else {
+    }
+    else {
       ret.push(JSON.parse(rawValue));
     }
   }

@@ -3,7 +3,7 @@ node_modules
 
 # Build files
 bin
-
+dist
 # Dev environment metadata
 .idea
 .DS_Store

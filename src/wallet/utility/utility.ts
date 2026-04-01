@@ -1,6 +1,12 @@
-import { Any, MsgAddPackage, MsgCall, MsgSend } from '../../proto';
-import { MsgRun } from '../../proto/gno/vm';
-import { MsgEndpoint } from '../endpoints';
+import {
+  MsgRun,
+} from "../../proto/gno/vm.js";
+import {
+  Any, MsgAddPackage, MsgCall, MsgSend,
+} from "../../proto/index.js";
+import {
+  MsgEndpoint,
+} from "../endpoints.js";
 
 /**
  * Converts a fund map to a concatenated string representation ("<value><denomination>")
@@ -8,7 +14,7 @@ import { MsgEndpoint } from '../endpoints';
  */
 export const fundsToCoins = (funds?: Map<string, number>): string => {
   if (!funds) {
-    return '';
+    return "";
   }
 
   const result: string[] = [];
@@ -17,7 +23,7 @@ export const fundsToCoins = (funds?: Map<string, number>): string => {
     result.push(`${value}${denomination}`);
   });
 
-  return result.join(',');
+  return result.join(",");
 };
 
 /**
@@ -30,21 +36,21 @@ export const fundsToCoins = (funds?: Map<string, number>): string => {
  * costs a fixed 1 GNOT
  * https://github.com/gnolang/gno/issues/649
  */
-export const defaultTxFee = '1000000ugnot'; // 1 GNOT
+export const defaultTxFee = "1000000ugnot"; // 1 GNOT
 
 /**
  * Decodes (and unrolls) Transaction messages into full objects
  * @param {Any[]} messages the encoded transaction messages
  */
-export const decodeTxMessages = (messages: Any[]): any[] => {
+export const decodeTxMessages = (messages: Any[]): unknown[] => {
   return messages.map((m: Any) => {
     switch (m.type_url) {
       case MsgEndpoint.MSG_CALL: {
         const decodedMessage = MsgCall.decode(m.value);
         const messageJson = MsgCall.toJSON(decodedMessage) as object;
         return {
-          '@type': m.type_url,
-          send: '',
+          "@type": m.type_url,
+          send: "",
           ...messageJson,
         };
       }
@@ -52,7 +58,7 @@ export const decodeTxMessages = (messages: Any[]): any[] => {
         const decodedMessage = MsgSend.decode(m.value);
         const messageJson = MsgSend.toJSON(decodedMessage) as object;
         return {
-          '@type': m.type_url,
+          "@type": m.type_url,
           ...messageJson,
         };
       }
@@ -60,7 +66,7 @@ export const decodeTxMessages = (messages: Any[]): any[] => {
         const decodedMessage = MsgAddPackage.decode(m.value);
         const messageJson = MsgAddPackage.toJSON(decodedMessage) as object;
         return {
-          '@type': m.type_url,
+          "@type": m.type_url,
           ...messageJson,
         };
       }
@@ -68,7 +74,7 @@ export const decodeTxMessages = (messages: Any[]): any[] => {
         const decodedMessage = MsgRun.decode(m.value);
         const messageJson = MsgRun.toJSON(decodedMessage) as object;
         return {
-          '@type': m.type_url,
+          "@type": m.type_url,
           ...messageJson,
         };
       }

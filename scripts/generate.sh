@@ -14,11 +14,6 @@ for x in ${FILES}; do
     --plugin="./node_modules/.bin/protoc-gen-ts_proto" \
     --ts_proto_out="${OUT_DIR}" \
     --proto_path="${PROTO_PATH}" \
-    --ts_proto_opt="esModuleInterop=true,forceLong=long,useOptionals=messages,useDate=false,snakeToCamel=false,emitDefaultValues=json-methods" \
+    --ts_proto_opt="importSuffix=.js,esModuleInterop=true,forceLong=bigint,useOptionals=messages,useDate=false,snakeToCamel=false,emitDefaultValues=json-methods,protoJsonFormat=false" \
     ${x}
 done
-
-echo "Prettifying generated files..."
-if [ $? -eq 0 ]; then
-  find ${OUT_DIR} -name "*.ts" -exec ${PRETTIER} --write {} +
-fi

@@ -1,4 +1,4 @@
-// Auto-generated module for gno.land/r/g1hy6zry03hg5d8le9s2w4fxme6236hkgd928dun/boards2/permissions/v1 — DO NOT EDIT
+// Auto-generated module for gno.land/r/g1q8txq2r5rxwkzu00l64j8d596tjc5p2t0uwf4e/helloworld — DO NOT EDIT
 import {
   GnoWallet,
 } from "@gnolang/gno-js-client";
@@ -10,42 +10,35 @@ import {
   TransactionEndpoint, TxFee,
 } from "@gnolang/tm2-js-client";
 
-const realm = "gno.land/r/g1hy6zry03hg5d8le9s2w4fxme6236hkgd928dun/boards2/permissions/v1";
+const realm = "gno.land/r/g1q8txq2r5rxwkzu00l64j8d596tjc5p2t0uwf4e/helloworld";
 
-type NewReturn = [unknown];
+type GetCounterReturn = [bigint];
+type HelloReturn = [string];
 
 const queryClient = (wallet: GnoWallet) => {
   return {
-    async SetAdmin(params: {
-      admin: string
-    }, height?: number): Promise<void> {
-      await wallet.getProvider().evaluateExpression(realm, `SetAdmin("${params.admin}")`, height);
+    async Increment(height?: number): Promise<void> {
+      await wallet.getProvider().evaluateExpression(realm, "Increment()", height);
       return;
     },
-    async SetOpenAccountAmount(params: {
-      amount: bigint
-    }, height?: number): Promise<void> {
-      await wallet.getProvider().evaluateExpression(realm, `SetOpenAccountAmount(${params.amount})`, height);
-      return;
+    async GetCounter(height?: number): Promise<GetCounterReturn> {
+      const result = await wallet.getProvider().evaluateExpression(realm, "GetCounter()", height);
+      return _parseGnoReturns(result) as GetCounterReturn;
     },
-    async New(params: {
-      owner: string
-    }, height?: number): Promise<NewReturn> {
-      const result = await wallet.getProvider().evaluateExpression(realm, `New("${params.owner}")`, height);
-      return _parseGnoReturns(result) as NewReturn;
+    async Hello(height?: number): Promise<HelloReturn> {
+      const result = await wallet.getProvider().evaluateExpression(realm, "Hello()", height);
+      return _parseGnoReturns(result) as HelloReturn;
     },
   };
 };
 
 const txClient = (wallet: GnoWallet) => {
   return {
-    async SetAdmin(params: {
-      admin: string
-    }, funds: Map<string, number>, maxDeposit: Map<string, number>, fee: TxFee): Promise<void> {
+    async Increment(funds: Map<string, number>, maxDeposit: Map<string, number>, fee: TxFee): Promise<void> {
       const resp = await wallet.callMethod(
         realm,
-        "SetAdmin",
-        [String(params.admin)],
+        "Increment",
+        [],
         TransactionEndpoint.BROADCAST_TX_COMMIT,
         funds,
         maxDeposit,
@@ -55,29 +48,11 @@ const txClient = (wallet: GnoWallet) => {
         throw new Error(resp.deliver_tx.ResponseBase.Log || JSON.stringify(resp.deliver_tx.ResponseBase.Error));
       }
     },
-    async SetOpenAccountAmount(params: {
-      amount: bigint
-    }, funds: Map<string, number>, maxDeposit: Map<string, number>, fee: TxFee): Promise<void> {
+    async GetCounter(funds: Map<string, number>, maxDeposit: Map<string, number>, fee: TxFee): Promise<GetCounterReturn> {
       const resp = await wallet.callMethod(
         realm,
-        "SetOpenAccountAmount",
-        [String(params.amount)],
-        TransactionEndpoint.BROADCAST_TX_COMMIT,
-        funds,
-        maxDeposit,
-        fee,
-      );
-      if (resp.deliver_tx.ResponseBase.Error) {
-        throw new Error(resp.deliver_tx.ResponseBase.Log || JSON.stringify(resp.deliver_tx.ResponseBase.Error));
-      }
-    },
-    async New(params: {
-      owner: string
-    }, funds: Map<string, number>, maxDeposit: Map<string, number>, fee: TxFee): Promise<NewReturn> {
-      const resp = await wallet.callMethod(
-        realm,
-        "New",
-        [String(params.owner)],
+        "GetCounter",
+        [],
         TransactionEndpoint.BROADCAST_TX_COMMIT,
         funds,
         maxDeposit,
@@ -87,7 +62,23 @@ const txClient = (wallet: GnoWallet) => {
         throw new Error(resp.deliver_tx.ResponseBase.Log || JSON.stringify(resp.deliver_tx.ResponseBase.Error));
       }
       const result = atob(resp.deliver_tx.ResponseBase.Data as string);
-      return _parseGnoReturns(result) as NewReturn;
+      return _parseGnoReturns(result) as GetCounterReturn;
+    },
+    async Hello(funds: Map<string, number>, maxDeposit: Map<string, number>, fee: TxFee): Promise<HelloReturn> {
+      const resp = await wallet.callMethod(
+        realm,
+        "Hello",
+        [],
+        TransactionEndpoint.BROADCAST_TX_COMMIT,
+        funds,
+        maxDeposit,
+        fee,
+      );
+      if (resp.deliver_tx.ResponseBase.Error) {
+        throw new Error(resp.deliver_tx.ResponseBase.Log || JSON.stringify(resp.deliver_tx.ResponseBase.Error));
+      }
+      const result = atob(resp.deliver_tx.ResponseBase.Data as string);
+      return _parseGnoReturns(result) as HelloReturn;
     },
   };
 };
@@ -107,12 +98,8 @@ const Realm = (wallet: GnoWallet) => {
     realm: {
       realms: {
         r: {
-          g1hy6zry03hg5d8le9s2w4fxme6236hkgd928dun: {
-            boards2: {
-              permissions: {
-                v1: new RealmModule(wallet),
-              },
-            },
+          g1q8txq2r5rxwkzu00l64j8d596tjc5p2t0uwf4e: {
+            helloworld: new RealmModule(wallet),
           },
         },
       },
