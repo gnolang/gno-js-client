@@ -1,8 +1,16 @@
-import { TransactionEndpoint, TxFee } from '@gnolang/tm2-js-client';
-import { GnoWallet } from '@gnolang/gno-js-client';
-import { parseGnoReturns } from '@gnolang/gno-js-client/bin/wallet/helpers';
+// Auto-generated module for gno.land/r/gnoland/wugnot — DO NOT EDIT
+import {
+  GnoWallet,
+} from "@gnolang/gno-js-client";
+// Imported with leading underscore to avoid linting errors about unused imports in void-returning functions
+import {
+  parseGnoReturns as _parseGnoReturns,
+} from "@gnolang/gno-js-client";
+import {
+  TransactionEndpoint, TxFee,
+} from "@gnolang/tm2-js-client";
 
-const realm = 'gno.land/r/gnoland/wugnot';
+const realm = "gno.land/r/gnoland/wugnot";
 
 type RenderReturn = [string];
 type TotalSupplyReturn = [bigint];
@@ -12,295 +20,216 @@ type AllowanceReturn = [bigint];
 const queryClient = (wallet: GnoWallet) => {
   return {
     async Deposit(height?: number): Promise<void> {
-      const result = await wallet
-        .getProvider()
-        .evaluateExpression(realm, `Deposit()`, height);
+      await wallet.getProvider().evaluateExpression(realm, "Deposit()", height);
+      return;
     },
-    async Withdraw(params: { amount: bigint }, height?: number): Promise<void> {
-      const result = await wallet
-        .getProvider()
-        .evaluateExpression(realm, `Withdraw(${params.amount})`, height);
+    async Withdraw(params: {
+      amount: bigint
+    }, height?: number): Promise<void> {
+      await wallet.getProvider().evaluateExpression(realm, `Withdraw(${params.amount})`, height);
+      return;
     },
-    async Render(
-      params: { path: string },
-      height?: number
-    ): Promise<RenderReturn> {
-      const result = await wallet
-        .getProvider()
-        .evaluateExpression(realm, `Render("${params.path}")`, height);
-      return parseGnoReturns(result) as RenderReturn;
+    async Render(params: {
+      path: string
+    }, height?: number): Promise<RenderReturn> {
+      const result = await wallet.getProvider().evaluateExpression(realm, `Render("${params.path}")`, height);
+      return _parseGnoReturns(result) as RenderReturn;
     },
     async TotalSupply(height?: number): Promise<TotalSupplyReturn> {
-      const result = await wallet
-        .getProvider()
-        .evaluateExpression(realm, `TotalSupply()`, height);
-      return parseGnoReturns(result) as TotalSupplyReturn;
+      const result = await wallet.getProvider().evaluateExpression(realm, "TotalSupply()", height);
+      return _parseGnoReturns(result) as TotalSupplyReturn;
     },
-    async BalanceOf(
-      params: { owner: string },
-      height?: number
-    ): Promise<BalanceOfReturn> {
-      const result = await wallet
-        .getProvider()
-        .evaluateExpression(realm, `BalanceOf("${params.owner}")`, height);
-      return parseGnoReturns(result) as BalanceOfReturn;
+    async BalanceOf(params: {
+      owner: string
+    }, height?: number): Promise<BalanceOfReturn> {
+      const result = await wallet.getProvider().evaluateExpression(realm, `BalanceOf("${params.owner}")`, height);
+      return _parseGnoReturns(result) as BalanceOfReturn;
     },
-    async Allowance(
-      params: { owner: string; spender: string },
-      height?: number
-    ): Promise<AllowanceReturn> {
-      const result = await wallet
-        .getProvider()
-        .evaluateExpression(
-          realm,
-          `Allowance("${params.owner}","${params.spender}")`,
-          height
-        );
-      return parseGnoReturns(result) as AllowanceReturn;
+    async Allowance(params: {
+      owner: string
+      spender: string
+    }, height?: number): Promise<AllowanceReturn> {
+      const result = await wallet.getProvider().evaluateExpression(realm, `Allowance("${params.owner}","${params.spender}")`, height);
+      return _parseGnoReturns(result) as AllowanceReturn;
     },
-    async Transfer(
-      params: { to: string; amount: bigint },
-      height?: number
-    ): Promise<void> {
-      const result = await wallet
-        .getProvider()
-        .evaluateExpression(
-          realm,
-          `Transfer("${params.to}",${params.amount})`,
-          height
-        );
+    async Transfer(params: {
+      to: string
+      amount: bigint
+    }, height?: number): Promise<void> {
+      await wallet.getProvider().evaluateExpression(realm, `Transfer("${params.to}",${params.amount})`, height);
+      return;
     },
-    async Approve(
-      params: { spender: string; amount: bigint },
-      height?: number
-    ): Promise<void> {
-      const result = await wallet
-        .getProvider()
-        .evaluateExpression(
-          realm,
-          `Approve("${params.spender}",${params.amount})`,
-          height
-        );
+    async Approve(params: {
+      spender: string
+      amount: bigint
+    }, height?: number): Promise<void> {
+      await wallet.getProvider().evaluateExpression(realm, `Approve("${params.spender}",${params.amount})`, height);
+      return;
     },
-    async TransferFrom(
-      params: { from: string; to: string; amount: bigint },
-      height?: number
-    ): Promise<void> {
-      const result = await wallet
-        .getProvider()
-        .evaluateExpression(
-          realm,
-          `TransferFrom("${params.from}","${params.to}",${params.amount})`,
-          height
-        );
+    async TransferFrom(params: {
+      from: string
+      to: string
+      amount: bigint
+    }, height?: number): Promise<void> {
+      await wallet.getProvider().evaluateExpression(realm, `TransferFrom("${params.from}","${params.to}",${params.amount})`, height);
+      return;
     },
   };
 };
 
 const txClient = (wallet: GnoWallet) => {
   return {
-    async Deposit(
-      funds: Map<string, number>,
-      maxDeposit: Map<string, number>,
-      fee: TxFee
-    ): Promise<void> {
+    async Deposit(funds: Map<string, number>, maxDeposit: Map<string, number>, fee: TxFee): Promise<void> {
       const resp = await wallet.callMethod(
         realm,
-        'Deposit',
+        "Deposit",
         [],
         TransactionEndpoint.BROADCAST_TX_COMMIT,
         funds,
         maxDeposit,
-        fee
+        fee,
       );
       if (resp.deliver_tx.ResponseBase.Error) {
-        throw new Error(
-          resp.deliver_tx.ResponseBase.Log ||
-            JSON.stringify(resp.deliver_tx.ResponseBase.Error)
-        );
+        throw new Error(resp.deliver_tx.ResponseBase.Log || JSON.stringify(resp.deliver_tx.ResponseBase.Error));
       }
     },
-    async Withdraw(
-      params: { amount: bigint },
-      funds: Map<string, number>,
-      maxDeposit: Map<string, number>,
-      fee: TxFee
-    ): Promise<void> {
+    async Withdraw(params: {
+      amount: bigint
+    }, funds: Map<string, number>, maxDeposit: Map<string, number>, fee: TxFee): Promise<void> {
       const resp = await wallet.callMethod(
         realm,
-        'Withdraw',
+        "Withdraw",
         [String(params.amount)],
         TransactionEndpoint.BROADCAST_TX_COMMIT,
         funds,
         maxDeposit,
-        fee
+        fee,
       );
       if (resp.deliver_tx.ResponseBase.Error) {
-        throw new Error(
-          resp.deliver_tx.ResponseBase.Log ||
-            JSON.stringify(resp.deliver_tx.ResponseBase.Error)
-        );
+        throw new Error(resp.deliver_tx.ResponseBase.Log || JSON.stringify(resp.deliver_tx.ResponseBase.Error));
       }
     },
-    async Render(
-      params: { path: string },
-      funds: Map<string, number>,
-      maxDeposit: Map<string, number>,
-      fee: TxFee
-    ): Promise<RenderReturn> {
+    async Render(params: {
+      path: string
+    }, funds: Map<string, number>, maxDeposit: Map<string, number>, fee: TxFee): Promise<RenderReturn> {
       const resp = await wallet.callMethod(
         realm,
-        'Render',
+        "Render",
         [String(params.path)],
         TransactionEndpoint.BROADCAST_TX_COMMIT,
         funds,
         maxDeposit,
-        fee
+        fee,
       );
       if (resp.deliver_tx.ResponseBase.Error) {
-        throw new Error(
-          resp.deliver_tx.ResponseBase.Log ||
-            JSON.stringify(resp.deliver_tx.ResponseBase.Error)
-        );
+        throw new Error(resp.deliver_tx.ResponseBase.Log || JSON.stringify(resp.deliver_tx.ResponseBase.Error));
       }
       const result = atob(resp.deliver_tx.ResponseBase.Data as string);
-      return parseGnoReturns(result) as RenderReturn;
+      return _parseGnoReturns(result) as RenderReturn;
     },
-    async TotalSupply(
-      funds: Map<string, number>,
-      maxDeposit: Map<string, number>,
-      fee: TxFee
-    ): Promise<TotalSupplyReturn> {
+    async TotalSupply(funds: Map<string, number>, maxDeposit: Map<string, number>, fee: TxFee): Promise<TotalSupplyReturn> {
       const resp = await wallet.callMethod(
         realm,
-        'TotalSupply',
+        "TotalSupply",
         [],
         TransactionEndpoint.BROADCAST_TX_COMMIT,
         funds,
         maxDeposit,
-        fee
+        fee,
       );
       if (resp.deliver_tx.ResponseBase.Error) {
-        throw new Error(
-          resp.deliver_tx.ResponseBase.Log ||
-            JSON.stringify(resp.deliver_tx.ResponseBase.Error)
-        );
+        throw new Error(resp.deliver_tx.ResponseBase.Log || JSON.stringify(resp.deliver_tx.ResponseBase.Error));
       }
       const result = atob(resp.deliver_tx.ResponseBase.Data as string);
-      return parseGnoReturns(result) as TotalSupplyReturn;
+      return _parseGnoReturns(result) as TotalSupplyReturn;
     },
-    async BalanceOf(
-      params: { owner: string },
-      funds: Map<string, number>,
-      maxDeposit: Map<string, number>,
-      fee: TxFee
-    ): Promise<BalanceOfReturn> {
+    async BalanceOf(params: {
+      owner: string
+    }, funds: Map<string, number>, maxDeposit: Map<string, number>, fee: TxFee): Promise<BalanceOfReturn> {
       const resp = await wallet.callMethod(
         realm,
-        'BalanceOf',
+        "BalanceOf",
         [String(params.owner)],
         TransactionEndpoint.BROADCAST_TX_COMMIT,
         funds,
         maxDeposit,
-        fee
+        fee,
       );
       if (resp.deliver_tx.ResponseBase.Error) {
-        throw new Error(
-          resp.deliver_tx.ResponseBase.Log ||
-            JSON.stringify(resp.deliver_tx.ResponseBase.Error)
-        );
+        throw new Error(resp.deliver_tx.ResponseBase.Log || JSON.stringify(resp.deliver_tx.ResponseBase.Error));
       }
       const result = atob(resp.deliver_tx.ResponseBase.Data as string);
-      return parseGnoReturns(result) as BalanceOfReturn;
+      return _parseGnoReturns(result) as BalanceOfReturn;
     },
-    async Allowance(
-      params: { owner: string; spender: string },
-      funds: Map<string, number>,
-      maxDeposit: Map<string, number>,
-      fee: TxFee
-    ): Promise<AllowanceReturn> {
+    async Allowance(params: {
+      owner: string
+      spender: string
+    }, funds: Map<string, number>, maxDeposit: Map<string, number>, fee: TxFee): Promise<AllowanceReturn> {
       const resp = await wallet.callMethod(
         realm,
-        'Allowance',
+        "Allowance",
         [String(params.owner), String(params.spender)],
         TransactionEndpoint.BROADCAST_TX_COMMIT,
         funds,
         maxDeposit,
-        fee
+        fee,
       );
       if (resp.deliver_tx.ResponseBase.Error) {
-        throw new Error(
-          resp.deliver_tx.ResponseBase.Log ||
-            JSON.stringify(resp.deliver_tx.ResponseBase.Error)
-        );
+        throw new Error(resp.deliver_tx.ResponseBase.Log || JSON.stringify(resp.deliver_tx.ResponseBase.Error));
       }
       const result = atob(resp.deliver_tx.ResponseBase.Data as string);
-      return parseGnoReturns(result) as AllowanceReturn;
+      return _parseGnoReturns(result) as AllowanceReturn;
     },
-    async Transfer(
-      params: { to: string; amount: bigint },
-      funds: Map<string, number>,
-      maxDeposit: Map<string, number>,
-      fee: TxFee
-    ): Promise<void> {
+    async Transfer(params: {
+      to: string
+      amount: bigint
+    }, funds: Map<string, number>, maxDeposit: Map<string, number>, fee: TxFee): Promise<void> {
       const resp = await wallet.callMethod(
         realm,
-        'Transfer',
+        "Transfer",
         [String(params.to), String(params.amount)],
         TransactionEndpoint.BROADCAST_TX_COMMIT,
         funds,
         maxDeposit,
-        fee
+        fee,
       );
       if (resp.deliver_tx.ResponseBase.Error) {
-        throw new Error(
-          resp.deliver_tx.ResponseBase.Log ||
-            JSON.stringify(resp.deliver_tx.ResponseBase.Error)
-        );
+        throw new Error(resp.deliver_tx.ResponseBase.Log || JSON.stringify(resp.deliver_tx.ResponseBase.Error));
       }
     },
-    async Approve(
-      params: { spender: string; amount: bigint },
-      funds: Map<string, number>,
-      maxDeposit: Map<string, number>,
-      fee: TxFee
-    ): Promise<void> {
+    async Approve(params: {
+      spender: string
+      amount: bigint
+    }, funds: Map<string, number>, maxDeposit: Map<string, number>, fee: TxFee): Promise<void> {
       const resp = await wallet.callMethod(
         realm,
-        'Approve',
+        "Approve",
         [String(params.spender), String(params.amount)],
         TransactionEndpoint.BROADCAST_TX_COMMIT,
         funds,
         maxDeposit,
-        fee
+        fee,
       );
       if (resp.deliver_tx.ResponseBase.Error) {
-        throw new Error(
-          resp.deliver_tx.ResponseBase.Log ||
-            JSON.stringify(resp.deliver_tx.ResponseBase.Error)
-        );
+        throw new Error(resp.deliver_tx.ResponseBase.Log || JSON.stringify(resp.deliver_tx.ResponseBase.Error));
       }
     },
-    async TransferFrom(
-      params: { from: string; to: string; amount: bigint },
-      funds: Map<string, number>,
-      maxDeposit: Map<string, number>,
-      fee: TxFee
-    ): Promise<void> {
+    async TransferFrom(params: {
+      from: string
+      to: string
+      amount: bigint
+    }, funds: Map<string, number>, maxDeposit: Map<string, number>, fee: TxFee): Promise<void> {
       const resp = await wallet.callMethod(
         realm,
-        'TransferFrom',
+        "TransferFrom",
         [String(params.from), String(params.to), String(params.amount)],
         TransactionEndpoint.BROADCAST_TX_COMMIT,
         funds,
         maxDeposit,
-        fee
+        fee,
       );
       if (resp.deliver_tx.ResponseBase.Error) {
-        throw new Error(
-          resp.deliver_tx.ResponseBase.Log ||
-            JSON.stringify(resp.deliver_tx.ResponseBase.Error)
-        );
+        throw new Error(resp.deliver_tx.ResponseBase.Log || JSON.stringify(resp.deliver_tx.ResponseBase.Error));
       }
     },
   };
@@ -318,7 +247,15 @@ class RealmModule {
 
 const Realm = (wallet: GnoWallet) => {
   return {
-    realm: { realms: { r: { gnoland: { wugnot: new RealmModule(wallet) } } } },
+    realm: {
+      realms: {
+        r: {
+          gnoland: {
+            wugnot: new RealmModule(wallet),
+          },
+        },
+      },
+    },
   };
 };
 

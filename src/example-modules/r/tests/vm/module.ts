@@ -1,8 +1,16 @@
-import { TransactionEndpoint, TxFee } from '@gnolang/tm2-js-client';
-import { GnoWallet } from '@gnolang/gno-js-client';
-import { parseGnoReturns } from '@gnolang/gno-js-client/bin/wallet/helpers';
+// Auto-generated module for gno.land/r/tests/vm — DO NOT EDIT
+import {
+  GnoWallet,
+} from "@gnolang/gno-js-client";
+// Imported with leading underscore to avoid linting errors about unused imports in void-returning functions
+import {
+  parseGnoReturns as _parseGnoReturns,
+} from "@gnolang/gno-js-client";
+import {
+  TransactionEndpoint, TxFee,
+} from "@gnolang/tm2-js-client";
 
-const realm = 'gno.land/r/tests/vm';
+const realm = "gno.land/r/tests/vm";
 
 type RenderReturn = [string];
 type GetZeroTypeReturn = [unknown];
@@ -22,697 +30,485 @@ type HasCallerSameNamespaceReturn = [boolean];
 const queryClient = (wallet: GnoWallet) => {
   return {
     async AddStringer(height?: number): Promise<void> {
-      const result = await wallet
-        .getProvider()
-        .evaluateExpression(realm, `AddStringer()`, height);
+      await wallet.getProvider().evaluateExpression(realm, "AddStringer()", height);
+      return;
     },
-    async Render(
-      params: { path: string },
-      height?: number
-    ): Promise<RenderReturn> {
-      const result = await wallet
-        .getProvider()
-        .evaluateExpression(realm, `Render("${params.path}")`, height);
-      return parseGnoReturns(result) as RenderReturn;
+    async Render(params: {
+      path: string
+    }, height?: number): Promise<RenderReturn> {
+      const result = await wallet.getProvider().evaluateExpression(realm, `Render("${params.path}")`, height);
+      return _parseGnoReturns(result) as RenderReturn;
     },
     async GetZeroType(height?: number): Promise<GetZeroTypeReturn> {
-      const result = await wallet
-        .getProvider()
-        .evaluateExpression(realm, `GetZeroType()`, height);
-      return parseGnoReturns(result) as GetZeroTypeReturn;
+      const result = await wallet.getProvider().evaluateExpression(realm, "GetZeroType()", height);
+      return _parseGnoReturns(result) as GetZeroTypeReturn;
     },
     async GetAbs(height?: number): Promise<GetAbsReturn> {
-      const result = await wallet
-        .getProvider()
-        .evaluateExpression(realm, `GetAbs()`, height);
-      return parseGnoReturns(result) as GetAbsReturn;
+      const result = await wallet.getProvider().evaluateExpression(realm, "GetAbs()", height);
+      return _parseGnoReturns(result) as GetAbsReturn;
     },
     async AbsAdd(height?: number): Promise<AbsAddReturn> {
-      const result = await wallet
-        .getProvider()
-        .evaluateExpression(realm, `AbsAdd()`, height);
-      return parseGnoReturns(result) as AbsAddReturn;
+      const result = await wallet.getProvider().evaluateExpression(realm, "AbsAdd()", height);
+      return _parseGnoReturns(result) as AbsAddReturn;
     },
     async IncCounter(height?: number): Promise<void> {
-      const result = await wallet
-        .getProvider()
-        .evaluateExpression(realm, `IncCounter()`, height);
+      await wallet.getProvider().evaluateExpression(realm, "IncCounter()", height);
+      return;
     },
     async Counter(height?: number): Promise<CounterReturn> {
-      const result = await wallet
-        .getProvider()
-        .evaluateExpression(realm, `Counter()`, height);
-      return parseGnoReturns(result) as CounterReturn;
+      const result = await wallet.getProvider().evaluateExpression(realm, "Counter()", height);
+      return _parseGnoReturns(result) as CounterReturn;
     },
     async CurrentRealmPath(height?: number): Promise<CurrentRealmPathReturn> {
-      const result = await wallet
-        .getProvider()
-        .evaluateExpression(realm, `CurrentRealmPath()`, height);
-      return parseGnoReturns(result) as CurrentRealmPathReturn;
+      const result = await wallet.getProvider().evaluateExpression(realm, "CurrentRealmPath()", height);
+      return _parseGnoReturns(result) as CurrentRealmPathReturn;
     },
     async InitOriginCaller(height?: number): Promise<InitOriginCallerReturn> {
-      const result = await wallet
-        .getProvider()
-        .evaluateExpression(realm, `InitOriginCaller()`, height);
-      return parseGnoReturns(result) as InitOriginCallerReturn;
+      const result = await wallet.getProvider().evaluateExpression(realm, "InitOriginCaller()", height);
+      return _parseGnoReturns(result) as InitOriginCallerReturn;
     },
     async CallAssertOriginCall(height?: number): Promise<void> {
-      const result = await wallet
-        .getProvider()
-        .evaluateExpression(realm, `CallAssertOriginCall()`, height);
+      await wallet.getProvider().evaluateExpression(realm, "CallAssertOriginCall()", height);
+      return;
     },
     async CallIsOriginCall(height?: number): Promise<CallIsOriginCallReturn> {
-      const result = await wallet
-        .getProvider()
-        .evaluateExpression(realm, `CallIsOriginCall()`, height);
-      return parseGnoReturns(result) as CallIsOriginCallReturn;
+      const result = await wallet.getProvider().evaluateExpression(realm, "CallIsOriginCall()", height);
+      return _parseGnoReturns(result) as CallIsOriginCallReturn;
     },
     async CallSubtestsAssertOriginCall(height?: number): Promise<void> {
-      const result = await wallet
-        .getProvider()
-        .evaluateExpression(realm, `CallSubtestsAssertOriginCall()`, height);
+      await wallet.getProvider().evaluateExpression(realm, "CallSubtestsAssertOriginCall()", height);
+      return;
     },
-    async CallSubtestsIsOriginCall(
-      height?: number
-    ): Promise<CallSubtestsIsOriginCallReturn> {
-      const result = await wallet
-        .getProvider()
-        .evaluateExpression(realm, `CallSubtestsIsOriginCall()`, height);
-      return parseGnoReturns(result) as CallSubtestsIsOriginCallReturn;
+    async CallSubtestsIsOriginCall(height?: number): Promise<CallSubtestsIsOriginCallReturn> {
+      const result = await wallet.getProvider().evaluateExpression(realm, "CallSubtestsIsOriginCall()", height);
+      return _parseGnoReturns(result) as CallSubtestsIsOriginCallReturn;
     },
-    async ModifyTestRealmObject(
-      params: { t: unknown },
-      height?: number
-    ): Promise<void> {
-      const result = await wallet
-        .getProvider()
-        .evaluateExpression(
-          realm,
-          `ModifyTestRealmObject(${params.t})`,
-          height
-        );
+    async ModifyTestRealmObject(params: {
+      t: unknown
+    }, height?: number): Promise<void> {
+      await wallet.getProvider().evaluateExpression(realm, `ModifyTestRealmObject(${params.t})`, height);
+      return;
     },
     async InitTestNodes(height?: number): Promise<void> {
-      const result = await wallet
-        .getProvider()
-        .evaluateExpression(realm, `InitTestNodes()`, height);
+      await wallet.getProvider().evaluateExpression(realm, "InitTestNodes()", height);
+      return;
     },
     async ModTestNodes(height?: number): Promise<void> {
-      const result = await wallet
-        .getProvider()
-        .evaluateExpression(realm, `ModTestNodes()`, height);
+      await wallet.getProvider().evaluateExpression(realm, "ModTestNodes()", height);
+      return;
     },
     async PrintTestNodes(height?: number): Promise<void> {
-      const result = await wallet
-        .getProvider()
-        .evaluateExpression(realm, `PrintTestNodes()`, height);
+      await wallet.getProvider().evaluateExpression(realm, "PrintTestNodes()", height);
+      return;
     },
     async GetPreviousRealm(height?: number): Promise<GetPreviousRealmReturn> {
-      const result = await wallet
-        .getProvider()
-        .evaluateExpression(realm, `GetPreviousRealm()`, height);
-      return parseGnoReturns(result) as GetPreviousRealmReturn;
+      const result = await wallet.getProvider().evaluateExpression(realm, "GetPreviousRealm()", height);
+      return _parseGnoReturns(result) as GetPreviousRealmReturn;
     },
-    async GetRSubtestsPreviousRealm(
-      height?: number
-    ): Promise<GetRSubtestsPreviousRealmReturn> {
-      const result = await wallet
-        .getProvider()
-        .evaluateExpression(realm, `GetRSubtestsPreviousRealm()`, height);
-      return parseGnoReturns(result) as GetRSubtestsPreviousRealmReturn;
+    async GetRSubtestsPreviousRealm(height?: number): Promise<GetRSubtestsPreviousRealmReturn> {
+      const result = await wallet.getProvider().evaluateExpression(realm, "GetRSubtestsPreviousRealm()", height);
+      return _parseGnoReturns(result) as GetRSubtestsPreviousRealmReturn;
     },
-    async Exec(params: { fn: unknown }, height?: number): Promise<void> {
-      const result = await wallet
-        .getProvider()
-        .evaluateExpression(realm, `Exec(${params.fn})`, height);
+    async Exec(params: {
+      fn: unknown
+    }, height?: number): Promise<void> {
+      await wallet.getProvider().evaluateExpression(realm, `Exec(${params.fn})`, height);
+      return;
     },
-    async ExecSwitch(params: { fn: unknown }, height?: number): Promise<void> {
-      const result = await wallet
-        .getProvider()
-        .evaluateExpression(realm, `ExecSwitch(${params.fn})`, height);
+    async ExecSwitch(params: {
+      fn: unknown
+    }, height?: number): Promise<void> {
+      await wallet.getProvider().evaluateExpression(realm, `ExecSwitch(${params.fn})`, height);
+      return;
     },
     async IsCallerSubPath(height?: number): Promise<IsCallerSubPathReturn> {
-      const result = await wallet
-        .getProvider()
-        .evaluateExpression(realm, `IsCallerSubPath()`, height);
-      return parseGnoReturns(result) as IsCallerSubPathReturn;
+      const result = await wallet.getProvider().evaluateExpression(realm, "IsCallerSubPath()", height);
+      return _parseGnoReturns(result) as IsCallerSubPathReturn;
     },
-    async IsCallerParentPath(
-      height?: number
-    ): Promise<IsCallerParentPathReturn> {
-      const result = await wallet
-        .getProvider()
-        .evaluateExpression(realm, `IsCallerParentPath()`, height);
-      return parseGnoReturns(result) as IsCallerParentPathReturn;
+    async IsCallerParentPath(height?: number): Promise<IsCallerParentPathReturn> {
+      const result = await wallet.getProvider().evaluateExpression(realm, "IsCallerParentPath()", height);
+      return _parseGnoReturns(result) as IsCallerParentPathReturn;
     },
-    async HasCallerSameNamespace(
-      height?: number
-    ): Promise<HasCallerSameNamespaceReturn> {
-      const result = await wallet
-        .getProvider()
-        .evaluateExpression(realm, `HasCallerSameNamespace()`, height);
-      return parseGnoReturns(result) as HasCallerSameNamespaceReturn;
+    async HasCallerSameNamespace(height?: number): Promise<HasCallerSameNamespaceReturn> {
+      const result = await wallet.getProvider().evaluateExpression(realm, "HasCallerSameNamespace()", height);
+      return _parseGnoReturns(result) as HasCallerSameNamespaceReturn;
     },
   };
 };
 
 const txClient = (wallet: GnoWallet) => {
   return {
-    async AddStringer(
-      funds: Map<string, number>,
-      maxDeposit: Map<string, number>,
-      fee: TxFee
-    ): Promise<void> {
+    async AddStringer(funds: Map<string, number>, maxDeposit: Map<string, number>, fee: TxFee): Promise<void> {
       const resp = await wallet.callMethod(
         realm,
-        'AddStringer',
+        "AddStringer",
         [],
         TransactionEndpoint.BROADCAST_TX_COMMIT,
         funds,
         maxDeposit,
-        fee
+        fee,
       );
       if (resp.deliver_tx.ResponseBase.Error) {
-        throw new Error(
-          resp.deliver_tx.ResponseBase.Log ||
-            JSON.stringify(resp.deliver_tx.ResponseBase.Error)
-        );
+        throw new Error(resp.deliver_tx.ResponseBase.Log || JSON.stringify(resp.deliver_tx.ResponseBase.Error));
       }
     },
-    async Render(
-      params: { path: string },
-      funds: Map<string, number>,
-      maxDeposit: Map<string, number>,
-      fee: TxFee
-    ): Promise<RenderReturn> {
+    async Render(params: {
+      path: string
+    }, funds: Map<string, number>, maxDeposit: Map<string, number>, fee: TxFee): Promise<RenderReturn> {
       const resp = await wallet.callMethod(
         realm,
-        'Render',
+        "Render",
         [String(params.path)],
         TransactionEndpoint.BROADCAST_TX_COMMIT,
         funds,
         maxDeposit,
-        fee
+        fee,
       );
       if (resp.deliver_tx.ResponseBase.Error) {
-        throw new Error(
-          resp.deliver_tx.ResponseBase.Log ||
-            JSON.stringify(resp.deliver_tx.ResponseBase.Error)
-        );
+        throw new Error(resp.deliver_tx.ResponseBase.Log || JSON.stringify(resp.deliver_tx.ResponseBase.Error));
       }
       const result = atob(resp.deliver_tx.ResponseBase.Data as string);
-      return parseGnoReturns(result) as RenderReturn;
+      return _parseGnoReturns(result) as RenderReturn;
     },
-    async GetZeroType(
-      funds: Map<string, number>,
-      maxDeposit: Map<string, number>,
-      fee: TxFee
-    ): Promise<GetZeroTypeReturn> {
+    async GetZeroType(funds: Map<string, number>, maxDeposit: Map<string, number>, fee: TxFee): Promise<GetZeroTypeReturn> {
       const resp = await wallet.callMethod(
         realm,
-        'GetZeroType',
+        "GetZeroType",
         [],
         TransactionEndpoint.BROADCAST_TX_COMMIT,
         funds,
         maxDeposit,
-        fee
+        fee,
       );
       if (resp.deliver_tx.ResponseBase.Error) {
-        throw new Error(
-          resp.deliver_tx.ResponseBase.Log ||
-            JSON.stringify(resp.deliver_tx.ResponseBase.Error)
-        );
+        throw new Error(resp.deliver_tx.ResponseBase.Log || JSON.stringify(resp.deliver_tx.ResponseBase.Error));
       }
       const result = atob(resp.deliver_tx.ResponseBase.Data as string);
-      return parseGnoReturns(result) as GetZeroTypeReturn;
+      return _parseGnoReturns(result) as GetZeroTypeReturn;
     },
-    async GetAbs(
-      funds: Map<string, number>,
-      maxDeposit: Map<string, number>,
-      fee: TxFee
-    ): Promise<GetAbsReturn> {
+    async GetAbs(funds: Map<string, number>, maxDeposit: Map<string, number>, fee: TxFee): Promise<GetAbsReturn> {
       const resp = await wallet.callMethod(
         realm,
-        'GetAbs',
+        "GetAbs",
         [],
         TransactionEndpoint.BROADCAST_TX_COMMIT,
         funds,
         maxDeposit,
-        fee
+        fee,
       );
       if (resp.deliver_tx.ResponseBase.Error) {
-        throw new Error(
-          resp.deliver_tx.ResponseBase.Log ||
-            JSON.stringify(resp.deliver_tx.ResponseBase.Error)
-        );
+        throw new Error(resp.deliver_tx.ResponseBase.Log || JSON.stringify(resp.deliver_tx.ResponseBase.Error));
       }
       const result = atob(resp.deliver_tx.ResponseBase.Data as string);
-      return parseGnoReturns(result) as GetAbsReturn;
+      return _parseGnoReturns(result) as GetAbsReturn;
     },
-    async AbsAdd(
-      funds: Map<string, number>,
-      maxDeposit: Map<string, number>,
-      fee: TxFee
-    ): Promise<AbsAddReturn> {
+    async AbsAdd(funds: Map<string, number>, maxDeposit: Map<string, number>, fee: TxFee): Promise<AbsAddReturn> {
       const resp = await wallet.callMethod(
         realm,
-        'AbsAdd',
+        "AbsAdd",
         [],
         TransactionEndpoint.BROADCAST_TX_COMMIT,
         funds,
         maxDeposit,
-        fee
+        fee,
       );
       if (resp.deliver_tx.ResponseBase.Error) {
-        throw new Error(
-          resp.deliver_tx.ResponseBase.Log ||
-            JSON.stringify(resp.deliver_tx.ResponseBase.Error)
-        );
+        throw new Error(resp.deliver_tx.ResponseBase.Log || JSON.stringify(resp.deliver_tx.ResponseBase.Error));
       }
       const result = atob(resp.deliver_tx.ResponseBase.Data as string);
-      return parseGnoReturns(result) as AbsAddReturn;
+      return _parseGnoReturns(result) as AbsAddReturn;
     },
-    async IncCounter(
-      funds: Map<string, number>,
-      maxDeposit: Map<string, number>,
-      fee: TxFee
-    ): Promise<void> {
+    async IncCounter(funds: Map<string, number>, maxDeposit: Map<string, number>, fee: TxFee): Promise<void> {
       const resp = await wallet.callMethod(
         realm,
-        'IncCounter',
+        "IncCounter",
         [],
         TransactionEndpoint.BROADCAST_TX_COMMIT,
         funds,
         maxDeposit,
-        fee
+        fee,
       );
       if (resp.deliver_tx.ResponseBase.Error) {
-        throw new Error(
-          resp.deliver_tx.ResponseBase.Log ||
-            JSON.stringify(resp.deliver_tx.ResponseBase.Error)
-        );
+        throw new Error(resp.deliver_tx.ResponseBase.Log || JSON.stringify(resp.deliver_tx.ResponseBase.Error));
       }
     },
-    async Counter(
-      funds: Map<string, number>,
-      maxDeposit: Map<string, number>,
-      fee: TxFee
-    ): Promise<CounterReturn> {
+    async Counter(funds: Map<string, number>, maxDeposit: Map<string, number>, fee: TxFee): Promise<CounterReturn> {
       const resp = await wallet.callMethod(
         realm,
-        'Counter',
+        "Counter",
         [],
         TransactionEndpoint.BROADCAST_TX_COMMIT,
         funds,
         maxDeposit,
-        fee
+        fee,
       );
       if (resp.deliver_tx.ResponseBase.Error) {
-        throw new Error(
-          resp.deliver_tx.ResponseBase.Log ||
-            JSON.stringify(resp.deliver_tx.ResponseBase.Error)
-        );
+        throw new Error(resp.deliver_tx.ResponseBase.Log || JSON.stringify(resp.deliver_tx.ResponseBase.Error));
       }
       const result = atob(resp.deliver_tx.ResponseBase.Data as string);
-      return parseGnoReturns(result) as CounterReturn;
+      return _parseGnoReturns(result) as CounterReturn;
     },
-    async CurrentRealmPath(
-      funds: Map<string, number>,
-      maxDeposit: Map<string, number>,
-      fee: TxFee
-    ): Promise<CurrentRealmPathReturn> {
+    async CurrentRealmPath(funds: Map<string, number>, maxDeposit: Map<string, number>, fee: TxFee): Promise<CurrentRealmPathReturn> {
       const resp = await wallet.callMethod(
         realm,
-        'CurrentRealmPath',
+        "CurrentRealmPath",
         [],
         TransactionEndpoint.BROADCAST_TX_COMMIT,
         funds,
         maxDeposit,
-        fee
+        fee,
       );
       if (resp.deliver_tx.ResponseBase.Error) {
-        throw new Error(
-          resp.deliver_tx.ResponseBase.Log ||
-            JSON.stringify(resp.deliver_tx.ResponseBase.Error)
-        );
+        throw new Error(resp.deliver_tx.ResponseBase.Log || JSON.stringify(resp.deliver_tx.ResponseBase.Error));
       }
       const result = atob(resp.deliver_tx.ResponseBase.Data as string);
-      return parseGnoReturns(result) as CurrentRealmPathReturn;
+      return _parseGnoReturns(result) as CurrentRealmPathReturn;
     },
-    async InitOriginCaller(
-      funds: Map<string, number>,
-      maxDeposit: Map<string, number>,
-      fee: TxFee
-    ): Promise<InitOriginCallerReturn> {
+    async InitOriginCaller(funds: Map<string, number>, maxDeposit: Map<string, number>, fee: TxFee): Promise<InitOriginCallerReturn> {
       const resp = await wallet.callMethod(
         realm,
-        'InitOriginCaller',
+        "InitOriginCaller",
         [],
         TransactionEndpoint.BROADCAST_TX_COMMIT,
         funds,
         maxDeposit,
-        fee
+        fee,
       );
       if (resp.deliver_tx.ResponseBase.Error) {
-        throw new Error(
-          resp.deliver_tx.ResponseBase.Log ||
-            JSON.stringify(resp.deliver_tx.ResponseBase.Error)
-        );
+        throw new Error(resp.deliver_tx.ResponseBase.Log || JSON.stringify(resp.deliver_tx.ResponseBase.Error));
       }
       const result = atob(resp.deliver_tx.ResponseBase.Data as string);
-      return parseGnoReturns(result) as InitOriginCallerReturn;
+      return _parseGnoReturns(result) as InitOriginCallerReturn;
     },
-    async CallAssertOriginCall(
-      funds: Map<string, number>,
-      maxDeposit: Map<string, number>,
-      fee: TxFee
-    ): Promise<void> {
+    async CallAssertOriginCall(funds: Map<string, number>, maxDeposit: Map<string, number>, fee: TxFee): Promise<void> {
       const resp = await wallet.callMethod(
         realm,
-        'CallAssertOriginCall',
+        "CallAssertOriginCall",
         [],
         TransactionEndpoint.BROADCAST_TX_COMMIT,
         funds,
         maxDeposit,
-        fee
+        fee,
       );
       if (resp.deliver_tx.ResponseBase.Error) {
-        throw new Error(
-          resp.deliver_tx.ResponseBase.Log ||
-            JSON.stringify(resp.deliver_tx.ResponseBase.Error)
-        );
+        throw new Error(resp.deliver_tx.ResponseBase.Log || JSON.stringify(resp.deliver_tx.ResponseBase.Error));
       }
     },
-    async CallIsOriginCall(
-      funds: Map<string, number>,
-      maxDeposit: Map<string, number>,
-      fee: TxFee
-    ): Promise<CallIsOriginCallReturn> {
+    async CallIsOriginCall(funds: Map<string, number>, maxDeposit: Map<string, number>, fee: TxFee): Promise<CallIsOriginCallReturn> {
       const resp = await wallet.callMethod(
         realm,
-        'CallIsOriginCall',
+        "CallIsOriginCall",
         [],
         TransactionEndpoint.BROADCAST_TX_COMMIT,
         funds,
         maxDeposit,
-        fee
+        fee,
       );
       if (resp.deliver_tx.ResponseBase.Error) {
-        throw new Error(
-          resp.deliver_tx.ResponseBase.Log ||
-            JSON.stringify(resp.deliver_tx.ResponseBase.Error)
-        );
+        throw new Error(resp.deliver_tx.ResponseBase.Log || JSON.stringify(resp.deliver_tx.ResponseBase.Error));
       }
       const result = atob(resp.deliver_tx.ResponseBase.Data as string);
-      return parseGnoReturns(result) as CallIsOriginCallReturn;
+      return _parseGnoReturns(result) as CallIsOriginCallReturn;
     },
-    async CallSubtestsAssertOriginCall(
-      funds: Map<string, number>,
-      maxDeposit: Map<string, number>,
-      fee: TxFee
-    ): Promise<void> {
+    async CallSubtestsAssertOriginCall(funds: Map<string, number>, maxDeposit: Map<string, number>, fee: TxFee): Promise<void> {
       const resp = await wallet.callMethod(
         realm,
-        'CallSubtestsAssertOriginCall',
+        "CallSubtestsAssertOriginCall",
         [],
         TransactionEndpoint.BROADCAST_TX_COMMIT,
         funds,
         maxDeposit,
-        fee
+        fee,
       );
       if (resp.deliver_tx.ResponseBase.Error) {
-        throw new Error(
-          resp.deliver_tx.ResponseBase.Log ||
-            JSON.stringify(resp.deliver_tx.ResponseBase.Error)
-        );
+        throw new Error(resp.deliver_tx.ResponseBase.Log || JSON.stringify(resp.deliver_tx.ResponseBase.Error));
       }
     },
-    async CallSubtestsIsOriginCall(
-      funds: Map<string, number>,
-      maxDeposit: Map<string, number>,
-      fee: TxFee
-    ): Promise<CallSubtestsIsOriginCallReturn> {
+    async CallSubtestsIsOriginCall(funds: Map<string, number>, maxDeposit: Map<string, number>, fee: TxFee): Promise<CallSubtestsIsOriginCallReturn> {
       const resp = await wallet.callMethod(
         realm,
-        'CallSubtestsIsOriginCall',
+        "CallSubtestsIsOriginCall",
         [],
         TransactionEndpoint.BROADCAST_TX_COMMIT,
         funds,
         maxDeposit,
-        fee
+        fee,
       );
       if (resp.deliver_tx.ResponseBase.Error) {
-        throw new Error(
-          resp.deliver_tx.ResponseBase.Log ||
-            JSON.stringify(resp.deliver_tx.ResponseBase.Error)
-        );
+        throw new Error(resp.deliver_tx.ResponseBase.Log || JSON.stringify(resp.deliver_tx.ResponseBase.Error));
       }
       const result = atob(resp.deliver_tx.ResponseBase.Data as string);
-      return parseGnoReturns(result) as CallSubtestsIsOriginCallReturn;
+      return _parseGnoReturns(result) as CallSubtestsIsOriginCallReturn;
     },
-    async ModifyTestRealmObject(
-      params: { t: unknown },
-      funds: Map<string, number>,
-      maxDeposit: Map<string, number>,
-      fee: TxFee
-    ): Promise<void> {
+    async ModifyTestRealmObject(params: {
+      t: unknown
+    }, funds: Map<string, number>, maxDeposit: Map<string, number>, fee: TxFee): Promise<void> {
       const resp = await wallet.callMethod(
         realm,
-        'ModifyTestRealmObject',
+        "ModifyTestRealmObject",
         [String(params.t)],
         TransactionEndpoint.BROADCAST_TX_COMMIT,
         funds,
         maxDeposit,
-        fee
+        fee,
       );
       if (resp.deliver_tx.ResponseBase.Error) {
-        throw new Error(
-          resp.deliver_tx.ResponseBase.Log ||
-            JSON.stringify(resp.deliver_tx.ResponseBase.Error)
-        );
+        throw new Error(resp.deliver_tx.ResponseBase.Log || JSON.stringify(resp.deliver_tx.ResponseBase.Error));
       }
     },
-    async InitTestNodes(
-      funds: Map<string, number>,
-      maxDeposit: Map<string, number>,
-      fee: TxFee
-    ): Promise<void> {
+    async InitTestNodes(funds: Map<string, number>, maxDeposit: Map<string, number>, fee: TxFee): Promise<void> {
       const resp = await wallet.callMethod(
         realm,
-        'InitTestNodes',
+        "InitTestNodes",
         [],
         TransactionEndpoint.BROADCAST_TX_COMMIT,
         funds,
         maxDeposit,
-        fee
+        fee,
       );
       if (resp.deliver_tx.ResponseBase.Error) {
-        throw new Error(
-          resp.deliver_tx.ResponseBase.Log ||
-            JSON.stringify(resp.deliver_tx.ResponseBase.Error)
-        );
+        throw new Error(resp.deliver_tx.ResponseBase.Log || JSON.stringify(resp.deliver_tx.ResponseBase.Error));
       }
     },
-    async ModTestNodes(
-      funds: Map<string, number>,
-      maxDeposit: Map<string, number>,
-      fee: TxFee
-    ): Promise<void> {
+    async ModTestNodes(funds: Map<string, number>, maxDeposit: Map<string, number>, fee: TxFee): Promise<void> {
       const resp = await wallet.callMethod(
         realm,
-        'ModTestNodes',
+        "ModTestNodes",
         [],
         TransactionEndpoint.BROADCAST_TX_COMMIT,
         funds,
         maxDeposit,
-        fee
+        fee,
       );
       if (resp.deliver_tx.ResponseBase.Error) {
-        throw new Error(
-          resp.deliver_tx.ResponseBase.Log ||
-            JSON.stringify(resp.deliver_tx.ResponseBase.Error)
-        );
+        throw new Error(resp.deliver_tx.ResponseBase.Log || JSON.stringify(resp.deliver_tx.ResponseBase.Error));
       }
     },
-    async PrintTestNodes(
-      funds: Map<string, number>,
-      maxDeposit: Map<string, number>,
-      fee: TxFee
-    ): Promise<void> {
+    async PrintTestNodes(funds: Map<string, number>, maxDeposit: Map<string, number>, fee: TxFee): Promise<void> {
       const resp = await wallet.callMethod(
         realm,
-        'PrintTestNodes',
+        "PrintTestNodes",
         [],
         TransactionEndpoint.BROADCAST_TX_COMMIT,
         funds,
         maxDeposit,
-        fee
+        fee,
       );
       if (resp.deliver_tx.ResponseBase.Error) {
-        throw new Error(
-          resp.deliver_tx.ResponseBase.Log ||
-            JSON.stringify(resp.deliver_tx.ResponseBase.Error)
-        );
+        throw new Error(resp.deliver_tx.ResponseBase.Log || JSON.stringify(resp.deliver_tx.ResponseBase.Error));
       }
     },
-    async GetPreviousRealm(
-      funds: Map<string, number>,
-      maxDeposit: Map<string, number>,
-      fee: TxFee
-    ): Promise<GetPreviousRealmReturn> {
+    async GetPreviousRealm(funds: Map<string, number>, maxDeposit: Map<string, number>, fee: TxFee): Promise<GetPreviousRealmReturn> {
       const resp = await wallet.callMethod(
         realm,
-        'GetPreviousRealm',
+        "GetPreviousRealm",
         [],
         TransactionEndpoint.BROADCAST_TX_COMMIT,
         funds,
         maxDeposit,
-        fee
+        fee,
       );
       if (resp.deliver_tx.ResponseBase.Error) {
-        throw new Error(
-          resp.deliver_tx.ResponseBase.Log ||
-            JSON.stringify(resp.deliver_tx.ResponseBase.Error)
-        );
+        throw new Error(resp.deliver_tx.ResponseBase.Log || JSON.stringify(resp.deliver_tx.ResponseBase.Error));
       }
       const result = atob(resp.deliver_tx.ResponseBase.Data as string);
-      return parseGnoReturns(result) as GetPreviousRealmReturn;
+      return _parseGnoReturns(result) as GetPreviousRealmReturn;
     },
-    async GetRSubtestsPreviousRealm(
-      funds: Map<string, number>,
-      maxDeposit: Map<string, number>,
-      fee: TxFee
-    ): Promise<GetRSubtestsPreviousRealmReturn> {
+    async GetRSubtestsPreviousRealm(funds: Map<string, number>, maxDeposit: Map<string, number>, fee: TxFee): Promise<GetRSubtestsPreviousRealmReturn> {
       const resp = await wallet.callMethod(
         realm,
-        'GetRSubtestsPreviousRealm',
+        "GetRSubtestsPreviousRealm",
         [],
         TransactionEndpoint.BROADCAST_TX_COMMIT,
         funds,
         maxDeposit,
-        fee
+        fee,
       );
       if (resp.deliver_tx.ResponseBase.Error) {
-        throw new Error(
-          resp.deliver_tx.ResponseBase.Log ||
-            JSON.stringify(resp.deliver_tx.ResponseBase.Error)
-        );
+        throw new Error(resp.deliver_tx.ResponseBase.Log || JSON.stringify(resp.deliver_tx.ResponseBase.Error));
       }
       const result = atob(resp.deliver_tx.ResponseBase.Data as string);
-      return parseGnoReturns(result) as GetRSubtestsPreviousRealmReturn;
+      return _parseGnoReturns(result) as GetRSubtestsPreviousRealmReturn;
     },
-    async Exec(
-      params: { fn: unknown },
-      funds: Map<string, number>,
-      maxDeposit: Map<string, number>,
-      fee: TxFee
-    ): Promise<void> {
+    async Exec(params: {
+      fn: unknown
+    }, funds: Map<string, number>, maxDeposit: Map<string, number>, fee: TxFee): Promise<void> {
       const resp = await wallet.callMethod(
         realm,
-        'Exec',
+        "Exec",
         [String(params.fn)],
         TransactionEndpoint.BROADCAST_TX_COMMIT,
         funds,
         maxDeposit,
-        fee
+        fee,
       );
       if (resp.deliver_tx.ResponseBase.Error) {
-        throw new Error(
-          resp.deliver_tx.ResponseBase.Log ||
-            JSON.stringify(resp.deliver_tx.ResponseBase.Error)
-        );
+        throw new Error(resp.deliver_tx.ResponseBase.Log || JSON.stringify(resp.deliver_tx.ResponseBase.Error));
       }
     },
-    async ExecSwitch(
-      params: { fn: unknown },
-      funds: Map<string, number>,
-      maxDeposit: Map<string, number>,
-      fee: TxFee
-    ): Promise<void> {
+    async ExecSwitch(params: {
+      fn: unknown
+    }, funds: Map<string, number>, maxDeposit: Map<string, number>, fee: TxFee): Promise<void> {
       const resp = await wallet.callMethod(
         realm,
-        'ExecSwitch',
+        "ExecSwitch",
         [String(params.fn)],
         TransactionEndpoint.BROADCAST_TX_COMMIT,
         funds,
         maxDeposit,
-        fee
+        fee,
       );
       if (resp.deliver_tx.ResponseBase.Error) {
-        throw new Error(
-          resp.deliver_tx.ResponseBase.Log ||
-            JSON.stringify(resp.deliver_tx.ResponseBase.Error)
-        );
+        throw new Error(resp.deliver_tx.ResponseBase.Log || JSON.stringify(resp.deliver_tx.ResponseBase.Error));
       }
     },
-    async IsCallerSubPath(
-      funds: Map<string, number>,
-      maxDeposit: Map<string, number>,
-      fee: TxFee
-    ): Promise<IsCallerSubPathReturn> {
+    async IsCallerSubPath(funds: Map<string, number>, maxDeposit: Map<string, number>, fee: TxFee): Promise<IsCallerSubPathReturn> {
       const resp = await wallet.callMethod(
         realm,
-        'IsCallerSubPath',
+        "IsCallerSubPath",
         [],
         TransactionEndpoint.BROADCAST_TX_COMMIT,
         funds,
         maxDeposit,
-        fee
+        fee,
       );
       if (resp.deliver_tx.ResponseBase.Error) {
-        throw new Error(
-          resp.deliver_tx.ResponseBase.Log ||
-            JSON.stringify(resp.deliver_tx.ResponseBase.Error)
-        );
+        throw new Error(resp.deliver_tx.ResponseBase.Log || JSON.stringify(resp.deliver_tx.ResponseBase.Error));
       }
       const result = atob(resp.deliver_tx.ResponseBase.Data as string);
-      return parseGnoReturns(result) as IsCallerSubPathReturn;
+      return _parseGnoReturns(result) as IsCallerSubPathReturn;
     },
-    async IsCallerParentPath(
-      funds: Map<string, number>,
-      maxDeposit: Map<string, number>,
-      fee: TxFee
-    ): Promise<IsCallerParentPathReturn> {
+    async IsCallerParentPath(funds: Map<string, number>, maxDeposit: Map<string, number>, fee: TxFee): Promise<IsCallerParentPathReturn> {
       const resp = await wallet.callMethod(
         realm,
-        'IsCallerParentPath',
+        "IsCallerParentPath",
         [],
         TransactionEndpoint.BROADCAST_TX_COMMIT,
         funds,
         maxDeposit,
-        fee
+        fee,
       );
       if (resp.deliver_tx.ResponseBase.Error) {
-        throw new Error(
-          resp.deliver_tx.ResponseBase.Log ||
-            JSON.stringify(resp.deliver_tx.ResponseBase.Error)
-        );
+        throw new Error(resp.deliver_tx.ResponseBase.Log || JSON.stringify(resp.deliver_tx.ResponseBase.Error));
       }
       const result = atob(resp.deliver_tx.ResponseBase.Data as string);
-      return parseGnoReturns(result) as IsCallerParentPathReturn;
+      return _parseGnoReturns(result) as IsCallerParentPathReturn;
     },
-    async HasCallerSameNamespace(
-      funds: Map<string, number>,
-      maxDeposit: Map<string, number>,
-      fee: TxFee
-    ): Promise<HasCallerSameNamespaceReturn> {
+    async HasCallerSameNamespace(funds: Map<string, number>, maxDeposit: Map<string, number>, fee: TxFee): Promise<HasCallerSameNamespaceReturn> {
       const resp = await wallet.callMethod(
         realm,
-        'HasCallerSameNamespace',
+        "HasCallerSameNamespace",
         [],
         TransactionEndpoint.BROADCAST_TX_COMMIT,
         funds,
         maxDeposit,
-        fee
+        fee,
       );
       if (resp.deliver_tx.ResponseBase.Error) {
-        throw new Error(
-          resp.deliver_tx.ResponseBase.Log ||
-            JSON.stringify(resp.deliver_tx.ResponseBase.Error)
-        );
+        throw new Error(resp.deliver_tx.ResponseBase.Log || JSON.stringify(resp.deliver_tx.ResponseBase.Error));
       }
       const result = atob(resp.deliver_tx.ResponseBase.Data as string);
-      return parseGnoReturns(result) as HasCallerSameNamespaceReturn;
+      return _parseGnoReturns(result) as HasCallerSameNamespaceReturn;
     },
   };
 };
@@ -729,7 +525,15 @@ class RealmModule {
 
 const Realm = (wallet: GnoWallet) => {
   return {
-    realm: { realms: { r: { tests: { vm: new RealmModule(wallet) } } } },
+    realm: {
+      realms: {
+        r: {
+          tests: {
+            vm: new RealmModule(wallet),
+          },
+        },
+      },
+    },
   };
 };
 

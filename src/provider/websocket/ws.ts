@@ -1,106 +1,27 @@
-import { GnoProvider } from '../provider';
 import {
-  ABCIEndpoint,
-  ABCIResponse,
-  newRequest,
-  WSProvider,
-} from '@gnolang/tm2-js-client';
-import { FunctionSignature } from '../types';
-import { VMEndpoint } from '../endpoints';
-import {
-  extractStringFromResponse,
-  prepareVMABCIEvaluateExpressionQuery,
-  prepareVMABCIQuery,
-  prepareVMABCIRenderQuery,
-} from '../utility';
+  Tm2Client,
+} from "@gnolang/tm2-rpc";
 
-export class GnoWSProvider extends WSProvider implements GnoProvider {
+import {
+  BaseGnoProvider,
+} from "../provider.js";
+
+/**
+ * Provider based on WebSocket connections
+ */
+export class GnoWSProvider extends BaseGnoProvider {
   /**
    * Creates a new instance of the {@link GnoWSProvider}
    * @param {string} baseURL the WS URL of the node
-   * @param {number} requestTimeout the timeout for the WS request (in MS)
    */
-  constructor(baseURL: string, requestTimeout?: number) {
-    super(baseURL, requestTimeout);
+  static async create(baseURL: string): Promise<GnoWSProvider> {
+    return new GnoWSProvider(await Tm2Client.connect(baseURL));
   }
 
-  async evaluateExpression(
-    packagePath: string,
-    expression: string,
-    height?: number
-  ): Promise<string> {
-    const response = await this.sendRequest<ABCIResponse>(
-      newRequest(ABCIEndpoint.ABCI_QUERY, [
-        `vm/${VMEndpoint.EVALUATE}`,
-        prepareVMABCIEvaluateExpressionQuery([packagePath, expression]),
-        '0', // Height; not supported > 0 for now
-        false,
-      ])
-    );
-
-    // Parse the response
-    const abciResponse = this.parseResponse<ABCIResponse>(response);
-
-    return extractStringFromResponse(abciResponse.response.ResponseBase.Data);
-  }
-
-  async getFileContent(packagePath: string, height?: number): Promise<string> {
-    const response = await this.sendRequest<ABCIResponse>(
-      newRequest(ABCIEndpoint.ABCI_QUERY, [
-        `vm/${VMEndpoint.FILE_CONTENT}`,
-        prepareVMABCIQuery([packagePath]),
-        '0', // Height; not supported > 0 for now
-        false,
-      ])
-    );
-
-    // Parse the response
-    const abciResponse = this.parseResponse<ABCIResponse>(response);
-
-    return extractStringFromResponse(abciResponse.response.ResponseBase.Data);
-  }
-
-  async getFunctionSignatures(
-    packagePath: string,
-    height?: number
-  ): Promise<FunctionSignature[]> {
-    const response = await this.sendRequest<ABCIResponse>(
-      newRequest(ABCIEndpoint.ABCI_QUERY, [
-        `vm/${VMEndpoint.FUNCTION_SIGNATURES}`,
-        prepareVMABCIQuery([packagePath]),
-        '0', // Height; not supported > 0 for now
-        false,
-      ])
-    );
-
-    // Parse the response
-    const abciResponse = this.parseResponse<ABCIResponse>(response);
-
-    // Function signatures encoded in JSON
-    const responseRaw: string = extractStringFromResponse(
-      abciResponse.response.ResponseBase.Data
-    );
-
-    return JSON.parse(responseRaw);
-  }
-
-  async getRenderOutput(
-    packagePath: string,
-    path: string,
-    height?: number
-  ): Promise<string> {
-    const response = await this.sendRequest<ABCIResponse>(
-      newRequest(ABCIEndpoint.ABCI_QUERY, [
-        `vm/${VMEndpoint.RENDER}`,
-        prepareVMABCIRenderQuery([packagePath, path]),
-        '0', // Height; not supported > 0 for now
-        false,
-      ])
-    );
-
-    // Parse the response
-    const abciResponse = this.parseResponse<ABCIResponse>(response);
-
-    return extractStringFromResponse(abciResponse.response.ResponseBase.Data);
+  /**
+   * Closes the WS connection
+   */
+  closeConnection(): void {
+    this.client.disconnect();
   }
 }
