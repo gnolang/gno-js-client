@@ -15,7 +15,9 @@ export interface MsgCreateSession {
   /** the bech32 address of the session creator */
   creator: string;
   /** the session public key wrapped as a TM2 pubkey Any */
-  session_key?: Any | undefined;
+  session_key?:
+    | Any
+    | undefined;
   /** unix timestamp expiry, or 0 for no expiry */
   expires_at: bigint;
   /** allowed realm paths, or empty for unrestricted paths */
@@ -41,14 +43,7 @@ export interface MsgRevokeAllSessions {
 }
 
 function createBaseMsgCreateSession(): MsgCreateSession {
-  return {
-    creator: "",
-    session_key: undefined,
-    expires_at: BigInt("0"),
-    allow_paths: [],
-    spend_limit: "",
-    spend_period: BigInt("0"),
-  };
+  return { creator: "", session_key: undefined, expires_at: 0n, allow_paths: [], spend_limit: "", spend_period: 0n };
 }
 
 export const MsgCreateSession: MessageFns<MsgCreateSession> = {
@@ -59,7 +54,10 @@ export const MsgCreateSession: MessageFns<MsgCreateSession> = {
     if (message.session_key !== undefined) {
       Any.encode(message.session_key, writer.uint32(18).fork()).join();
     }
-    if (message.expires_at !== BigInt("0")) {
+    if (message.expires_at !== 0n) {
+      if (BigInt.asIntN(64, message.expires_at) !== message.expires_at) {
+        throw new globalThis.Error("value provided for field message.expires_at of type sint64 too large");
+      }
       writer.uint32(24).sint64(message.expires_at);
     }
     for (const v of message.allow_paths) {
@@ -68,7 +66,10 @@ export const MsgCreateSession: MessageFns<MsgCreateSession> = {
     if (message.spend_limit !== "") {
       writer.uint32(42).string(message.spend_limit);
     }
-    if (message.spend_period !== BigInt("0")) {
+    if (message.spend_period !== 0n) {
+      if (BigInt.asIntN(64, message.spend_period) !== message.spend_period) {
+        throw new globalThis.Error("value provided for field message.spend_period of type sint64 too large");
+      }
       writer.uint32(48).sint64(message.spend_period);
     }
     return writer;
@@ -102,7 +103,7 @@ export const MsgCreateSession: MessageFns<MsgCreateSession> = {
             break;
           }
 
-          message.expires_at = BigInt(reader.sint64().toString());
+          message.expires_at = reader.sint64() as bigint;
           continue;
         }
         case 4: {
@@ -126,7 +127,7 @@ export const MsgCreateSession: MessageFns<MsgCreateSession> = {
             break;
           }
 
-          message.spend_period = BigInt(reader.sint64().toString());
+          message.spend_period = reader.sint64() as bigint;
           continue;
         }
       }
@@ -142,12 +143,12 @@ export const MsgCreateSession: MessageFns<MsgCreateSession> = {
     return {
       creator: isSet(object.creator) ? globalThis.String(object.creator) : "",
       session_key: isSet(object.session_key) ? Any.fromJSON(object.session_key) : undefined,
-      expires_at: isSet(object.expires_at) ? BigInt(object.expires_at) : BigInt("0"),
+      expires_at: isSet(object.expires_at) ? BigInt(object.expires_at) : 0n,
       allow_paths: globalThis.Array.isArray(object?.allow_paths)
         ? object.allow_paths.map((e: any) => globalThis.String(e))
         : [],
       spend_limit: isSet(object.spend_limit) ? globalThis.String(object.spend_limit) : "",
-      spend_period: isSet(object.spend_period) ? BigInt(object.spend_period) : BigInt("0"),
+      spend_period: isSet(object.spend_period) ? BigInt(object.spend_period) : 0n,
     };
   },
 
@@ -183,10 +184,10 @@ export const MsgCreateSession: MessageFns<MsgCreateSession> = {
     message.session_key = (object.session_key !== undefined && object.session_key !== null)
       ? Any.fromPartial(object.session_key)
       : undefined;
-    message.expires_at = object.expires_at ?? BigInt("0");
-    message.allow_paths = object.allow_paths?.map(e => e) || [];
+    message.expires_at = object.expires_at ?? 0n;
+    message.allow_paths = object.allow_paths?.map((e) => e) || [];
     message.spend_limit = object.spend_limit ?? "";
-    message.spend_period = object.spend_period ?? BigInt("0");
+    message.spend_period = object.spend_period ?? 0n;
     return message;
   },
 };
