@@ -7,6 +7,10 @@ This file was reconstructed from git history and npm publish metadata to address
 [#241](https://github.com/gnolang/gno-js-client/issues/241). Going forward, please
 keep it up to date as part of the release process.
 
+## [Unreleased]
+
+- ci: build `gnodev` from source and bump Go to 1.25 to fix test workflow ([#248](https://github.com/gnolang/gno-js-client/pull/248))
+
 ## [2.0.2] - 2026-04-01
 
 Commit: [`0c078d6`](https://github.com/gnolang/gno-js-client/commit/0c078d69cad9f5851ac919d6140ff55a4cd3b1c5)
