@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package gno.auth;
+
+import "google/protobuf/any.proto";
+
+// MsgCreateSession creates a new account session.
+message MsgCreateSession {
+  // the bech32 address of the session creator
+  string creator = 1;
+  // the session public key wrapped as a TM2 pubkey Any
+  google.protobuf.Any session_key = 2;
+  // unix timestamp expiry, or 0 for no expiry
+  sint64 expires_at = 3;
+  // allowed realm paths, or empty for unrestricted paths
+  repeated string allow_paths = 4;
+  // spending limit as a std.Coins string, or empty for no spending
+  string spend_limit = 5;
+  // spending period in seconds, or 0 for lifetime cap
+  sint64 spend_period = 6;
+}
+
+// MsgRevokeSession revokes an existing account session.
+message MsgRevokeSession {
+  // the bech32 address of the session creator
+  string creator = 1;
+  // the session public key wrapped as a TM2 pubkey Any
+  google.protobuf.Any session_key = 2;
+}
+
+// MsgRevokeAllSessions revokes all sessions for the creator.
+message MsgRevokeAllSessions {
+  // the bech32 address of the session creator
+  string creator = 1;
+}

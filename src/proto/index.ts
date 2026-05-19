@@ -1,4 +1,7 @@
 export {
+  MsgCreateSession, MsgRevokeAllSessions, MsgRevokeSession,
+} from "./gno/auth.js";
+export {
   MsgSend,
 } from "./gno/bank.js";
 export {
