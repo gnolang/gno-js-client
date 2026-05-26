@@ -24,11 +24,14 @@ jobs:
       - name: Install Go
         uses: actions/setup-go@v6
         with:
-          go-version: '1.24'
+          go-version: '1.25'
 
-      # Install gnodev only when this PR will be merged: https://github.com/gnolang/gno/pull/4763
+      # gnolang/gno has no v* release tags with prebuilt binaries, so the
+      # installer's default download mode fails ("no v* release found").
       - name: Install gnodev
-        run: curl -sSL https://raw.githubusercontent.com/gnolang/gno/master/misc/install.sh | bash
+        run: |
+          curl -sSL https://raw.githubusercontent.com/gnolang/gno/master/misc/install.sh | bash -s -- --from-source
+          echo "$HOME/.gno/bin" >> "$GITHUB_PATH"
 
       - name: Tests
         run: pnpm test
