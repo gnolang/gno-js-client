@@ -10,6 +10,7 @@ keep it up to date as part of the release process.
 ## [Unreleased]
 
 - feat: add Account Sessions support ([#247](https://github.com/gnolang/gno-js-client/pull/247))
+- ci: build `gnodev` from source and bump Go to 1.25 to fix test workflow ([#248](https://github.com/gnolang/gno-js-client/pull/248))
 
 ## [2.0.2] - 2026-04-01
 
