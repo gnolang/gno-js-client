@@ -10,10 +10,12 @@ import {
 } from "./endpoints.js";
 import {
   FunctionSignature,
+  SessionAccountInfo,
 } from "./types/index.js";
 import {
   encodeVMQueryData,
   extractStringFromResponse,
+  normalizeSessionAccount,
 } from "./utility/index.js";
 
 /**
@@ -41,6 +43,28 @@ export interface GnoProvider extends Provider {
     packagePath: string,
     height?: number
   ): Promise<FunctionSignature[]>
+
+  /**
+   * Fetches all account sessions for a master address.
+   * @param {string} masterAddress the bech32 address of the master account
+   * @param {number} [height=0] the height for querying.
+   */
+  getSessions(
+    masterAddress: string,
+    height?: number
+  ): Promise<SessionAccountInfo[]>
+
+  /**
+   * Fetches a single account session.
+   * @param {string} masterAddress the bech32 address of the master account
+   * @param {string} sessionAddress the bech32 address of the session account
+   * @param {number} [height=0] the height for querying.
+   */
+  getSession(
+    masterAddress: string,
+    sessionAddress: string,
+    height?: number
+  ): Promise<SessionAccountInfo>
 
   /**
    * Evaluates any expression in readonly mode and returns the results
@@ -127,6 +151,55 @@ export abstract class BaseGnoProvider extends BaseTm2Provider implements GnoProv
     return JSON.parse(responseRaw);
   }
 
+  async getSessions(masterAddress: string, height?: number): Promise<SessionAccountInfo[]> {
+    const abciResponse = await this.abciQuery(
+      `auth/accounts/${masterAddress}/sessions`,
+      new Uint8Array(),
+      height,
+    );
+
+    const {
+      ResponseBase,
+    } = abciResponse.response;
+
+    if (ResponseBase.Error) {
+      throw new Error(ResponseBase.Log || JSON.stringify(ResponseBase.Error));
+    }
+    if (!ResponseBase.Data) {
+      return [];
+    }
+
+    const raw = extractStringFromResponse(ResponseBase.Data);
+    if (raw.trim() === "") {
+      return [];
+    }
+
+    return (JSON.parse(raw) as unknown[]).map(normalizeSessionAccount);
+  }
+
+  async getSession(
+    masterAddress: string,
+    sessionAddress: string,
+    height?: number,
+  ): Promise<SessionAccountInfo> {
+    const abciResponse = await this.abciQuery(
+      `auth/accounts/${masterAddress}/session/${sessionAddress}`,
+      new Uint8Array(),
+      height,
+    );
+
+    const {
+      ResponseBase,
+    } = abciResponse.response;
+
+    if (ResponseBase.Error) {
+      throw new Error(ResponseBase.Log || JSON.stringify(ResponseBase.Error));
+    }
+
+    const raw = extractStringFromResponse(ResponseBase.Data);
+    return normalizeSessionAccount(JSON.parse(raw));
+  }
+
   async getRenderOutput(
     packagePath: string,
     path: string,
@@ -167,7 +240,7 @@ export abstract class BaseGnoProvider extends BaseTm2Provider implements GnoProv
       }
     }
     catch {
-      // Not JSON — treat as newline-separated paths
+      // Not JSON, treat as newline-separated paths
     }
     return raw.split("\n").filter(p => p.length > 0);
   }

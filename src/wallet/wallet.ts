@@ -15,7 +15,14 @@ import {
   MsgRun,
 } from "../proto/gno/vm.js";
 import {
-  MemPackage, MsgAddPackage, MsgCall, MsgSend,
+  Any,
+  MemPackage,
+  MsgAddPackage,
+  MsgCall,
+  MsgCreateSession,
+  MsgRevokeAllSessions,
+  MsgRevokeSession,
+  MsgSend,
 } from "../proto/index.js";
 import {
   GnoProvider,
@@ -244,6 +251,141 @@ export class GnoWallet extends Wallet {
     const signedTx: Tx = await this.signTransaction(tx, decodeTxMessages);
 
     // Send the transaction
+    return this.sendTransaction(signedTx, endpoint);
+  };
+
+  /**
+   * Creates a new account session for the current wallet address
+   * @param {Any} sessionKey the session public key wrapped as Any
+   * @param {bigint} expiresAt the unix timestamp expiry, or 0 for no expiry
+   * @param {string} spendLimit the std.Coins spending limit string, or empty for no spending
+   * @param {string[]} allowPaths the allowed realm paths, or empty for unrestricted paths
+   * @param {TransactionEndpoint} endpoint the transaction broadcast type (sync / commit)
+   * @param {bigint} [spendPeriod] the spending period in seconds, or 0 for lifetime cap
+   * @param {TxFee} [fee] the custom transaction fee, if any
+   */
+  createSession = async <K extends keyof BroadcastTransactionMap>(
+    sessionKey: Any,
+    expiresAt: bigint,
+    spendLimit: string,
+    allowPaths: string[],
+    endpoint: K,
+    spendPeriod = 0n,
+    fee?: TxFee,
+  ): Promise<BroadcastTransactionMap[K]["result"]> => {
+    const creator: string = await this.getAddress();
+
+    const txFee: TxFee = fee
+      ? fee
+      : {
+        gas_wanted: 60000n,
+        gas_fee: defaultTxFee,
+      };
+
+    const createSessionMsg: MsgCreateSession = {
+      creator,
+      session_key: sessionKey,
+      expires_at: expiresAt,
+      allow_paths: allowPaths,
+      spend_limit: spendLimit,
+      spend_period: spendPeriod,
+    };
+
+    const tx: Tx = {
+      messages: [
+        {
+          type_url: MsgEndpoint.MSG_CREATE_SESSION,
+          value: MsgCreateSession.encode(createSessionMsg).finish(),
+        },
+      ],
+      fee: txFee,
+      memo: "",
+      signatures: [],
+    };
+
+    const signedTx: Tx = await this.signTransaction(tx, decodeTxMessages);
+
+    return this.sendTransaction(signedTx, endpoint);
+  };
+
+  /**
+   * Revokes an account session for the current wallet address
+   * @param {Any} sessionKey the session public key wrapped as Any
+   * @param {TransactionEndpoint} endpoint the transaction broadcast type (sync / commit)
+   * @param {TxFee} [fee] the custom transaction fee, if any
+   */
+  revokeSession = async <K extends keyof BroadcastTransactionMap>(
+    sessionKey: Any,
+    endpoint: K,
+    fee?: TxFee,
+  ): Promise<BroadcastTransactionMap[K]["result"]> => {
+    const creator: string = await this.getAddress();
+
+    const txFee: TxFee = fee
+      ? fee
+      : {
+        gas_wanted: 60000n,
+        gas_fee: defaultTxFee,
+      };
+
+    const revokeSessionMsg: MsgRevokeSession = {
+      creator,
+      session_key: sessionKey,
+    };
+
+    const tx: Tx = {
+      messages: [
+        {
+          type_url: MsgEndpoint.MSG_REVOKE_SESSION,
+          value: MsgRevokeSession.encode(revokeSessionMsg).finish(),
+        },
+      ],
+      fee: txFee,
+      memo: "",
+      signatures: [],
+    };
+
+    const signedTx: Tx = await this.signTransaction(tx, decodeTxMessages);
+
+    return this.sendTransaction(signedTx, endpoint);
+  };
+
+  /**
+   * Revokes all account sessions for the current wallet address
+   * @param {TransactionEndpoint} endpoint the transaction broadcast type (sync / commit)
+   * @param {TxFee} [fee] the custom transaction fee, if any
+   */
+  revokeAllSessions = async <K extends keyof BroadcastTransactionMap>(
+    endpoint: K,
+    fee?: TxFee,
+  ): Promise<BroadcastTransactionMap[K]["result"]> => {
+    const creator: string = await this.getAddress();
+
+    const txFee: TxFee = fee
+      ? fee
+      : {
+        gas_wanted: 60000n,
+        gas_fee: defaultTxFee,
+      };
+
+    const revokeAllSessionsMsg: MsgRevokeAllSessions = {
+      creator,
+    };
+
+    const tx: Tx = {
+      messages: [
+        {
+          type_url: MsgEndpoint.MSG_REVOKE_ALL_SESSIONS,
+          value: MsgRevokeAllSessions.encode(revokeAllSessionsMsg).finish(),
+        },
+      ],
+      fee: txFee,
+      memo: "",
+      signatures: [],
+    };
+
+    const signedTx: Tx = await this.signTransaction(tx, decodeTxMessages);
+
     return this.sendTransaction(signedTx, endpoint);
   };
 
