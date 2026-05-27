@@ -18,7 +18,6 @@ import {
   normalizeSessionAccount,
 } from "./utility/index.js";
 
-
 /**
  * GnoProvider is the Provider interface for Gno-specific functionality
  */

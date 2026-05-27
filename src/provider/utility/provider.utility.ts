@@ -1,4 +1,6 @@
-import { SessionAccountInfo } from "../types/index.js";
+import {
+  SessionAccountInfo,
+} from "../types/index.js";
 
 const encoder = new TextEncoder();
 
