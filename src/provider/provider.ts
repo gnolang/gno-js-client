@@ -9,11 +9,15 @@ import {
   VMEndpoint,
 } from "./endpoints.js";
 import {
+  assertNoABCIError,
+} from "./errors/index.js";
+import {
   FunctionSignature,
   SessionAccountInfo,
 } from "./types/index.js";
 import {
   encodeVMQueryData,
+  extractOptionalStringFromResponse,
   extractStringFromResponse,
   normalizeSessionAccount,
 } from "./utility/index.js";
@@ -91,8 +95,19 @@ export interface GnoProvider extends Provider {
  * Provides all VM query methods; subclasses only need a static `create()` factory.
  */
 export abstract class BaseGnoProvider extends BaseTm2Provider implements GnoProvider {
+  /**
+   * Runs an ABCI query and surfaces node-side failures as typed errors.
+   *
+   * A VM-level failure is not a transport error: it comes back as a regular
+   * HTTP 200 response with `ResponseBase.Error` set and `Data` null. Checking
+   * it here — rather than in each caller — is what keeps "package not found"
+   * distinguishable from "package declares no Render".
+   * @param {string} path the ABCI query path
+   * @param {Uint8Array} data the query payload
+   * @param {number} [height=0] the height for querying.
+   */
   private async abciQuery(path: string, data: Uint8Array, height?: number): Promise<ABCIResponse> {
-    return adaptAbciQueryResponse(
+    const abciResponse = adaptAbciQueryResponse(
       await this.client.abciQuery({
         path,
         data,
@@ -100,6 +115,10 @@ export abstract class BaseGnoProvider extends BaseTm2Provider implements GnoProv
         prove: false,
       }),
     );
+
+    assertNoABCIError(abciResponse.response.ResponseBase);
+
+    return abciResponse;
   }
 
   async evaluateExpression(
@@ -113,7 +132,7 @@ export abstract class BaseGnoProvider extends BaseTm2Provider implements GnoProv
       height,
     );
 
-    return extractStringFromResponse(abciResponse.response.ResponseBase.Data);
+    return extractOptionalStringFromResponse(abciResponse.response.ResponseBase.Data);
   }
 
   async getFileContent(packagePath: string, height?: number): Promise<string> {
@@ -123,7 +142,7 @@ export abstract class BaseGnoProvider extends BaseTm2Provider implements GnoProv
       height,
     );
 
-    return extractStringFromResponse(abciResponse.response.ResponseBase.Data);
+    return extractOptionalStringFromResponse(abciResponse.response.ResponseBase.Data);
   }
 
   async getFunctionSignatures(
@@ -136,17 +155,9 @@ export abstract class BaseGnoProvider extends BaseTm2Provider implements GnoProv
       height,
     );
 
-    const {
-      ResponseBase,
-    } = abciResponse.response;
-
-    if (ResponseBase.Error) {
-      throw new Error(
-        `ABCI error querying ${packagePath}: ${ResponseBase.Log || JSON.stringify(ResponseBase.Error)}`,
-      );
-    }
-
-    const responseRaw: string = extractStringFromResponse(ResponseBase.Data);
+    const responseRaw: string = extractStringFromResponse(
+      abciResponse.response.ResponseBase.Data,
+    );
 
     return JSON.parse(responseRaw);
   }
@@ -162,9 +173,6 @@ export abstract class BaseGnoProvider extends BaseTm2Provider implements GnoProv
       ResponseBase,
     } = abciResponse.response;
 
-    if (ResponseBase.Error) {
-      throw new Error(ResponseBase.Log || JSON.stringify(ResponseBase.Error));
-    }
     if (!ResponseBase.Data) {
       return [];
     }
@@ -188,15 +196,10 @@ export abstract class BaseGnoProvider extends BaseTm2Provider implements GnoProv
       height,
     );
 
-    const {
-      ResponseBase,
-    } = abciResponse.response;
+    const raw = extractStringFromResponse(
+      abciResponse.response.ResponseBase.Data,
+    );
 
-    if (ResponseBase.Error) {
-      throw new Error(ResponseBase.Log || JSON.stringify(ResponseBase.Error));
-    }
-
-    const raw = extractStringFromResponse(ResponseBase.Data);
     return normalizeSessionAccount(JSON.parse(raw));
   }
 
@@ -211,7 +214,7 @@ export abstract class BaseGnoProvider extends BaseTm2Provider implements GnoProv
       height,
     );
 
-    return extractStringFromResponse(abciResponse.response.ResponseBase.Data);
+    return extractOptionalStringFromResponse(abciResponse.response.ResponseBase.Data);
   }
 
   async getRealmPaths(prefix: string): Promise<string[]> {
@@ -224,9 +227,6 @@ export abstract class BaseGnoProvider extends BaseTm2Provider implements GnoProv
       ResponseBase,
     } = abciResponse.response;
 
-    if (ResponseBase.Error) {
-      throw new Error(ResponseBase.Log || JSON.stringify(ResponseBase.Error));
-    }
     if (!ResponseBase.Data) {
       return [];
     }

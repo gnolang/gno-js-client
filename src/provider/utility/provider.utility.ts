@@ -27,6 +27,20 @@ export const extractStringFromResponse = (abciData: string | null): string => {
   return Buffer.from(abciData, "base64").toString();
 };
 
+/**
+ * Decodes an ABCI payload that is allowed to be empty.
+ *
+ * A query can legitimately succeed and produce nothing — a `Render` that
+ * returns an empty string, for instance. The response adapter collapses an
+ * empty payload to `null`, so text results have to read a missing payload as
+ * empty; whether the query actually failed has already been settled by
+ * `assertNoABCIError`.
+ * @param {string | null} abciData the base64 `ResponseBase.Data`
+ */
+export const extractOptionalStringFromResponse = (abciData: string | null): string => {
+  return abciData ? Buffer.from(abciData, "base64").toString() : "";
+};
+
 export const toRecord = (value: unknown): Record<string, unknown> => {
   return value && typeof value === "object"
     ? value as Record<string, unknown>
