@@ -30,21 +30,21 @@
     "js"
   ],
   "devDependencies": {
-    "@arethetypeswrong/core": "^0.18.2",
-    "@changesets/changelog-github": "^0.6.0",
-    "@changesets/cli": "^2.31.0",
+    "@arethetypeswrong/core": "^0.18.5",
+    "@changesets/changelog-github": "^0.7.0",
+    "@changesets/cli": "^2.31.1",
     "@eslint/js": "^10.0.1",
     "@stylistic/eslint-plugin": "^5.10.0",
-    "@types/node": "^25.5.0",
+    "@types/node": "^26.1.2",
     "@types/yargs": "^17.0.35",
-    "@vitest/coverage-istanbul": "^4.1.2",
-    "eslint": "^10.1.0",
-    "eslint-plugin-simple-import-sort": "^12.1.1",
-    "ts-proto": "^2.11.6",
-    "tsdown": "^0.21.7",
-    "typescript": "^6.0.2",
-    "typescript-eslint": "^8.57.2",
-    "vitest": "^4.1.2"
+    "@vitest/coverage-istanbul": "^4.1.10",
+    "eslint": "^10.8.0",
+    "eslint-plugin-simple-import-sort": "^14.0.0",
+    "ts-proto": "^2.12.0",
+    "tsdown": "^0.22.14",
+    "typescript": "6.0.2",
+    "typescript-eslint": "^8.66.0",
+    "vitest": "^4.1.10"
   },
   "scripts": {
     "tsc": "tsc",
@@ -62,14 +62,14 @@
     "release": "pnpm build && changeset publish"
   },
   "dependencies": {
-    "@bufbuild/protobuf": "^2.11.0",
-    "@cosmjs/ledger-amino": "^0.38.1",
+    "@bufbuild/protobuf": "^2.13.0",
+    "@cosmjs/ledger-amino": "0.38.1",
     "@gnolang/tm2-js-client": "^2.0.4",
     "@gnolang/tm2-rpc": "^1.0.0",
-    "protobufjs": "^8.0.0",
-    "yargs": "^18.0.0"
+    "protobufjs": "^8.7.1",
+    "yargs": "^18.1.0"
   },
-  "packageManager": "pnpm@10.33.0",
+  "packageManager": "pnpm@11.20.0",
   "main": "dist/index.cjs",
   "module": "dist/index.mjs",
   "types": "dist/index.d.mts",
