@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.0.4
+
+### Patch Changes
+
+- [#255](https://github.com/gnolang/gno-js-client/pull/255) [`b9a0d34`](https://github.com/gnolang/gno-js-client/commit/b9a0d3454c7cdba4576ca2cfe447cc7d40c5a572) Thanks [@clockworkgr](https://github.com/clockworkgr)! - Update deps, fix potential CI build issues. Ensure changeset runs properly
+
 All published versions of `@gnolang/gno-js-client` and the commits they correspond to.
 Dates are npm publish dates (UTC). Commit hashes point to `main` unless noted.
 
@@ -32,16 +38,19 @@ Commit: [`7b39384`](https://github.com/gnolang/gno-js-client/commit/7b393844ef32
 Major release. The PR that landed this on `main` is [#238](https://github.com/gnolang/gno-js-client/pull/238); contents were published from `feat/version-2.0` before that merge.
 
 **Breaking changes**
+
 - ESM-compatible imports; package now ships dual ESM/CJS (`7b39384`, [#238](https://github.com/gnolang/gno-js-client/pull/238))
 - Build system replaced (now uses `tsdown`); update deps (`0ef402b`, [#238](https://github.com/gnolang/gno-js-client/pull/238))
 - Treeshaking disabled on the bundle (`0c078d6`)
 - Bump `@gnolang/tm2-js-client` to a 2.x-compatible version (`0c078d6`)
 
 **Features**
+
 - Extensible client architecture with better `GnoWallet` typing and adjusted return types for transactions ([#236](https://github.com/gnolang/gno-js-client/pull/236))
 - Workflows migrated to `pnpm` (`8bd1756`, [#238](https://github.com/gnolang/gno-js-client/pull/238))
 
 **Maintenance / deps (since 1.4.5)**
+
 - [#229](https://github.com/gnolang/gno-js-client/pull/229) bump tar
 - [#227](https://github.com/gnolang/gno-js-client/pull/227) bump prettier 3.6.2 → 3.8.1
 - [#226](https://github.com/gnolang/gno-js-client/pull/226) bump @types/node 24.7.0 → 25.0.10
@@ -224,7 +233,7 @@ Commit: [`fc472db`](https://github.com/gnolang/gno-js-client/commit/fc472db987f7
 - chore(deps): bump prettier 2.8.8 → 3.0.1 ([#33](https://github.com/gnolang/gno-js-client/pull/33))
 - chore(deps): bump eslint-config-prettier 8.8.0 → 9.0.0 ([#34](https://github.com/gnolang/gno-js-client/pull/34))
 - chore(deps): bump ts-proto 1.150.1 → 1.156.2 ([#29](https://github.com/gnolang/gno-js-client/pull/29))
-- chore(deps): bump @typescript-eslint/* 5.60.1 → 5.62.0 ([#22](https://github.com/gnolang/gno-js-client/pull/22), [#23](https://github.com/gnolang/gno-js-client/pull/23))
+- chore(deps): bump @typescript-eslint/\* 5.60.1 → 5.62.0 ([#22](https://github.com/gnolang/gno-js-client/pull/22), [#23](https://github.com/gnolang/gno-js-client/pull/23))
 - chore(deps): bump jest 29.5.0 → 29.6.1 ([#15](https://github.com/gnolang/gno-js-client/pull/15))
 
 > Note: 1.0.5 was never published.
@@ -312,38 +321,38 @@ git tag -a v2.0.2 0c078d69cad9f5851ac919d6140ff55a4cd3b1c5 -m "v2.0.2"
 git push origin --tags
 ```
 
-| npm version | npm publish (UTC)        | git commit | notes |
-|-------------|--------------------------|------------|-------|
-| 1.0.0       | 2023-05-16T10:31:15Z     | `8e2154c`  | Initial release |
-| 1.0.1       | 2023-06-08T18:37:27Z     | `ea436d8`  |       |
-| 1.0.2       | 2023-06-16T10:22:30Z     | `b72e2e0`  |       |
-| 1.0.3       | 2023-07-03T10:02:03Z     | `57ea001`  |       |
-| 1.0.4       | 2023-07-03T10:20:31Z     | `314b1d6`  |       |
-| 1.0.5       | —                        | —          | Never published |
-| 1.0.6       | 2023-09-06T12:18:29Z     | `fc472db`  |       |
-| 1.0.7       | 2023-09-08T10:41:57Z     | `e03c742`  |       |
-| 1.1.0       | 2023-09-13T12:30:40Z     | `6cdf395`  |       |
-| 1.1.1       | 2023-09-21T13:39:49Z     | `371cb33`  |       |
-| 1.1.2       | 2023-09-22T10:42:03Z     | `8d01ab4`  |       |
-| 1.1.3       | 2023-09-22T10:48:23Z     | `2c0c9be`  |       |
-| 1.1.4       | 2023-09-22T16:25:21Z     | `9bb9f8b`  |       |
-| 1.1.5       | 2023-09-24T21:41:01Z     | `76418b2`  |       |
-| 1.1.6       | 2023-09-25T11:30:52Z     | `7430b7e`  |       |
-| 1.1.7       | 2023-12-04T10:12:18Z     | `963c755`  |       |
-| 1.2.0       | 2024-02-12T09:43:48Z     | `e5700f0`  |       |
-| 1.2.1       | 2024-03-11T15:29:53Z     | `0d6d321`  |       |
-| 1.2.2       | 2024-04-06T09:04:17Z     | `25d85d3`  |       |
-| 1.2.3       | 2024-04-29T12:01:21Z     | `cb5d9ed`  |       |
-| 1.3.0       | 2024-06-26T13:42:51Z     | `c5c3f94`  |       |
-| 1.3.1       | 2024-09-19T10:34:16Z     | `115afac`  |       |
-| 1.3.2       | 2025-01-16T12:00:01Z     | `cb04b9d`  |       |
-| 1.3.3       | —                        | `5662326`  | Bumped in source ([#176](https://github.com/gnolang/gno-js-client/pull/176)) but never published; superseded by 1.4.0 |
-| 1.4.0       | 2025-07-25T16:53:52Z     | `21cfea9`  |       |
-| 1.4.1       | 2025-07-25T18:11:09Z     | `7f06f99`  |       |
-| 1.4.2       | 2025-08-27T18:15:15Z     | `d6cd18d`  |       |
-| 1.4.3       | 2025-09-04T14:42:19Z     | `518b018`  |       |
-| 1.4.4       | 2025-09-08T13:41:59Z     | `d2401c0`  |       |
-| 1.4.5       | 2025-10-08T12:38:28Z     | `d0de0c4`  |       |
-| 2.0.0       | 2026-03-31T13:44:27Z     | `7b39384`  | bump-to-2.0.0 commit was `0ef402b`; published from `feat/version-2.0` (PR [#238](https://github.com/gnolang/gno-js-client/pull/238)), merged to main 2026-04-27 |
-| 2.0.1       | 2026-04-01T13:51:42Z     | `8bd1756`* | *Approximate. No commit on main has `version: "2.0.1"`; published from an uncommitted state. Diff vs 2.0.2 is unknown without inspecting the npm tarballs. |
-| 2.0.2       | 2026-04-01T14:00:40Z     | `0c078d6`  |       |
+| npm version | npm publish (UTC)    | git commit  | notes                                                                                                                                                           |
+| ----------- | -------------------- | ----------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1.0.0       | 2023-05-16T10:31:15Z | `8e2154c`   | Initial release                                                                                                                                                 |
+| 1.0.1       | 2023-06-08T18:37:27Z | `ea436d8`   |                                                                                                                                                                 |
+| 1.0.2       | 2023-06-16T10:22:30Z | `b72e2e0`   |                                                                                                                                                                 |
+| 1.0.3       | 2023-07-03T10:02:03Z | `57ea001`   |                                                                                                                                                                 |
+| 1.0.4       | 2023-07-03T10:20:31Z | `314b1d6`   |                                                                                                                                                                 |
+| 1.0.5       | —                    | —           | Never published                                                                                                                                                 |
+| 1.0.6       | 2023-09-06T12:18:29Z | `fc472db`   |                                                                                                                                                                 |
+| 1.0.7       | 2023-09-08T10:41:57Z | `e03c742`   |                                                                                                                                                                 |
+| 1.1.0       | 2023-09-13T12:30:40Z | `6cdf395`   |                                                                                                                                                                 |
+| 1.1.1       | 2023-09-21T13:39:49Z | `371cb33`   |                                                                                                                                                                 |
+| 1.1.2       | 2023-09-22T10:42:03Z | `8d01ab4`   |                                                                                                                                                                 |
+| 1.1.3       | 2023-09-22T10:48:23Z | `2c0c9be`   |                                                                                                                                                                 |
+| 1.1.4       | 2023-09-22T16:25:21Z | `9bb9f8b`   |                                                                                                                                                                 |
+| 1.1.5       | 2023-09-24T21:41:01Z | `76418b2`   |                                                                                                                                                                 |
+| 1.1.6       | 2023-09-25T11:30:52Z | `7430b7e`   |                                                                                                                                                                 |
+| 1.1.7       | 2023-12-04T10:12:18Z | `963c755`   |                                                                                                                                                                 |
+| 1.2.0       | 2024-02-12T09:43:48Z | `e5700f0`   |                                                                                                                                                                 |
+| 1.2.1       | 2024-03-11T15:29:53Z | `0d6d321`   |                                                                                                                                                                 |
+| 1.2.2       | 2024-04-06T09:04:17Z | `25d85d3`   |                                                                                                                                                                 |
+| 1.2.3       | 2024-04-29T12:01:21Z | `cb5d9ed`   |                                                                                                                                                                 |
+| 1.3.0       | 2024-06-26T13:42:51Z | `c5c3f94`   |                                                                                                                                                                 |
+| 1.3.1       | 2024-09-19T10:34:16Z | `115afac`   |                                                                                                                                                                 |
+| 1.3.2       | 2025-01-16T12:00:01Z | `cb04b9d`   |                                                                                                                                                                 |
+| 1.3.3       | —                    | `5662326`   | Bumped in source ([#176](https://github.com/gnolang/gno-js-client/pull/176)) but never published; superseded by 1.4.0                                           |
+| 1.4.0       | 2025-07-25T16:53:52Z | `21cfea9`   |                                                                                                                                                                 |
+| 1.4.1       | 2025-07-25T18:11:09Z | `7f06f99`   |                                                                                                                                                                 |
+| 1.4.2       | 2025-08-27T18:15:15Z | `d6cd18d`   |                                                                                                                                                                 |
+| 1.4.3       | 2025-09-04T14:42:19Z | `518b018`   |                                                                                                                                                                 |
+| 1.4.4       | 2025-09-08T13:41:59Z | `d2401c0`   |                                                                                                                                                                 |
+| 1.4.5       | 2025-10-08T12:38:28Z | `d0de0c4`   |                                                                                                                                                                 |
+| 2.0.0       | 2026-03-31T13:44:27Z | `7b39384`   | bump-to-2.0.0 commit was `0ef402b`; published from `feat/version-2.0` (PR [#238](https://github.com/gnolang/gno-js-client/pull/238)), merged to main 2026-04-27 |
+| 2.0.1       | 2026-04-01T13:51:42Z | `8bd1756`\* | \*Approximate. No commit on main has `version: "2.0.1"`; published from an uncommitted state. Diff vs 2.0.2 is unknown without inspecting the npm tarballs.     |
+| 2.0.2       | 2026-04-01T14:00:40Z | `0c078d6`   |                                                                                                                                                                 |
