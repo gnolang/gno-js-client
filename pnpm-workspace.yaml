@@ -12,3 +12,4 @@ packages:
 
 allowBuilds:
   protobufjs: true
+minimumReleaseAge: 720
