@@ -23,6 +23,8 @@ export enum GnoErrorType {
   INVALID_PACKAGE = "/vm.InvalidPackageError",
   INVALID_FILE = "/vm.InvalidFileError",
   OBJECT_NOT_FOUND = "/vm.ObjectNotFoundError",
+  UNOBSERVED_SEND = "/vm.UnobservedSendError",
+  UNSPENDABLE_SEND = "/vm.UnspendableSendError",
   STRING = "/abci.StringError",
 }
 
@@ -84,20 +86,31 @@ export class InvalidExprError extends GnoABCIError {
   }
 }
 
-/** The package did not pass type checking */
+/**
+ * The package did not pass type checking.
+ *
+ * The node cannot put the individual diagnostics in the error value: it is
+ * amino-encoded into the merkle-hashed result, and go/types wording varies
+ * across toolchains, so hashing it would break consensus. `vm.ErrTypeCheck`
+ * therefore joins them with a newline onto the error's msg trace, which is what
+ * `message` is recovered from — {@link errors} just splits it back apart.
+ */
 export class TypeCheckError extends GnoABCIError {
-  /** The individual type-check failures, as reported by the node */
+  /** The individual type-check failures, one per line of the msg trace */
   readonly errors: string[];
 
-  constructor(errors: string[] = [], message?: string, log?: string) {
+  constructor(message?: string, log?: string) {
     super(
       GnoErrorType.TYPE_CHECK,
-      message
-      ?? ["invalid gno package; type check errors:", ...errors].join("\n"),
+      message ?? "invalid gno package; type check failed",
       log,
     );
 
-    this.errors = errors;
+    // Only a recovered msg trace holds diagnostics; the fallback above is the
+    // type's own description and is not one.
+    this.errors = message
+      ? message.split("\n").map(line => line.trim()).filter(line => line.length > 0)
+      : [];
   }
 }
 
@@ -126,6 +139,32 @@ export class InvalidFileError extends GnoABCIError {
 export class ObjectNotFoundError extends GnoABCIError {
   constructor(message = "object not found", log?: string) {
     super(GnoErrorType.OBJECT_NOT_FOUND, message, log);
+  }
+}
+
+/**
+ * A `MsgCall` attached a non-empty send envelope that no executing code ever
+ * observed, which would strand the coins in the callee's address.
+ */
+export class UnobservedSendError extends GnoABCIError {
+  constructor(
+    message = "coins were sent but the called function never read them",
+    log?: string,
+  ) {
+    super(GnoErrorType.UNOBSERVED_SEND, message, log);
+  }
+}
+
+/**
+ * A `MsgAddPackage` attached coins to a pure `p/` package. Such a package has
+ * no realm identity, so it could never spend them.
+ */
+export class UnspendableSendError extends GnoABCIError {
+  constructor(
+    message = "coins cannot be sent to a pure package; nothing could ever spend them",
+    log?: string,
+  ) {
+    super(GnoErrorType.UNSPENDABLE_SEND, message, log);
   }
 }
 
@@ -237,11 +276,7 @@ export const constructGnoError = (
     case GnoErrorType.INVALID_EXPR:
       return new InvalidExprError(message, log);
     case GnoErrorType.TYPE_CHECK:
-      return new TypeCheckError(
-        Array.isArray(raw.errors) ? raw.errors.map(String) : [],
-        message,
-        log,
-      );
+      return new TypeCheckError(message, log);
     case GnoErrorType.UNAUTHORIZED_USER:
       return new UnauthorizedUserError(message, log);
     case GnoErrorType.INVALID_PACKAGE:
@@ -250,6 +285,10 @@ export const constructGnoError = (
       return new InvalidFileError(message, log);
     case GnoErrorType.OBJECT_NOT_FOUND:
       return new ObjectNotFoundError(message, log);
+    case GnoErrorType.UNOBSERVED_SEND:
+      return new UnobservedSendError(message, log);
+    case GnoErrorType.UNSPENDABLE_SEND:
+      return new UnspendableSendError(message, log);
     case GnoErrorType.STRING:
       return new StringError(message, log);
     default:

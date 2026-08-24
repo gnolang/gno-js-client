@@ -10,6 +10,7 @@ import {
 } from "./endpoints.js";
 import {
   assertNoABCIError,
+  ObjectNotFoundError,
 } from "./errors/index.js";
 import {
   FunctionSignature,
@@ -155,11 +156,17 @@ export abstract class BaseGnoProvider extends BaseTm2Provider implements GnoProv
       height,
     );
 
-    const responseRaw: string = extractStringFromResponse(
-      abciResponse.response.ResponseBase.Data,
-    );
+    const {
+      ResponseBase,
+    } = abciResponse.response;
 
-    return JSON.parse(responseRaw);
+    // A package that exports nothing is a success with an empty payload, not a
+    // failure — `assertNoABCIError` has already ruled the latter out.
+    if (!ResponseBase.Data) {
+      return [];
+    }
+
+    return JSON.parse(extractStringFromResponse(ResponseBase.Data));
   }
 
   async getSessions(masterAddress: string, height?: number): Promise<SessionAccountInfo[]> {
@@ -196,11 +203,24 @@ export abstract class BaseGnoProvider extends BaseTm2Provider implements GnoProv
       height,
     );
 
-    const raw = extractStringFromResponse(
-      abciResponse.response.ResponseBase.Data,
-    );
+    const {
+      ResponseBase,
+    } = abciResponse.response;
 
-    return normalizeSessionAccount(JSON.parse(raw));
+    // A node on a current tm2 reports a missing session as
+    // `/std.SessionNotFoundError`, which `assertNoABCIError` has already
+    // raised. This covers the remaining shape — a success carrying no account —
+    // so that it too names the condition instead of leaking
+    // "ABCI response is not initialized".
+    if (!ResponseBase.Data) {
+      throw new ObjectNotFoundError(
+        `no session ${sessionAddress} for master account ${masterAddress}`,
+      );
+    }
+
+    return normalizeSessionAccount(
+      JSON.parse(extractStringFromResponse(ResponseBase.Data)),
+    );
   }
 
   async getRenderOutput(
