@@ -10,10 +10,13 @@ import {
 
 import {
   defaultTxFee,
+  GnoABCIError,
   GnoJSONRPCProvider,
   GnoWallet,
+  InvalidPkgPathError,
   MemFile,
   MemPackage,
+  NoRenderDeclError,
 } from "../index.js";
 
 describe("E2E Tests", () => {
@@ -133,6 +136,41 @@ describe("E2E Tests", () => {
         txFee,
       ),
     ).resolves.not.toThrow();
+  });
+
+  test("a missing package is reported as InvalidPkgPathError", async () => {
+    const error = await provider
+      .getRenderOutput("gno.land/r/does/not/exist", "")
+      .then(() => null, (thrown: unknown) => thrown as GnoABCIError);
+
+    expect(error).toBeInstanceOf(InvalidPkgPathError);
+    expect(error?.type).toBe("/vm.InvalidPkgPathError");
+    expect(error?.message).toContain("package not found: gno.land/r/does/not/exist");
+  });
+
+  test("a package without Render is reported as NoRenderDeclError", async () => {
+    const error = await provider
+      .getRenderOutput("gno.land/p/nt/ufmt/v0", "")
+      .then(() => null, (thrown: unknown) => thrown as GnoABCIError);
+
+    expect(error).toBeInstanceOf(NoRenderDeclError);
+    expect(error?.type).toBe("/vm.NoRenderDeclError");
+    // The condition the caller actually needs to branch on — telling this
+    // apart from a missing package used to be impossible.
+    expect(error).not.toBeInstanceOf(InvalidPkgPathError);
+  });
+
+  test("a missing package is reported the same way by every VM query", async () => {
+    const missing = "gno.land/r/does/not/exist";
+
+    await expect(provider.getFileContent(missing)).rejects.toBeInstanceOf(GnoABCIError);
+    await expect(provider.getFunctionSignatures(missing)).rejects.toBeInstanceOf(GnoABCIError);
+    await expect(provider.evaluateExpression(missing, "Foo()"))
+      .rejects.toBeInstanceOf(InvalidPkgPathError);
+  });
+
+  test("an empty Render output is not an error", async () => {
+    await expect(provider.getRenderOutput("gno.land/r/tests/vm", "")).resolves.toBe("");
   });
 
   afterAll(async () => {

@@ -13,6 +13,11 @@ This file was reconstructed from git history and npm publish metadata to address
 [#241](https://github.com/gnolang/gno-js-client/issues/241). Going forward, please
 keep it up to date as part of the release process.
 
+## [Unreleased]
+
+- fix: surface the ABCI error returned by the node instead of a generic
+  `ABCI response is not initialized` ([#250](https://github.com/gnolang/gno-js-client/issues/250))
+
 ## [2.0.3] - 2026-05-27]
 
 - feat: add Account Sessions support ([#247](https://github.com/gnolang/gno-js-client/pull/247))
