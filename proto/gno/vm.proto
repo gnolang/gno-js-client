@@ -70,3 +70,25 @@ message MemFile {
   // the content of the source gno file
   string body = 2;
 }
+
+// MsgEnablePackage is the package approval tx message,
+// denoted as "m_enable_pkg"
+message MsgEnablePackage {
+  // the bech32 address of the approver
+  string approver = 1;
+  // the gno package path being enabled
+  string pkg_path = 2;
+  // the content hash of the package source being approved
+  string pkg_hash = 3;
+  // the block height at which the package submission was recorded
+  sint64 pkg_height = 4;
+}
+
+// MsgRejectPackage is the package rejection tx message,
+// denoted as "m_reject_pkg"
+message MsgRejectPackage {
+  // the bech32 address of the sender
+  string sender = 1;
+  // the gno package path being rejected
+  string pkg_path = 2;
+}

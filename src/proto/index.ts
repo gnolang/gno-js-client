@@ -5,7 +5,7 @@ export {
   MsgSend,
 } from "./gno/bank.js";
 export {
-  MemFile, MemPackage, MsgAddPackage, MsgCall, MsgRun,
+  MemFile, MemPackage, MsgAddPackage, MsgCall, MsgEnablePackage, MsgRejectPackage, MsgRun,
 } from "./gno/vm.js";
 export {
   Any,
