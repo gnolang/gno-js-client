@@ -12,6 +12,8 @@ import {
   MsgAddPackage,
   MsgCall,
   MsgCreateSession,
+  MsgEnablePackage,
+  MsgRejectPackage,
   MsgRevokeAllSessions,
   MsgRevokeSession,
   MsgSend,
@@ -115,6 +117,22 @@ export const decodeTxMessages = (messages: Any[]): unknown[] => {
       case MsgEndpoint.MSG_RUN: {
         const decodedMessage = MsgRun.decode(m.value);
         const messageJson = MsgRun.toJSON(decodedMessage) as object;
+        return {
+          "@type": m.type_url,
+          ...messageJson,
+        };
+      }
+      case MsgEndpoint.MSG_ENABLE_PKG: {
+        const decodedMessage = MsgEnablePackage.decode(m.value);
+        const messageJson = MsgEnablePackage.toJSON(decodedMessage) as object;
+        return {
+          "@type": m.type_url,
+          ...messageJson,
+        };
+      }
+      case MsgEndpoint.MSG_REJECT_PKG: {
+        const decodedMessage = MsgRejectPackage.decode(m.value);
+        const messageJson = MsgRejectPackage.toJSON(decodedMessage) as object;
         return {
           "@type": m.type_url,
           ...messageJson,
