@@ -118,7 +118,8 @@ Transaction methods call `callMethod`, check for errors in `deliver_tx.ResponseB
 
 ```ts
 const noFunds = new Map<string, number>();
-const fee = { gas_wanted: Long.fromNumber(2_000_000), gas_fee: '1000000ugnot' };
+// gas_fee must be a single `<amount><denom>` coin; anything else throws when the tx is signed
+const fee = { gas_wanted: 2_000_000n, gas_fee: '1000000ugnot' };
 
 // Returns the same typed tuple as the query method — e.g. Promise<void> here
 await wallet.realms.r.gnoland.wugnot.tx.Transfer(

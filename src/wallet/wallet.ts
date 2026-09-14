@@ -205,7 +205,7 @@ export class GnoWallet extends Wallet {
    * @param {string} to the bech32 address of the receiver
    * @param {Map<string, number>} funds the denomination -> value map for funds
    * @param {TransactionEndpoint} endpoint the transaction broadcast type (sync / commit)
-   * @param {TxFee} [fee] the custom transaction fee, if any
+   * @param {TxFee} [fee] the custom transaction fee, if any (gas_fee as a single <amount><denom> coin, ex. 1000000ugnot)
    */
   transferFunds = async <K extends keyof BroadcastTransactionMap>(
     to: string,
@@ -262,7 +262,7 @@ export class GnoWallet extends Wallet {
    * @param {string[]} allowPaths the allowed realm paths, or empty for unrestricted paths
    * @param {TransactionEndpoint} endpoint the transaction broadcast type (sync / commit)
    * @param {bigint} [spendPeriod] the spending period in seconds, or 0 for lifetime cap
-   * @param {TxFee} [fee] the custom transaction fee, if any
+   * @param {TxFee} [fee] the custom transaction fee, if any (gas_fee as a single <amount><denom> coin, ex. 1000000ugnot)
    */
   createSession = async <K extends keyof BroadcastTransactionMap>(
     sessionKey: Any,
@@ -312,7 +312,7 @@ export class GnoWallet extends Wallet {
    * Revokes an account session for the current wallet address
    * @param {Any} sessionKey the session public key wrapped as Any
    * @param {TransactionEndpoint} endpoint the transaction broadcast type (sync / commit)
-   * @param {TxFee} [fee] the custom transaction fee, if any
+   * @param {TxFee} [fee] the custom transaction fee, if any (gas_fee as a single <amount><denom> coin, ex. 1000000ugnot)
    */
   revokeSession = async <K extends keyof BroadcastTransactionMap>(
     sessionKey: Any,
@@ -353,7 +353,7 @@ export class GnoWallet extends Wallet {
   /**
    * Revokes all account sessions for the current wallet address
    * @param {TransactionEndpoint} endpoint the transaction broadcast type (sync / commit)
-   * @param {TxFee} [fee] the custom transaction fee, if any
+   * @param {TxFee} [fee] the custom transaction fee, if any (gas_fee as a single <amount><denom> coin, ex. 1000000ugnot)
    */
   revokeAllSessions = async <K extends keyof BroadcastTransactionMap>(
     endpoint: K,
@@ -397,7 +397,7 @@ export class GnoWallet extends Wallet {
    * @param {TransactionEndpoint} endpoint the transaction broadcast type (sync / commit)
    * @param {Map<string, number>} [funds] the denomination -> value map for funds, if any
    * @param {Map<string, number>} [maxDeposit] the denomination -> value map for max storage deposit, if any
-   * @param {TxFee} [fee] the custom transaction fee, if any
+   * @param {TxFee} [fee] the custom transaction fee, if any (gas_fee as a single <amount><denom> coin, ex. 1000000ugnot)
    */
   callMethod = async <K extends keyof BroadcastTransactionMap>(
     path: string,
@@ -459,7 +459,7 @@ export class GnoWallet extends Wallet {
    * @param {TransactionEndpoint} endpoint the transaction broadcast type (sync / commit)
    * @param {Map<string, number>} [funds] the denomination -> value map for funds, if any
    * @param {Map<string, number>} [maxDeposit] the denomination -> value map for max storage deposit, if any
-   * @param {TxFee} [fee] the custom transaction fee, if any
+   * @param {TxFee} [fee] the custom transaction fee, if any (gas_fee as a single <amount><denom> coin, ex. 1000000ugnot)
    */
   deployPackage = async <K extends keyof BroadcastTransactionMap>(
     gnoPackage: MemPackage,
@@ -517,7 +517,7 @@ export class GnoWallet extends Wallet {
    * @param {TransactionEndpoint} endpoint the transaction broadcast type (sync / commit)
    * @param {Map<string, number>} [funds] the denomination -> value map for funds, if any
    * @param {Map<string, number>} [maxDeposit] the denomination -> value map for max storage deposit, if any
-   * @param {TxFee} [fee] the custom transaction fee, if any
+   * @param {TxFee} [fee] the custom transaction fee, if any (gas_fee as a single <amount><denom> coin, ex. 1000000ugnot)
    */
   executePackage = async <K extends keyof BroadcastTransactionMap>(
     gnoPackage: MemPackage,
