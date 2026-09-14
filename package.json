@@ -64,7 +64,7 @@
   "dependencies": {
     "@bufbuild/protobuf": "^2.13.0",
     "@cosmjs/ledger-amino": "0.38.1",
-    "@gnolang/tm2-js-client": "^2.1.0",
+    "@gnolang/tm2-js-client": "^3.0.0",
     "@gnolang/tm2-rpc": "^1.0.0",
     "protobufjs": "^8.7.1",
     "yargs": "^18.1.0"
