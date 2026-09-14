@@ -91,6 +91,32 @@ export interface MemFile {
   body: string;
 }
 
+/**
+ * MsgEnablePackage is the package approval tx message,
+ * denoted as "m_enable_pkg"
+ */
+export interface MsgEnablePackage {
+  /** the bech32 address of the approver */
+  approver: string;
+  /** the gno package path being enabled */
+  pkg_path: string;
+  /** the content hash of the package source being approved */
+  pkg_hash: string;
+  /** the block height at which the package submission was recorded */
+  pkg_height: bigint;
+}
+
+/**
+ * MsgRejectPackage is the package rejection tx message,
+ * denoted as "m_reject_pkg"
+ */
+export interface MsgRejectPackage {
+  /** the bech32 address of the sender */
+  sender: string;
+  /** the gno package path being rejected */
+  pkg_path: string;
+}
+
 function createBaseMsgCall(): MsgCall {
   return { caller: "", send: "", max_deposit: "", pkg_path: "", func: "", args: [] };
 }
@@ -647,6 +673,193 @@ export const MemFile: MessageFns<MemFile> = {
     const message = createBaseMemFile();
     message.name = object.name ?? "";
     message.body = object.body ?? "";
+    return message;
+  },
+};
+
+function createBaseMsgEnablePackage(): MsgEnablePackage {
+  return { approver: "", pkg_path: "", pkg_hash: "", pkg_height: 0n };
+}
+
+export const MsgEnablePackage: MessageFns<MsgEnablePackage> = {
+  encode(message: MsgEnablePackage, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.approver !== "") {
+      writer.uint32(10).string(message.approver);
+    }
+    if (message.pkg_path !== "") {
+      writer.uint32(18).string(message.pkg_path);
+    }
+    if (message.pkg_hash !== "") {
+      writer.uint32(26).string(message.pkg_hash);
+    }
+    if (message.pkg_height !== 0n) {
+      if (BigInt.asIntN(64, message.pkg_height) !== message.pkg_height) {
+        throw new globalThis.Error("value provided for field message.pkg_height of type sint64 too large");
+      }
+      writer.uint32(32).sint64(message.pkg_height);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): MsgEnablePackage {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMsgEnablePackage();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.approver = reader.string();
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.pkg_path = reader.string();
+          continue;
+        }
+        case 3: {
+          if (tag !== 26) {
+            break;
+          }
+
+          message.pkg_hash = reader.string();
+          continue;
+        }
+        case 4: {
+          if (tag !== 32) {
+            break;
+          }
+
+          message.pkg_height = reader.sint64() as bigint;
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): MsgEnablePackage {
+    return {
+      approver: isSet(object.approver) ? globalThis.String(object.approver) : "",
+      pkg_path: isSet(object.pkg_path) ? globalThis.String(object.pkg_path) : "",
+      pkg_hash: isSet(object.pkg_hash) ? globalThis.String(object.pkg_hash) : "",
+      pkg_height: isSet(object.pkg_height) ? BigInt(object.pkg_height) : 0n,
+    };
+  },
+
+  toJSON(message: MsgEnablePackage): unknown {
+    const obj: any = {};
+    if (message.approver !== undefined) {
+      obj.approver = message.approver;
+    }
+    if (message.pkg_path !== undefined) {
+      obj.pkg_path = message.pkg_path;
+    }
+    if (message.pkg_hash !== undefined) {
+      obj.pkg_hash = message.pkg_hash;
+    }
+    if (message.pkg_height !== undefined) {
+      obj.pkg_height = message.pkg_height.toString();
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<MsgEnablePackage>, I>>(base?: I): MsgEnablePackage {
+    return MsgEnablePackage.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<MsgEnablePackage>, I>>(object: I): MsgEnablePackage {
+    const message = createBaseMsgEnablePackage();
+    message.approver = object.approver ?? "";
+    message.pkg_path = object.pkg_path ?? "";
+    message.pkg_hash = object.pkg_hash ?? "";
+    message.pkg_height = object.pkg_height ?? 0n;
+    return message;
+  },
+};
+
+function createBaseMsgRejectPackage(): MsgRejectPackage {
+  return { sender: "", pkg_path: "" };
+}
+
+export const MsgRejectPackage: MessageFns<MsgRejectPackage> = {
+  encode(message: MsgRejectPackage, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.sender !== "") {
+      writer.uint32(10).string(message.sender);
+    }
+    if (message.pkg_path !== "") {
+      writer.uint32(18).string(message.pkg_path);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): MsgRejectPackage {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMsgRejectPackage();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.sender = reader.string();
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.pkg_path = reader.string();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): MsgRejectPackage {
+    return {
+      sender: isSet(object.sender) ? globalThis.String(object.sender) : "",
+      pkg_path: isSet(object.pkg_path) ? globalThis.String(object.pkg_path) : "",
+    };
+  },
+
+  toJSON(message: MsgRejectPackage): unknown {
+    const obj: any = {};
+    if (message.sender !== undefined) {
+      obj.sender = message.sender;
+    }
+    if (message.pkg_path !== undefined) {
+      obj.pkg_path = message.pkg_path;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<MsgRejectPackage>, I>>(base?: I): MsgRejectPackage {
+    return MsgRejectPackage.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<MsgRejectPackage>, I>>(object: I): MsgRejectPackage {
+    const message = createBaseMsgRejectPackage();
+    message.sender = object.sender ?? "";
+    message.pkg_path = object.pkg_path ?? "";
     return message;
   },
 };
