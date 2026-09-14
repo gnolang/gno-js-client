@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.0.0
+
+### Major Changes
+
+- [#264](https://github.com/gnolang/gno-js-client/pull/264) [`05711aa`](https://github.com/gnolang/gno-js-client/commit/05711aa18050a492a65f27c0abcf5b47337c9cdb) Thanks [@clockworkgr](https://github.com/clockworkgr)! - Bump `@gnolang/tm2-js-client` to `^3.0.0`. Transactions are now signed with the fee rendered as `{"amount":[{"amount","denom"}],"gas"}` ([gnolang/gno#6173](https://github.com/gnolang/gno/pull/6173)), the shape the Ledger Cosmos app accepts, so `GnoWallet.fromLedger` can sign again. This changes the signed bytes for every signer: nodes without gnolang/gno#6173 reject transactions signed by this version. `gas_fee` must be a single `<amount><denom>` coin (e.g. `1000000ugnot`); other values now throw when the transaction is signed.
+
 ## 2.2.0
 
 ### Minor Changes
