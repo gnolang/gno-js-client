@@ -1,5 +1,15 @@
 # Changelog
 
+## 2.2.0
+
+### Minor Changes
+
+- [#260](https://github.com/gnolang/gno-js-client/pull/260) [`b241daf`](https://github.com/gnolang/gno-js-client/commit/b241daf4cf3aeede5417d9d7da14ee8ed3e3ef6f) Thanks [@jinoosss](https://github.com/jinoosss)! - Add `MsgEnablePackage` (`/vm.m_enable_pkg`) and `MsgRejectPackage` (`/vm.m_reject_pkg`) message types, `MsgEndpoint` entries, and `decodeTxMessages` support.
+
+### Patch Changes
+
+- [#262](https://github.com/gnolang/gno-js-client/pull/262) [`834262b`](https://github.com/gnolang/gno-js-client/commit/834262b3b131303bc803a3efe27f6ee3a4d7642c) Thanks [@jinoosss](https://github.com/jinoosss)! - Bump `@gnolang/tm2-js-client` to `^2.1.0`.
+
 ## 2.1.0
 
 ### Minor Changes
