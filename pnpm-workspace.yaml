@@ -18,3 +18,11 @@ minimumReleaseAge: 720
 # The cutoff still applies to every other package.
 minimumReleaseAgeExclude:
   - "@gnolang/*"
+
+# @gnolang/tm2-rpc 1.x decodes validator addresses with @cosmjs/encoding's
+# fromBech32, whose default length limit (Infinity) is rejected by
+# @scure/base >= 2.3.0 ("RangeError: limit: expected safe integer"). Hold
+# @scure/base 2.x below that until this package depends on
+# @gnolang/tm2-rpc >= 2.0.1, which passes an explicit limit; then remove this.
+overrides:
+  "@scure/base@2": 2.2.0
