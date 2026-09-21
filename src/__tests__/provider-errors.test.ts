@@ -11,6 +11,8 @@ import {
 import {
   assertNoABCIError,
   constructGnoError,
+  ExportDepthExceededError,
+  ExportSizeExceededError,
   GnoABCIError,
   GnoErrorType,
   InvalidPackageError,
@@ -137,6 +139,24 @@ describe("parseABCIErrorLog", () => {
 });
 
 describe("constructGnoError", () => {
+  test.each([[GnoErrorType.EXPORT_SIZE_EXCEEDED, ExportSizeExceededError, "/vm.ExportSizeExceededError", "vm.ExportSizeExceededError", "export size limit exceeded"], [GnoErrorType.EXPORT_DEPTH_EXCEEDED, ExportDepthExceededError, "/vm.ExportDepthExceededError", "vm.ExportDepthExceededError", "export depth limit exceeded"]])("maps %s to its typed error", (
+    type,
+    ErrorClass,
+    expectedType,
+    expectedName,
+    defaultMessage,
+  ) => {
+    const error = constructGnoError({
+      "@type": type,
+      value: "",
+    });
+
+    expect(error).toBeInstanceOf(ErrorClass);
+    expect(error.type).toBe(expectedType);
+    expect(error.name).toBe(expectedName);
+    expect(new ErrorClass().message).toBe(defaultMessage);
+  });
+
   test("maps a missing package to InvalidPkgPathError", () => {
     const error = constructGnoError({
       "@type": GnoErrorType.INVALID_PKG_PATH,
@@ -243,6 +263,13 @@ describe("constructGnoError", () => {
 // `adaptAbciQueryResponse`, then the check the provider performs — rather than
 // handing `assertNoABCIError` an object built by hand.
 describe("assertNoABCIError, over an adapted node response", () => {
+  test.each([[GnoErrorType.EXPORT_SIZE_EXCEEDED, ExportSizeExceededError], [GnoErrorType.EXPORT_DEPTH_EXCEEDED, ExportDepthExceededError]])("throws the typed error for %s", (type, ErrorClass) => {
+    expect(() => assertNodeResponse({
+      "@type": type,
+      value: "",
+    })).toThrow(ErrorClass);
+  });
+
   test("throws the typed error when the node reported one", () => {
     expect(() => assertNodeResponse({
       "@type": GnoErrorType.INVALID_PACKAGE,

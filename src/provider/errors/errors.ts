@@ -22,6 +22,8 @@ export enum GnoErrorType {
   UNAUTHORIZED_USER = "/vm.UnauthorizedUserError",
   INVALID_PACKAGE = "/vm.InvalidPackageError",
   INVALID_FILE = "/vm.InvalidFileError",
+  EXPORT_SIZE_EXCEEDED = "/vm.ExportSizeExceededError",
+  EXPORT_DEPTH_EXCEEDED = "/vm.ExportDepthExceededError",
   OBJECT_NOT_FOUND = "/vm.ObjectNotFoundError",
   UNOBSERVED_SEND = "/vm.UnobservedSendError",
   UNSPENDABLE_SEND = "/vm.UnspendableSendError",
@@ -132,6 +134,20 @@ export class InvalidPackageError extends GnoABCIError {
 export class InvalidFileError extends GnoABCIError {
   constructor(message = "file is not available", log?: string) {
     super(GnoErrorType.INVALID_FILE, message, log);
+  }
+}
+
+/** The exported value exceeds the maximum encoded size */
+export class ExportSizeExceededError extends GnoABCIError {
+  constructor(message = "export size limit exceeded", log?: string) {
+    super(GnoErrorType.EXPORT_SIZE_EXCEEDED, message, log);
+  }
+}
+
+/** The exported value exceeds the maximum traversal depth */
+export class ExportDepthExceededError extends GnoABCIError {
+  constructor(message = "export depth limit exceeded", log?: string) {
+    super(GnoErrorType.EXPORT_DEPTH_EXCEEDED, message, log);
   }
 }
 
@@ -283,6 +299,10 @@ export const constructGnoError = (
       return new InvalidPackageError(message, log);
     case GnoErrorType.INVALID_FILE:
       return new InvalidFileError(message, log);
+    case GnoErrorType.EXPORT_SIZE_EXCEEDED:
+      return new ExportSizeExceededError(message, log);
+    case GnoErrorType.EXPORT_DEPTH_EXCEEDED:
+      return new ExportDepthExceededError(message, log);
     case GnoErrorType.OBJECT_NOT_FOUND:
       return new ObjectNotFoundError(message, log);
     case GnoErrorType.UNOBSERVED_SEND:
