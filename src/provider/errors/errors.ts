@@ -1,6 +1,7 @@
 import {
   ABCIErrorKey,
   ABCIResponseBase,
+  constructRequestError,
   TM2Error,
 } from "@gnolang/tm2-js-client";
 
@@ -264,12 +265,12 @@ export const parseABCIErrorLog = (log?: string): string | undefined => {
  * it carries one, and from the log otherwise.
  * @param {object} error the `ResponseBase.Error` object
  * @param {string} [log] the accompanying `ResponseBase.Log`
- * @returns {GnoABCIError} the typed error
+ * @returns {TM2Error} the typed error
  */
 export const constructGnoError = (
   error: NonNullable<ABCIResponseBase["Error"]>,
   log?: string,
-): GnoABCIError => {
+): TM2Error => {
   const raw = error as Record<string, unknown>;
   const type = String(raw[ABCIErrorKey] ?? "");
 
@@ -311,12 +312,17 @@ export const constructGnoError = (
       return new UnspendableSendError(message, log);
     case GnoErrorType.STRING:
       return new StringError(message, log);
-    default:
-      return new GnoABCIError(
-        type || "unknown",
-        message ?? `unknown error: ${type || JSON.stringify(error)}`,
-        log,
-      );
+    default: {
+      const tm2Error = constructRequestError(type, log);
+      // Keep the richer Gno fallback when tm2 does not recognize the type.
+      return tm2Error.constructor === TM2Error
+        ? new GnoABCIError(
+          type || "unknown",
+          message ?? `unknown error: ${type || JSON.stringify(error)}`,
+          log,
+        )
+        : tm2Error;
+    }
   }
 };
 

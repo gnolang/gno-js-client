@@ -1,5 +1,5 @@
 ---
-"@gnolang/gno-js-client": patch
+"@gnolang/gno-js-client": minor
 ---
 
-Drop the direct `@gnolang/tm2-rpc` runtime dependency by importing `Tm2Client` from `@gnolang/tm2-js-client` 3.2.0 or later. Keep `@gnolang/tm2-rpc` only as a dev dependency for a test type.
+Drop the direct `@gnolang/tm2-rpc` runtime dependency by using `Tm2Client` and `constructRequestError` from `@gnolang/tm2-js-client` 3.3.0 or later. Preserve typed Gno and TM2 errors across direct ABCI queries and inherited provider methods.
