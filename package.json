@@ -34,6 +34,7 @@
     "@changesets/changelog-github": "^1.0.1",
     "@changesets/cli": "^3.0.3",
     "@eslint/js": "^10.0.1",
+    "@gnolang/tm2-rpc": "^2.0.2",
     "@stylistic/eslint-plugin": "^5.10.0",
     "@types/node": "^26.6.2",
     "@types/yargs": "^17.0.35",
@@ -65,8 +66,7 @@
   "dependencies": {
     "@bufbuild/protobuf": "^2.15.0",
     "@cosmjs/ledger-amino": "0.39.0",
-    "@gnolang/tm2-js-client": "^3.1.1",
-    "@gnolang/tm2-rpc": "^2.0.2",
+    "@gnolang/tm2-js-client": "^3.3.0",
     "protobufjs": "^8.8.0",
     "yargs": "^18.2.0"
   },

@@ -1,5 +1,8 @@
 import {
+  type AbciQueryParams,
   adaptAbciQueryResponse,
+  InvalidAddressError,
+  type Tm2Client,
 } from "@gnolang/tm2-js-client";
 import {
   AbciQueryResponse,
@@ -10,6 +13,7 @@ import {
 
 import {
   assertNoABCIError,
+  BaseGnoProvider,
   constructGnoError,
   ExportDepthExceededError,
   ExportSizeExceededError,
@@ -117,6 +121,65 @@ const assertNodeResponse = (
   );
 };
 
+class TestGnoProvider extends BaseGnoProvider {
+  constructor(client: Tm2Client) {
+    super(client);
+  }
+}
+
+describe("BaseGnoProvider.abciQuery", () => {
+  const params: AbciQueryParams = {
+    path: "vm/qeval",
+    data: new Uint8Array([1, 2, 3]),
+    height: 7,
+    prove: true,
+  };
+
+  test("preserves a typed Gno error for direct queries", async () => {
+    let forwarded: AbciQueryParams | undefined;
+    const provider = new TestGnoProvider({
+      abciQuery: async (received: AbciQueryParams) => {
+        forwarded = received;
+        return nodeResponse({
+          "@type": GnoErrorType.INVALID_PKG_PATH,
+        }, invalidPkgPathLog);
+      },
+    } as unknown as Tm2Client);
+
+    const error = await provider.abciQuery(params)
+      .then(() => null, (thrown: unknown) => thrown as InvalidPkgPathError);
+
+    expect(forwarded).toBe(params);
+    expect(error).toBeInstanceOf(InvalidPkgPathError);
+    expect(error?.log).toBe(invalidPkgPathLog);
+  });
+
+  test("preserves the inherited TM2 error mapping", async () => {
+    const log = "invalid address";
+    let forwarded: AbciQueryParams | undefined;
+    const provider = new TestGnoProvider({
+      abciQuery: async (received: AbciQueryParams) => {
+        forwarded = received;
+        return nodeResponse({
+          "@type": "/std.InvalidAddressError",
+        }, log);
+      },
+    } as unknown as Tm2Client);
+
+    const error = await provider.getAccount("invalid")
+      .then(() => null, (thrown: unknown) => thrown as InvalidAddressError);
+
+    expect(forwarded).toEqual({
+      path: "auth/accounts/invalid",
+      data: new Uint8Array(),
+      height: 0,
+      prove: false,
+    });
+    expect(error).toBeInstanceOf(InvalidAddressError);
+    expect(error?.log).toBe(log);
+  });
+});
+
 describe("parseABCIErrorLog", () => {
   test("extracts the first msg trace", () => {
     expect(parseABCIErrorLog(invalidPkgPathLog))
@@ -152,7 +215,7 @@ describe("constructGnoError", () => {
     });
 
     expect(error).toBeInstanceOf(ErrorClass);
-    expect(error.type).toBe(expectedType);
+    expect((error as GnoABCIError).type).toBe(expectedType);
     expect(error.name).toBe(expectedName);
     expect(new ErrorClass().message).toBe(defaultMessage);
   });
@@ -163,7 +226,7 @@ describe("constructGnoError", () => {
     }, invalidPkgPathLog);
 
     expect(error).toBeInstanceOf(InvalidPkgPathError);
-    expect(error.type).toBe("/vm.InvalidPkgPathError");
+    expect((error as GnoABCIError).type).toBe("/vm.InvalidPkgPathError");
     expect(error.name).toBe("vm.InvalidPkgPathError");
     expect(error.message).toBe("package not found: gno.land/r/does/not/exist");
     expect(error.log).toBe(invalidPkgPathLog);
@@ -175,7 +238,7 @@ describe("constructGnoError", () => {
     }, noRenderDeclLog);
 
     expect(error).toBeInstanceOf(NoRenderDeclError);
-    expect(error.type).toBe("/vm.NoRenderDeclError");
+    expect((error as GnoABCIError).type).toBe("/vm.NoRenderDeclError");
     // No msg trace to extract, so the type's own description is used.
     expect(error.message).toBe("render function not declared");
     expect(error.log).toBe(noRenderDeclLog);
@@ -228,7 +291,7 @@ describe("constructGnoError", () => {
         "@type": type,
       });
 
-      expect(error.type).toBe(type);
+      expect((error as GnoABCIError).type).toBe(type);
       expect(error.constructor).not.toBe(GnoABCIError);
       expect(error.message).not.toBe("");
     }
@@ -240,7 +303,7 @@ describe("constructGnoError", () => {
     });
 
     expect(error).toBeInstanceOf(GnoABCIError);
-    expect(error.type).toBe("/vm.SomethingNewError");
+    expect((error as GnoABCIError).type).toBe("/vm.SomethingNewError");
     expect(error.message).toBe("unknown error: /vm.SomethingNewError");
   });
 
@@ -253,7 +316,7 @@ describe("constructGnoError", () => {
     }, sessionNotFoundLog);
 
     expect(error).toBeInstanceOf(GnoABCIError);
-    expect(error.type).toBe("/std.SessionNotFoundError");
+    expect((error as GnoABCIError).type).toBe("/std.SessionNotFoundError");
     expect(error.name).toBe("std.SessionNotFoundError");
     expect(error.message).toBe("session not found");
   });

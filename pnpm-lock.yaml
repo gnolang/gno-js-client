@@ -173,11 +173,8 @@ importers:
         specifier: 0.39.0
         version: 0.39.0
       '@gnolang/tm2-js-client':
-        specifier: ^3.1.1
-        version: 3.1.1(debug@4.4.3)
-      '@gnolang/tm2-rpc':
-        specifier: ^2.0.2
-        version: 2.0.2
+        specifier: ^3.3.0
+        version: 3.3.0(debug@4.4.3)
       protobufjs:
         specifier: ^8.8.0
         version: 8.8.0
@@ -197,6 +194,9 @@ importers:
       '@eslint/js':
         specifier: ^10.0.1
         version: 10.0.1(eslint@10.11.0)
+      '@gnolang/tm2-rpc':
+        specifier: ^2.0.2
+        version: 2.0.2
       '@stylistic/eslint-plugin':
         specifier: ^5.10.0
         version: 5.10.0(eslint@10.11.0)
@@ -469,8 +469,8 @@ packages:
     resolution: {integrity: sha512-IkO+/KEUvwbVpiURZg+P7zF74z5Jxe0UgJxVni+RtoHQ6IZieXaO02kmadomap/q+l6bc/jdPGGqTjhuZnuz1Q==}
     engines: {node: ^20.19.0 || ^22.13.0 || >=24}
 
-  '@gnolang/tm2-js-client@3.1.1':
-    resolution: {integrity: sha512-zsBKLWUdiMhFjexFzXj5mpDLL0EtgnlKf/wJlU3J+jkfuxKbLSFokkQpAme/HvLdUBCtVwLSKhSXmK7/6Fcsng==}
+  '@gnolang/tm2-js-client@3.3.0':
+    resolution: {integrity: sha512-yB1x+sq02yAUPtzfB7t16jbMaMSrCgg8VSHTc2LIpoxm5KTTLtVoVBLmPj1hOsV1Z/Do5xlAFfpoo9d+3pd6hw==}
 
   '@gnolang/tm2-rpc@2.0.2':
     resolution: {integrity: sha512-nbl20CLMf63Sn/ujrswbTlCF3WHudEexjOi1Mbis0904683+tSG5tCoIz8JNCf1L1gNaZOEqg8sS7HyJ7XXbHQ==}
@@ -2415,7 +2415,7 @@ snapshots:
       '@eslint/core': 1.2.1
       levn: 0.4.1
 
-  '@gnolang/tm2-js-client@3.1.1(debug@4.4.3)':
+  '@gnolang/tm2-js-client@3.3.0(debug@4.4.3)':
     dependencies:
       '@bufbuild/protobuf': 2.15.0
       '@cosmjs/amino': 0.39.0

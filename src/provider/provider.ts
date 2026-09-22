@@ -1,4 +1,5 @@
 import {
+  AbciQueryParams,
   ABCIResponse,
   adaptAbciQueryResponse,
   BaseTm2Provider,
@@ -99,22 +100,16 @@ export abstract class BaseGnoProvider extends BaseTm2Provider implements GnoProv
   /**
    * Runs an ABCI query and surfaces node-side failures as typed errors.
    *
-   * A VM-level failure is not a transport error: it comes back as a regular
-   * HTTP 200 response with `ResponseBase.Error` set and `Data` null. Checking
-   * it here — rather than in each caller — is what keeps "package not found"
-   * distinguishable from "package declares no Render".
-   * @param {string} path the ABCI query path
-   * @param {Uint8Array} data the query payload
-   * @param {number} [height=0] the height for querying.
+   * VM errors are returned in successful HTTP response through
+   * `ResponseBase.Error`. The base provider converts these errors to a
+   * generic `TM2Error`, so this override calls {@link assertNoABCIError}
+   * first to preserve errors such as `InvalidPkgPathError`.
+   * @param {AbciQueryParams} params the ABCI query parameters
+   * @returns {Promise<ABCIResponse>} the ABCI response
    */
-  private async abciQuery(path: string, data: Uint8Array, height?: number): Promise<ABCIResponse> {
+  override async abciQuery(params: AbciQueryParams): Promise<ABCIResponse> {
     const abciResponse = adaptAbciQueryResponse(
-      await this.client.abciQuery({
-        path,
-        data,
-        height: height ?? 0,
-        prove: false,
-      }),
+      await this.client.abciQuery(params),
     );
 
     assertNoABCIError(abciResponse.response.ResponseBase);
@@ -127,21 +122,23 @@ export abstract class BaseGnoProvider extends BaseTm2Provider implements GnoProv
     expression: string,
     height?: number,
   ): Promise<string> {
-    const abciResponse = await this.abciQuery(
-      `vm/${VMEndpoint.EVALUATE}`,
-      encodeVMQueryData([packagePath, expression], "."),
-      height,
-    );
+    const abciResponse = await this.abciQuery({
+      path: `vm/${VMEndpoint.EVALUATE}`,
+      data: encodeVMQueryData([packagePath, expression], "."),
+      height: height ?? 0,
+      prove: false,
+    });
 
     return extractOptionalStringFromResponse(abciResponse.response.ResponseBase.Data);
   }
 
   async getFileContent(packagePath: string, height?: number): Promise<string> {
-    const abciResponse = await this.abciQuery(
-      `vm/${VMEndpoint.FILE_CONTENT}`,
-      encodeVMQueryData([packagePath]),
-      height,
-    );
+    const abciResponse = await this.abciQuery({
+      path: `vm/${VMEndpoint.FILE_CONTENT}`,
+      data: encodeVMQueryData([packagePath]),
+      height: height ?? 0,
+      prove: false,
+    });
 
     return extractOptionalStringFromResponse(abciResponse.response.ResponseBase.Data);
   }
@@ -150,11 +147,12 @@ export abstract class BaseGnoProvider extends BaseTm2Provider implements GnoProv
     packagePath: string,
     height?: number,
   ): Promise<FunctionSignature[]> {
-    const abciResponse = await this.abciQuery(
-      `vm/${VMEndpoint.FUNCTION_SIGNATURES}`,
-      encodeVMQueryData([packagePath]),
-      height,
-    );
+    const abciResponse = await this.abciQuery({
+      path: `vm/${VMEndpoint.FUNCTION_SIGNATURES}`,
+      data: encodeVMQueryData([packagePath]),
+      height: height ?? 0,
+      prove: false,
+    });
 
     const {
       ResponseBase,
@@ -170,11 +168,12 @@ export abstract class BaseGnoProvider extends BaseTm2Provider implements GnoProv
   }
 
   async getSessions(masterAddress: string, height?: number): Promise<SessionAccountInfo[]> {
-    const abciResponse = await this.abciQuery(
-      `auth/accounts/${masterAddress}/sessions`,
-      new Uint8Array(),
-      height,
-    );
+    const abciResponse = await this.abciQuery({
+      path: `auth/accounts/${masterAddress}/sessions`,
+      data: new Uint8Array(),
+      height: height ?? 0,
+      prove: false,
+    });
 
     const {
       ResponseBase,
@@ -197,11 +196,12 @@ export abstract class BaseGnoProvider extends BaseTm2Provider implements GnoProv
     sessionAddress: string,
     height?: number,
   ): Promise<SessionAccountInfo> {
-    const abciResponse = await this.abciQuery(
-      `auth/accounts/${masterAddress}/session/${sessionAddress}`,
-      new Uint8Array(),
-      height,
-    );
+    const abciResponse = await this.abciQuery({
+      path: `auth/accounts/${masterAddress}/session/${sessionAddress}`,
+      data: new Uint8Array(),
+      height: height ?? 0,
+      prove: false,
+    });
 
     const {
       ResponseBase,
@@ -228,20 +228,23 @@ export abstract class BaseGnoProvider extends BaseTm2Provider implements GnoProv
     path: string,
     height?: number,
   ): Promise<string> {
-    const abciResponse = await this.abciQuery(
-      `vm/${VMEndpoint.RENDER}`,
-      encodeVMQueryData([packagePath, path], ":"),
-      height,
-    );
+    const abciResponse = await this.abciQuery({
+      path: `vm/${VMEndpoint.RENDER}`,
+      data: encodeVMQueryData([packagePath, path], ":"),
+      height: height ?? 0,
+      prove: false,
+    });
 
     return extractOptionalStringFromResponse(abciResponse.response.ResponseBase.Data);
   }
 
   async getRealmPaths(prefix: string): Promise<string[]> {
-    const abciResponse = await this.abciQuery(
-      "vm/qpaths",
-      encodeVMQueryData([prefix]),
-    );
+    const abciResponse = await this.abciQuery({
+      path: "vm/qpaths",
+      data: encodeVMQueryData([prefix]),
+      height: 0,
+      prove: false,
+    });
 
     const {
       ResponseBase,
