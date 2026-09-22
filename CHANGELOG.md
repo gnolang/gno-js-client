@@ -1,5 +1,29 @@
 # Changelog
 
+## 3.1.0
+
+### Minor Changes
+
+- [#271](https://github.com/gnolang/gno-js-client/pull/271) [`12f6486`](https://github.com/gnolang/gno-js-client/commit/12f6486e04f01976adef0760ccbe01c80c856f21) Thanks [@clockworkgr](https://github.com/clockworkgr)! - Update `@gnolang/tm2-js-client` to `^3.1.1`, `@gnolang/tm2-rpc` to `^2.0.2` and `@cosmjs/ledger-amino` to 0.39.0, along with `@bufbuild/protobuf`, protobufjs, yargs and the build and test toolchain.
+  
+  This fixes validator address decoding in `status`, `validators`, `genesis` and `dumpConsensusState`, which threw `RangeError: limit: expected safe integer, got Infinity` for anyone whose install resolved `@scure/base` to 2.3.0 or later — currently every fresh install. It also picks up tm2-rpc 2.x's decoding fixes for `broadcastTxSync`/`broadcastTxAsync` responses and for transactions that emit events without a `pkg_path`, such as the `/bank.TransferEvent` emitted on every ugnot transfer.
+  
+  Inherited from tm2-js-client 3.1.x, and so visible on `GnoJSONRPCProvider` and `GnoWSProvider`:
+  
+  - ABCI errors from balance, account and gas price queries now reject with the node's typed error and log, instead of returning a fallback value or failing to parse.
+  - `getGasPrice()` is implemented against `auth/gasprice`; it used to reject with `not supported`. It returns `{ amount, denom, gas }`, or `null` when the chain has no minimum gas price configured. Its return type changed from `Promise<number>`, which breaks code typed against the old signature — though no code could have read a value before, since the call always rejected.
+  - `getTransaction` is now declared on the `Provider` interface.
+
+- [#273](https://github.com/gnolang/gno-js-client/pull/273) [`a335dd3`](https://github.com/gnolang/gno-js-client/commit/a335dd3e8d578a8d68b9a8107c1586250abe9c72) Thanks [@notJoon](https://github.com/notJoon)! - Drop the direct `@gnolang/tm2-rpc` runtime dependency by using `Tm2Client` and `constructRequestError` from `@gnolang/tm2-js-client` 3.3.0 or later. Preserve typed Gno and TM2 errors across direct ABCI queries and inherited provider methods.
+
+- [#267](https://github.com/gnolang/gno-js-client/pull/267) [`66aafa9`](https://github.com/gnolang/gno-js-client/commit/66aafa9ee2c519de44ec1169d3543468c0b91811) Thanks [@notJoon](https://github.com/notJoon)! - Add typed handling for the `ExportSizeExceededError` and `ExportDepthExceededError` VM errors (`/vm.ExportSizeExceededError`, `/vm.ExportDepthExceededError`). These are returned when a query result exceeds the node's encoded-size or traversal-depth cap, and previously fell through to the generic `GnoABCIError`.
+
+### Patch Changes
+
+- [#272](https://github.com/gnolang/gno-js-client/pull/272) [`e4754e8`](https://github.com/gnolang/gno-js-client/commit/e4754e8ba8aa8d3219f62a67ed1fc66c264e169b) Thanks [@clockworkgr](https://github.com/clockworkgr)! - Regenerate the protobuf sources with ts-proto 2.12.4, the version the lockfile already resolved; they had been generated with 2.11.6.
+  
+  Every generated `decode()` now guards its recursion depth, throwing `protobuf decode recursion limit exceeded` once a message nests more than 100 levels instead of recursing until the stack overflows. The message types, and encoding and decoding of any realistic payload, are unchanged.
+
 ## 3.0.0
 
 ### Major Changes

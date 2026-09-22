@@ -1,6 +1,6 @@
 {
   "name": "@gnolang/gno-js-client",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "description": "Gno JS / TS Client",
   "bin": {
     "gno-gen-module": "./dist/generate-module.cjs"
