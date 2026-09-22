@@ -100,7 +100,7 @@ export abstract class BaseGnoProvider extends BaseTm2Provider implements GnoProv
   /**
    * Runs an ABCI query and surfaces node-side failures as typed errors.
    *
-   * VM errors are returned in successful HTTp response through
+   * VM errors are returned in successful HTTP response through
    * `ResponseBase.Error`. The base provider converts these errors to a
    * generic `TM2Error`, so this override calls {@link assertNoABCIError}
    * first to preserve errors such as `InvalidPkgPathError`.
