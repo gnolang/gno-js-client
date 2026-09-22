@@ -1,6 +1,6 @@
 import {
   Tm2Client,
-} from "@gnolang/tm2-rpc";
+} from "@gnolang/tm2-js-client";
 
 import {
   BaseGnoProvider,
