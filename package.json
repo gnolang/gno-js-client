@@ -41,10 +41,10 @@
     "@vitest/coverage-istanbul": "^5.0.1",
     "eslint": "^10.11.0",
     "eslint-plugin-simple-import-sort": "^14.0.0",
-    "ts-proto": "^2.12.4",
+    "ts-proto": "^2.13.0",
     "tsdown": "^0.23.0",
     "typescript": "6.0.3",
-    "typescript-eslint": "^8.70.0",
+    "typescript-eslint": "^8.71.1",
     "vitest": "^5.0.1"
   },
   "scripts": {
@@ -64,7 +64,7 @@
     "release": "pnpm build && changeset publish"
   },
   "dependencies": {
-    "@bufbuild/protobuf": "^2.15.0",
+    "@bufbuild/protobuf": "^2.16.0",
     "@cosmjs/ledger-amino": "0.39.0",
     "@gnolang/tm2-js-client": "^3.3.0",
     "protobufjs": "^8.8.0",
