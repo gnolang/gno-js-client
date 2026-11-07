@@ -38,14 +38,14 @@
     "@stylistic/eslint-plugin": "^5.10.0",
     "@types/node": "^26.6.2",
     "@types/yargs": "^17.0.35",
-    "@vitest/coverage-istanbul": "^5.0.1",
+    "@vitest/coverage-istanbul": "^5.1.0",
     "eslint": "^10.11.0",
     "eslint-plugin-simple-import-sort": "^14.0.0",
-    "ts-proto": "^2.12.4",
+    "ts-proto": "^2.18.4",
     "tsdown": "^0.23.0",
     "typescript": "6.0.3",
-    "typescript-eslint": "^8.70.0",
-    "vitest": "^5.0.1"
+    "typescript-eslint": "^8.72.1",
+    "vitest": "^5.1.0"
   },
   "scripts": {
     "tsc": "tsc",
@@ -64,7 +64,7 @@
     "release": "pnpm build && changeset publish"
   },
   "dependencies": {
-    "@bufbuild/protobuf": "^2.15.0",
+    "@bufbuild/protobuf": "^2.16.0",
     "@cosmjs/ledger-amino": "0.39.0",
     "@gnolang/tm2-js-client": "^3.3.0",
     "protobufjs": "^8.8.0",
