@@ -35,17 +35,17 @@
     "@changesets/cli": "^3.0.3",
     "@eslint/js": "^10.0.1",
     "@gnolang/tm2-rpc": "^2.0.2",
-    "@stylistic/eslint-plugin": "^5.10.0",
+    "@stylistic/eslint-plugin": "^6.0.1",
     "@types/node": "^26.6.2",
     "@types/yargs": "^17.0.35",
-    "@vitest/coverage-istanbul": "^5.0.1",
+    "@vitest/coverage-istanbul": "^5.1.1",
     "eslint": "^10.11.0",
     "eslint-plugin-simple-import-sort": "^14.0.0",
-    "ts-proto": "^2.12.4",
+    "ts-proto": "^2.22.0",
     "tsdown": "^0.23.0",
     "typescript": "6.0.3",
-    "typescript-eslint": "^8.70.0",
-    "vitest": "^5.0.1"
+    "typescript-eslint": "^8.73.0",
+    "vitest": "^5.1.1"
   },
   "scripts": {
     "tsc": "tsc",
@@ -64,7 +64,7 @@
     "release": "pnpm build && changeset publish"
   },
   "dependencies": {
-    "@bufbuild/protobuf": "^2.15.0",
+    "@bufbuild/protobuf": "^2.17.0",
     "@cosmjs/ledger-amino": "0.39.0",
     "@gnolang/tm2-js-client": "^3.3.0",
     "protobufjs": "^8.8.0",
