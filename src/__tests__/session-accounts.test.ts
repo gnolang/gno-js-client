@@ -1,14 +1,15 @@
 import {
   PubKeySecp256k1,
   Secp256k1PubKeyType,
-  uint8ArrayToBase64,
+  TransactionEndpoint,
 } from "@gnolang/tm2-js-client";
 import {
-  describe, expect, test,
+  describe, expect, test, vi,
 } from "vitest";
 
 import {
   decodeTxMessages,
+  GnoWallet,
   MsgCreateSession,
   MsgEndpoint,
   MsgRevokeAllSessions,
@@ -31,6 +32,20 @@ describe("account session messages", () => {
     expect(PubKeySecp256k1.decode(wrapped.value).key).toEqual(sessionPubKey);
   });
 
+  // upstream/master: auth/msgs.go omits empty limits/paths.
+  function mockWallet() {
+    const wallet = new GnoWallet();
+    vi.spyOn(wallet, "getAddress").mockResolvedValue("g1master");
+    const signSpy = vi.spyOn(wallet, "signTransaction").mockImplementation(async tx => tx);
+    const sendSpy = vi.spyOn(wallet, "sendTransaction").mockResolvedValue({
+    } as never);
+    return {
+      wallet,
+      signSpy,
+      sendSpy,
+    };
+  }
+
   test("encodes and decodes MsgCreateSession", () => {
     const sessionKey = secp256k1PubKeyToAny(sessionPubKey);
     const message = MsgCreateSession.create({
@@ -47,15 +62,41 @@ describe("account session messages", () => {
     expect(decoded).toEqual(message);
   });
 
+  test("includes spend limits and period in createSession signing JSON", async () => {
+    const {
+      wallet, signSpy,
+    } = mockWallet();
+
+    await wallet.createSession(
+      secp256k1PubKeyToAny(sessionPubKey),
+      0n,
+      "5foo,10ugnot",
+      ["*"],
+      TransactionEndpoint.BROADCAST_TX_COMMIT,
+      3600n,
+    );
+
+    expect(decodeTxMessages(signSpy.mock.calls[0][0].messages)).toEqual([
+      {
+        "@type": "/auth.m_create_session",
+        creator: "g1master",
+        session_key: {
+          "@type": Secp256k1PubKeyType,
+          value: "AgECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8g",
+        },
+        expires_at: "0",
+        allow_paths: ["*"],
+        spend_limit: "5foo,10ugnot",
+        spend_period: "3600",
+      },
+    ]);
+  });
+
   test("decodes account session transaction messages for signing", () => {
     const sessionKey = secp256k1PubKeyToAny(sessionPubKey);
     const createSession = MsgCreateSession.create({
       creator: "g1master",
       session_key: sessionKey,
-      expires_at: 0n,
-      allow_paths: [],
-      spend_limit: "",
-      spend_period: 0n,
     });
     const revokeSession = MsgRevokeSession.create({
       creator: "g1master",
@@ -78,21 +119,22 @@ describe("account session messages", () => {
         type_url: MsgEndpoint.MSG_REVOKE_ALL_SESSIONS,
         value: MsgRevokeAllSessions.encode(revokeAllSessions).finish(),
       },
-    ])).toMatchObject([
+    ])).toEqual([
       {
         "@type": MsgEndpoint.MSG_CREATE_SESSION,
         creator: "g1master",
         session_key: {
           "@type": Secp256k1PubKeyType,
-          value: uint8ArrayToBase64(sessionPubKey),
+          value: "AgECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8g",
         },
+        expires_at: "0",
       },
       {
         "@type": MsgEndpoint.MSG_REVOKE_SESSION,
         creator: "g1master",
         session_key: {
           "@type": Secp256k1PubKeyType,
-          value: uint8ArrayToBase64(sessionPubKey),
+          value: "AgECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8g",
         },
       },
       {

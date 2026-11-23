@@ -140,11 +140,20 @@ export const decodeTxMessages = (messages: Any[]): unknown[] => {
       }
       case MsgEndpoint.MSG_CREATE_SESSION: {
         const decodedMessage = MsgCreateSession.decode(m.value);
-        const messageJson = MsgCreateSession.toJSON(decodedMessage) as object;
         return {
           "@type": m.type_url,
-          ...messageJson,
+          creator: decodedMessage.creator,
           session_key: pubKeyAnyToAminoJson(decodedMessage.session_key),
+          expires_at: decodedMessage.expires_at.toString(),
+          ...(decodedMessage.allow_paths.length > 0 && {
+            allow_paths: decodedMessage.allow_paths,
+          }),
+          ...(decodedMessage.spend_limit !== "" && {
+            spend_limit: decodedMessage.spend_limit,
+          }),
+          ...(decodedMessage.spend_period !== 0n && {
+            spend_period: decodedMessage.spend_period.toString(),
+          }),
         };
       }
       case MsgEndpoint.MSG_REVOKE_SESSION: {
