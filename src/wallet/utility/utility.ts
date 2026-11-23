@@ -116,7 +116,10 @@ export const decodeTxMessages = (messages: Any[]): unknown[] => {
       }
       case MsgEndpoint.MSG_RUN: {
         const decodedMessage = MsgRun.decode(m.value);
-        const messageJson = MsgRun.toJSON(decodedMessage) as object;
+        const messageJson = MsgRun.toJSON(decodedMessage) as Record<string, unknown>;
+        if (decodedMessage.max_send === "") {
+          delete messageJson.max_send;
+        }
         return {
           "@type": m.type_url,
           ...messageJson,
