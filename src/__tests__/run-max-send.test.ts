@@ -7,17 +7,41 @@ import {
 
 import {
   decodeTxMessages,
+  fundsToCoins,
   GnoWallet,
   MsgEndpoint,
   MsgRun,
 } from "../index.js";
+
+describe("fundsToCoins", () => {
+  test("sorts coins by denomination", () => {
+    expect(fundsToCoins(new Map([["ugnot", 1000], ["foo", 5]]))).toBe("5foo,1000ugnot");
+  });
+
+  test("omits zero amounts", () => {
+    expect(fundsToCoins(new Map([["ugnot", 1000], ["foo", 0]]))).toBe("1000ugnot");
+  });
+
+  test("returns an empty string when all amounts are zero", () => {
+    expect(fundsToCoins(new Map([["ugnot", 0], ["foo", 0]]))).toBe("");
+  });
+
+  test("rejects negative amounts", () => {
+    expect(() => fundsToCoins(new Map([["ugnot", -1]]))).toThrow("invalid coin amount: -1ugnot");
+  });
+});
 
 describe("run max send", () => {
   const caller = "g1jg8mtutu9khhfwc4nxmuhcpftf0pajdhfvsqf5";
   const gnoPackage = {
     name: "main",
     path: "",
-    files: [],
+    files: [
+      {
+        name: "main.gno",
+        body: "package main\n\nfunc main() {}\n",
+      },
+    ],
   };
 
   test.each(["", "1000ugnot"])("matches Go amino JSON with max_send '%s'", (maxSend) => {
@@ -40,6 +64,12 @@ describe("run max send", () => {
         package: {
           name: "main",
           path: "",
+          files: [
+            {
+              name: "main.gno",
+              body: "package main\n\nfunc main() {}\n",
+            },
+          ],
         },
         ...(maxSend
           ? {
