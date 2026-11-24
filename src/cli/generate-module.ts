@@ -11,7 +11,8 @@ import {
   GnoJSONRPCProvider,
 } from "../provider/jsonrpc/jsonrpc.js";
 import {
-  FunctionSignature, NamedType,
+  FunctionSignature,
+  NamedType,
 } from "../provider/types/vm.js";
 
 function gnoTypeToTS(gnoType: string): string {
@@ -302,7 +303,8 @@ async function generateAndWrite(
       `Failed to fetch function signatures for "${realmPath}" from provider:\n  ${msg}\n\nPlease verify:\n  - The realm path "${realmPath}" exists on the chain`,
       {
         cause: err,
-      });
+      },
+    );
   }
   if (!signatures || signatures.length === 0) {
     console.log("  No exported functions, skipping.");
