@@ -6,10 +6,12 @@ import {
 } from "./provider.utility.js";
 
 /**
- * The `PrimitiveType` bit flags (`1 << iota`) that gnovm defines in
+ * `PrimitiveType` bit flags (`1 << iota`) from
  * {@link https://github.com/gnolang/gno/blob/d0cbe58c32b8464d593c96bb601790244f4b8e7b/gnovm/pkg/gnolang/types.go#L146-L171 | gnovm/pkg/gnolang/types.go},
- * written as the decimal strings amino JSON sends in `T.value`.
- * Only the typed kinds are listed, since the untyped and `DataByte` kinds never reach `vm/qeval_json`.
+ * encoded as decimal strings to match Amino JSON's `T.Value`.
+ *
+ * Untyped kinds and `DataByte` are omitted as they never appear
+ * in `vm/qeval_json` responses.
  */
 const PrimitiveType = {
   Bool: "4",
@@ -41,10 +43,18 @@ export class UnsupportedTypedValueError extends Error {
 }
 
 /**
- * Decodes bool to boolean, string/address to string, int/int64/uint/uint64 to bigint,
- * smaller integers and floats to number, and nil to null.
- * Unsupported values throw UnsupportedTypedValueError.
- * Check the result's `@error` and decode only the values preceding the error result.
+ * Decodes primitive `TypeValues` into their ECMAScript equivalents:
+ *
+ * - bool -> boolean
+ * - string, address -> string
+ * - int, int64, uint, uint64 -> bigint
+ * - Smaller integers and floats -> number
+ * - nil -> null
+ *
+ * @throws {UnsupportedTypedValueError} if the value is unsupported.
+ *
+ * caller should check the response's `@error` and decode only
+ * the values preceding the error result.
  */
 export const decodeTypedValue = (tv: TypedValueJSON): GnoPrimitiveValue => {
   if (tv.T === undefined && tv.V === undefined && tv.N === undefined) {
