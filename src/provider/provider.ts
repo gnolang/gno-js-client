@@ -86,8 +86,7 @@ export interface GnoProvider extends Provider {
   ): Promise<string>
 
   /**
-   * Evaluates an expression in readonly mode and returns raw amino TypedValue JSON.
-   * `"@error"` can be an empty string, so check it with `!== undefined`
+   * Evaluates an expression in readonly mode and returns raw amino TypedValue JSON
    * @param {string} packagePath the gno package path
    * @param {string} expression the expression to be evaluated
    * @param {number} [height=0] the height for querying.
