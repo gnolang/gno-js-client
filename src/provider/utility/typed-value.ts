@@ -43,7 +43,7 @@ export class UnsupportedTypedValueError extends Error {
 }
 
 /**
- * Decodes primitive `TypeValues` into their ECMAScript equivalents:
+ * Decodes primitive `TypeValue`s into their ECMAScript equivalents:
  *
  * - bool -> boolean
  * - string, address -> string

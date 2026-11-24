@@ -76,10 +76,52 @@ describe("evaluateExpressionJSON", () => {
       result: {
         results: [
           oneValue,
+          // `errors.New("bad")` as the node returns it (captured from QueryEvalJSON)
           {
+            T: {
+              "@type": "/gno.PointerType",
+              Elt: {
+                "@type": "/gno.RefType",
+                ID: "errors.errorString",
+              },
+            },
             V: {
-              "@type": "/gno.StringValue",
-              value: "bad",
+              "@type": "/gno.PointerValue",
+              TV: null,
+              Base: {
+                "@type": "/gno.HeapItemValue",
+                ObjectInfo: {
+                  ID: "0db98e7192fc2589b348ef5628ebd34f65b53e2c:0",
+                  ModTime: "0",
+                  RefCount: "0",
+                  LastObjectSize: "0",
+                },
+                Value: {
+                  T: {
+                    "@type": "/gno.RefType",
+                    ID: "errors.errorString",
+                  },
+                  V: {
+                    "@type": "/gno.StructValue",
+                    ObjectInfo: {
+                      ID: "0db98e7192fc2589b348ef5628ebd34f65b53e2c:0",
+                      ModTime: "0",
+                      RefCount: "0",
+                      LastObjectSize: "0",
+                    },
+                    Fields: [
+                      {
+                        T: stringValue.T,
+                        V: {
+                          "@type": "/gno.StringValue",
+                          value: "bad",
+                        },
+                      },
+                    ],
+                  },
+                },
+              },
+              Index: "0",
             },
           },
         ],
