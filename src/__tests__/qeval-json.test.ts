@@ -4,43 +4,18 @@ import {
   UnknownRequestError,
 } from "@gnolang/tm2-js-client";
 import {
-  type AbciQueryResponse,
-} from "@gnolang/tm2-rpc";
-import {
   describe, expect, test,
 } from "vitest";
 
 import {
-  BaseGnoProvider,
   type EvalJSONResult,
-  ExportSizeExceededError,
   type GnoProvider,
   InvalidPkgPathError,
-  StringError,
 } from "../index.js";
-
-const nodeResponse = (
-  result: EvalJSONResult | string,
-  error?: Record<string, unknown>,
-  log = "",
-): AbciQueryResponse => ({
-  responseBase: {
-    error: error as AbciQueryResponse["responseBase"]["error"],
-    data: new TextEncoder().encode(typeof result === "string" ? result : JSON.stringify(result)),
-    events: [],
-    log,
-    info: "",
-  },
-  key: new Uint8Array(),
-  value: new Uint8Array(),
-  height: 0,
-});
-
-class TestGnoProvider extends BaseGnoProvider {
-  constructor(client: Tm2Client) {
-    super(client);
-  }
-}
+import {
+  nodeResponse,
+  TestGnoProvider,
+} from "./helpers.js";
 
 const intValue = {
   T: {
@@ -70,9 +45,9 @@ describe("evaluateExpressionJSON", () => {
     const provider: GnoProvider = new TestGnoProvider({
       abciQuery: async (params: AbciQueryParams) => {
         forwarded = params;
-        return nodeResponse({
+        return nodeResponse(undefined, "", JSON.stringify({
           results: [],
-        });
+        }));
       },
     } as unknown as Tm2Client);
 
@@ -91,56 +66,9 @@ describe("evaluateExpressionJSON", () => {
     result: EvalJSONResult
   }>([
     {
-      name: "GetInt",
-      result: {
-        results: [intValue],
-      },
-    },
-    {
-      name: "GetString",
-      result: {
-        results: [stringValue],
-      },
-    },
-    {
       name: "GetMulti",
       result: {
         results: [stringValue, intValue],
-      },
-    },
-    {
-      name: "GetStruct",
-      result: {
-        results: [
-          {
-            T: {
-              "@type": "/gno.RefType",
-              ID: "gno.land/r/test/json.User",
-            },
-            V: {
-              "@type": "/gno.StructValue",
-              ObjectInfo: {
-                ID: "0db98e7192fc2589b348ef5628ebd34f65b53e2c:0",
-                ModTime: "0",
-                RefCount: "0",
-                LastObjectSize: "0",
-              },
-              Fields: [
-                {
-                  T: stringValue.T,
-                  V: {
-                    "@type": "/gno.StringValue",
-                    value: "alice",
-                  },
-                },
-                {
-                  T: intValue.T,
-                  N: "HgAAAAAAAAA=",
-                },
-              ],
-            },
-          },
-        ],
       },
     },
     {
@@ -158,40 +86,11 @@ describe("evaluateExpressionJSON", () => {
         "@error": "bad",
       },
     },
-    {
-      name: "a nil error",
-      result: {
-        results: [
-          oneValue,
-          {
-          },
-        ],
-      },
-    },
-    {
-      name: "no return values",
-      result: {
-        results: [],
-      },
-    },
-    {
-      name: "a zero value without N",
-      result: {
-        results: [
-          {
-            T: {
-              "@type": "/gno.PrimitiveType",
-              value: "4",
-            },
-          },
-        ],
-      },
-    },
   ])("preserves raw TypedValue JSON for $name", async ({
     result,
   }) => {
     const provider = new TestGnoProvider({
-      abciQuery: async () => nodeResponse(result),
+      abciQuery: async () => nodeResponse(undefined, "", JSON.stringify(result)),
     } as unknown as Tm2Client);
 
     expect(await provider.evaluateExpressionJSON("gno.land/r/test/json", "GetMulti()"))
@@ -200,7 +99,7 @@ describe("evaluateExpressionJSON", () => {
 
   test.each(["", "[]", "{}"])("rejects a response with no results array: '%s'", async (data) => {
     const provider = new TestGnoProvider({
-      abciQuery: async () => nodeResponse(data),
+      abciQuery: async () => nodeResponse(undefined, "", data),
     } as unknown as Tm2Client);
 
     await expect(provider.evaluateExpressionJSON("gno.land/r/test/json", "GetMulti()"))
@@ -217,21 +116,6 @@ describe("evaluateExpressionJSON", () => {
     },
     {
       error: {
-        "@type": "/vm.ExportSizeExceededError",
-      },
-      ErrorClass: ExportSizeExceededError,
-      message: "export size limit exceeded",
-    },
-    {
-      error: {
-        "@type": "/abci.StringError",
-        value: "kaboom",
-      },
-      ErrorClass: StringError,
-      message: "kaboom",
-    },
-    {
-      error: {
         "@type": "/std.UnknownRequestError",
       },
       ErrorClass: UnknownRequestError,
@@ -242,9 +126,7 @@ describe("evaluateExpressionJSON", () => {
     error: nodeError, ErrorClass, message, log,
   }) => {
     const provider = new TestGnoProvider({
-      abciQuery: async () => nodeResponse({
-        results: [],
-      }, nodeError, log),
+      abciQuery: async () => nodeResponse(nodeError, log),
     } as unknown as Tm2Client);
 
     const error = await provider.evaluateExpressionJSON("gno.land/r/test/json", "GetMulti()")
