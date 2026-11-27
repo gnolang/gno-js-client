@@ -1,11 +1,17 @@
 import {
-  TransactionEndpoint, TxFee,
+  TransactionEndpoint,
+  TxFee,
 } from "@gnolang/tm2-js-client";
 import {
-  ChildProcess, spawn,
+  ChildProcess,
+  spawn,
 } from "child_process";
 import {
-  afterAll, beforeAll, describe, expect, test,
+  afterAll,
+  beforeAll,
+  describe,
+  expect,
+  test,
 } from "vitest";
 
 import {

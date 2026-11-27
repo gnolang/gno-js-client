@@ -8,7 +8,9 @@ import {
   AbciQueryResponse,
 } from "@gnolang/tm2-rpc";
 import {
-  describe, expect, test,
+  describe,
+  expect,
+  test,
 } from "vitest";
 
 import {
