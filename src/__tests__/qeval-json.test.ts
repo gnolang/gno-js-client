@@ -4,7 +4,9 @@ import {
   UnknownRequestError,
 } from "@gnolang/tm2-js-client";
 import {
-  describe, expect, test,
+  describe,
+  expect,
+  test,
 } from "vitest";
 
 import {
@@ -165,7 +167,10 @@ describe("evaluateExpressionJSON", () => {
       log: "unknown vm query endpoint qeval_json in vm/qeval_json",
     },
   ])("maps the node error to $ErrorClass.name", async ({
-    error: nodeError, ErrorClass, message, log,
+    error: nodeError,
+    ErrorClass,
+    message,
+    log,
   }) => {
     const provider = new TestGnoProvider({
       abciQuery: async () => nodeResponse(nodeError, log),
