@@ -1,5 +1,31 @@
 # Changelog
 
+## 4.0.0
+
+### Major Changes
+
+- [#280](https://github.com/gnolang/gno-js-client/pull/280) [`b2dc43e`](https://github.com/gnolang/gno-js-client/commit/b2dc43e2fa91752262176523779dd5deb3131daf) Thanks [@notJoon](https://github.com/notJoon)! - Add `MsgRun.max_send` ([gnolang/gno#6504](https://github.com/gnolang/gno/pull/6504)) and an optional trailing `maxSend` argument to `GnoWallet.executePackage`. A run may send at most `max_send` coins out of the caller's account, and none if it is empty.
+  
+  **Breaking:** `MsgRun.max_send` is required. Build messages with `MsgRun.create(...)` or set `max_send` explicitly (`""` for no sends).
+  
+  `fundsToCoins` now sorts coins by denom, drops zero amounts and throws on negative ones, so `send`, `max_deposit` and `max_send` encode the way the node expects.
+
+### Minor Changes
+
+- [#281](https://github.com/gnolang/gno-js-client/pull/281) [`81a3eb5`](https://github.com/gnolang/gno-js-client/commit/81a3eb5f6b31809fa034731596356f742f76afe8) Thanks [@notJoon](https://github.com/notJoon)! - Add `evaluateExpressionJSON` to query `vm/qeval_json` and return the node's raw amino `TypedValue` JSON (`{ results, "@error"? }`) without decoding values.
+  Queries against nodes without `qeval_json` reject with `UnknownRequestError`.
+  Add `decodeTypedValue` to decode primitive values and reject unsupported values with `UnsupportedTypedValueError`.
+  
+  Breaking for custom `GnoProvider` implementations: the interface now requires `evaluateExpressionJSON`. Providers extending `BaseGnoProvider` inherit it and need no change.
+
+### Patch Changes
+
+- [#279](https://github.com/gnolang/gno-js-client/pull/279) [`d5e98f5`](https://github.com/gnolang/gno-js-client/commit/d5e98f5bcd509c647c7b85bda79a9a5c7dbd4290) Thanks [@notJoon](https://github.com/notJoon)! - Fix the signing payloads of `MsgCreateSession` and `MsgRevokeSession` to match the node's Amino JSON encoding. Previously, these transactions failed signature verification in three cases:
+  
+  - Empty `spend_limit` and zero `spend_period` values were included instead of omitted, causing `createSession` to fail with its default arguments.
+  - Non-secp256k1 session keys were signed using `{type_url, value}`. `/tm.PubKeyEd25519` and `/tm.PubKeyMultisig` keys are now encoded in Amino format, and unsupported key types are rejected before signing.
+  - `spendLimit` was signed without normalization. It is now trimmed, sorted by denom, and stripped of leading zeros to match the node's `ParseCoins` behavior.
+
 ## 3.1.0
 
 ### Minor Changes
