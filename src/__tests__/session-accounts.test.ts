@@ -2,6 +2,7 @@ import {
   PubKeyMultisig,
   PubKeySecp256k1,
   Secp256k1PubKeyType,
+  type Tm2Client,
   TransactionEndpoint,
 } from "@gnolang/tm2-js-client";
 import {
@@ -20,6 +21,10 @@ import {
   MsgRevokeSession,
   secp256k1PubKeyToAny,
 } from "../index.js";
+import {
+  nodeResponse,
+  TestGnoProvider,
+} from "./helpers.js";
 
 describe("account session messages", () => {
   const sessionPubKey = Uint8Array.from([
@@ -186,5 +191,15 @@ describe("account session messages", () => {
         })).finish(),
       },
     ])).toThrow("unsupported session public key type /unknown.PubKey");
+  });
+});
+
+describe("getSessions", () => {
+  test("returns an empty list for JSON null", async () => {
+    const provider = new TestGnoProvider({
+      abciQuery: async () => nodeResponse(undefined, "", "null"),
+    } as unknown as Tm2Client);
+
+    expect(await provider.getSessions("g1master")).toEqual([]);
   });
 });
