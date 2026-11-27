@@ -40,6 +40,7 @@ import {
   decodeTxMessages,
   defaultTxFee,
   fundsToCoins,
+  sortCoins,
 } from "./utility/index.js";
 
 /**
@@ -292,7 +293,7 @@ export class GnoWallet extends Wallet {
       session_key: sessionKey,
       expires_at: expiresAt,
       allow_paths: allowPaths,
-      spend_limit: spendLimit,
+      spend_limit: sortCoins(spendLimit),
       spend_period: spendPeriod,
     };
 

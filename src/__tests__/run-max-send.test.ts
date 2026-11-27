@@ -2,7 +2,10 @@ import {
   TransactionEndpoint,
 } from "@gnolang/tm2-js-client";
 import {
-  describe, expect, test, vi,
+  describe,
+  expect,
+  test,
+  vi,
 } from "vitest";
 
 import {
