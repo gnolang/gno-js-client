@@ -31,13 +31,17 @@ export const fundsToCoins = (funds?: Map<string, number>): string => {
     return "";
   }
 
-  const result: string[] = [];
+  return [...funds]
+    .filter(([denomination, amount]) => {
+      if (amount < 0) {
+        throw new Error(`invalid coin amount: ${amount}${denomination}`);
+      }
 
-  funds.forEach((value: number, denomination: string) => {
-    result.push(`${value}${denomination}`);
-  });
-
-  return result.join(",");
+      return amount !== 0;
+    })
+    .sort(([a], [b]) => a < b ? -1 : a > b ? 1 : 0)
+    .map(([denomination, amount]) => `${amount}${denomination}`)
+    .join(",");
 };
 
 /**
@@ -116,7 +120,10 @@ export const decodeTxMessages = (messages: Any[]): unknown[] => {
       }
       case MsgEndpoint.MSG_RUN: {
         const decodedMessage = MsgRun.decode(m.value);
-        const messageJson = MsgRun.toJSON(decodedMessage) as object;
+        const messageJson = MsgRun.toJSON(decodedMessage) as Record<string, unknown>;
+        if (decodedMessage.max_send === "") {
+          delete messageJson.max_send;
+        }
         return {
           "@type": m.type_url,
           ...messageJson,

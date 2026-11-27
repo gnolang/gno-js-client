@@ -45,6 +45,8 @@ message MsgRun {
   string max_deposit = 3;
   // the package being executed
   MemPackage package = 4;
+  // the maximum coins the run may send out of the caller's account; empty refuses transfers outside replayed history
+  string max_send = 5;
 }
 
 // MemPackage is the metadata information tied to

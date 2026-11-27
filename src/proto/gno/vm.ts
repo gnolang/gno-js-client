@@ -60,7 +60,11 @@ export interface MsgRun {
   /** the amount of funds to put down for the storage fee, if any ("<amount><denomination>") */
   max_deposit: string;
   /** the package being executed */
-  package?: MemPackage | undefined;
+  package?:
+    | MemPackage
+    | undefined;
+  /** the maximum coins the run may send out of the caller's account; empty refuses transfers outside replayed history */
+  max_send: string;
 }
 
 /**
@@ -388,7 +392,7 @@ export const MsgAddPackage: MessageFns<MsgAddPackage> = {
 };
 
 function createBaseMsgRun(): MsgRun {
-  return { caller: "", send: "", max_deposit: "", package: undefined };
+  return { caller: "", send: "", max_deposit: "", package: undefined, max_send: "" };
 }
 
 export const MsgRun: MessageFns<MsgRun> = {
@@ -404,6 +408,9 @@ export const MsgRun: MessageFns<MsgRun> = {
     }
     if (message.package !== undefined) {
       MemPackage.encode(message.package, writer.uint32(34).fork()).join();
+    }
+    if (message.max_send !== "") {
+      writer.uint32(42).string(message.max_send);
     }
     return writer;
   },
@@ -453,6 +460,14 @@ export const MsgRun: MessageFns<MsgRun> = {
             message.package = MemPackage.decode(reader, reader.uint32());
             continue;
           }
+          case 5: {
+            if (tag !== 42) {
+              break;
+            }
+
+            message.max_send = reader.string();
+            continue;
+          }
         }
         if ((tag & 7) === 4 || tag === 0) {
           break;
@@ -471,6 +486,7 @@ export const MsgRun: MessageFns<MsgRun> = {
       send: isSet(object.send) ? globalThis.String(object.send) : "",
       max_deposit: isSet(object.max_deposit) ? globalThis.String(object.max_deposit) : "",
       package: isSet(object.package) ? MemPackage.fromJSON(object.package) : undefined,
+      max_send: isSet(object.max_send) ? globalThis.String(object.max_send) : "",
     };
   },
 
@@ -488,6 +504,9 @@ export const MsgRun: MessageFns<MsgRun> = {
     if (message.package !== undefined) {
       obj.package = MemPackage.toJSON(message.package);
     }
+    if (message.max_send !== undefined) {
+      obj.max_send = message.max_send;
+    }
     return obj;
   },
 
@@ -502,6 +521,7 @@ export const MsgRun: MessageFns<MsgRun> = {
     message.package = (object.package !== undefined && object.package !== null)
       ? MemPackage.fromPartial(object.package)
       : undefined;
+    message.max_send = object.max_send ?? "";
     return message;
   },
 };
