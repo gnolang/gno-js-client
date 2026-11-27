@@ -1,5 +1,7 @@
 import {
-  describe, expect, test,
+  describe,
+  expect,
+  test,
 } from "vitest";
 
 import {
@@ -16,7 +18,8 @@ describe("sortCoins", () => {
     ${""}                         | ${""}
     ${" "}                        | ${""}
   `("sorts or preserves '$coins'", ({
-    coins, expected,
+    coins,
+    expected,
   }) => {
     expect(sortCoins(coins)).toBe(expected);
   });
