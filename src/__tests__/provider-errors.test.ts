@@ -5,7 +5,9 @@ import {
   type Tm2Client,
 } from "@gnolang/tm2-js-client";
 import {
-  describe, expect, test,
+  describe,
+  expect,
+  test,
 } from "vitest";
 
 import {

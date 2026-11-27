@@ -7,7 +7,8 @@ import {
   parseGnoReturns as _parseGnoReturns,
 } from "@gnolang/gno-js-client";
 import {
-  TransactionEndpoint, TxFee,
+  TransactionEndpoint,
+  TxFee,
 } from "@gnolang/tm2-js-client";
 
 const realm = "gno.land/r/g1lyejwwmxef5tn8nx69saykmgm8rlr4xq9yeh3z/helloworld";

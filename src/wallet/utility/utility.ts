@@ -1,4 +1,5 @@
 import {
+  PubKeyMultisig,
   PubKeySecp256k1,
   Secp256k1PubKeyType,
   uint8ArrayToBase64,
@@ -22,6 +23,26 @@ import {
   MsgEndpoint,
 } from "../endpoints.js";
 
+/** Sorts a coin string by denomination and normalizes amounts, leaving unparseable input unchanged. */
+export const sortCoins = (coins: string): string => {
+  // Go strings.TrimSpace uses Unicode White_Space; reCoin allows only ASCII space between amount and denom.
+  const parts = coins.split(",").map(coin => coin.replace(/^\p{White_Space}+|\p{White_Space}+$/gu, ""));
+  if (parts.length === 1 && parts[0] === "") {
+    return "";
+  }
+
+  // upstream/master:tm2/pkg/std/coin.go: reAmt, reSpc, reDnmString, and reCoin.
+  const parsed = parts.map(coin => coin.match(/^([0-9]+)[\t\n\v\f\r ]*([a-z/][a-z0-9_.:/-]{2,})$/));
+  if (!parsed.every((coin): coin is RegExpMatchArray => coin !== null)) {
+    return coins;
+  }
+
+  return parsed
+    .sort((a, b) => a[2] < b[2] ? -1 : a[2] > b[2] ? 1 : 0)
+    .map(coin => `${BigInt(coin[1]).toString()}${coin[2]}`)
+    .join(",");
+};
+
 /**
  * Converts a fund map to a concatenated string representation ("<value><denomination>")
  * @param funds
@@ -31,13 +52,17 @@ export const fundsToCoins = (funds?: Map<string, number>): string => {
     return "";
   }
 
-  const result: string[] = [];
+  return [...funds]
+    .filter(([denomination, amount]) => {
+      if (amount < 0) {
+        throw new Error(`invalid coin amount: ${amount}${denomination}`);
+      }
 
-  funds.forEach((value: number, denomination: string) => {
-    result.push(`${value}${denomination}`);
-  });
-
-  return result.join(",");
+      return amount !== 0;
+    })
+    .sort(([a], [b]) => a < b ? -1 : a > b ? 1 : 0)
+    .map(([denomination, amount]) => `${amount}${denomination}`)
+    .join(",");
 };
 
 /**
@@ -53,6 +78,8 @@ export const fundsToCoins = (funds?: Map<string, number>): string => {
 export const defaultTxFee = "1000000ugnot"; // 1 GNOT
 
 export const PUB_KEY_SECP256K1_TYPE_URL = Secp256k1PubKeyType;
+const PUB_KEY_ED25519_TYPE_URL = "/tm.PubKeyEd25519";
+const PUB_KEY_MULTISIG_TYPE_URL = "/tm.PubKeyMultisig";
 
 /**
  * Wraps a compressed secp256k1 public key into the TM2 protobuf Any format.
@@ -69,15 +96,21 @@ const pubKeyAnyToAminoJson = (pubKey: Any | undefined): unknown => {
   if (!pubKey) {
     return undefined;
   }
-  if (pubKey.type_url !== PUB_KEY_SECP256K1_TYPE_URL) {
+  if (pubKey.type_url === PUB_KEY_MULTISIG_TYPE_URL) {
+    const decoded = PubKeyMultisig.decode(pubKey.value);
     return {
-      type_url: pubKey.type_url,
-      value: uint8ArrayToBase64(pubKey.value),
+      "@type": pubKey.type_url,
+      threshold: decoded.k.toString(),
+      pubkeys: decoded.pub_keys.map(pubKeyAnyToAminoJson),
     };
+  }
+  if (pubKey.type_url !== PUB_KEY_SECP256K1_TYPE_URL && pubKey.type_url !== PUB_KEY_ED25519_TYPE_URL) {
+    throw new Error(`unsupported session public key type ${pubKey.type_url}`);
   }
 
   return {
     "@type": pubKey.type_url,
+    // Upstream crypto/{ed25519,secp256k1}/*.proto both encode the raw key as field 1 bytes.
     value: uint8ArrayToBase64(PubKeySecp256k1.decode(pubKey.value).key),
   };
 };
@@ -116,7 +149,10 @@ export const decodeTxMessages = (messages: Any[]): unknown[] => {
       }
       case MsgEndpoint.MSG_RUN: {
         const decodedMessage = MsgRun.decode(m.value);
-        const messageJson = MsgRun.toJSON(decodedMessage) as object;
+        const messageJson = MsgRun.toJSON(decodedMessage) as Record<string, unknown>;
+        if (decodedMessage.max_send === "") {
+          delete messageJson.max_send;
+        }
         return {
           "@type": m.type_url,
           ...messageJson,
@@ -140,11 +176,20 @@ export const decodeTxMessages = (messages: Any[]): unknown[] => {
       }
       case MsgEndpoint.MSG_CREATE_SESSION: {
         const decodedMessage = MsgCreateSession.decode(m.value);
-        const messageJson = MsgCreateSession.toJSON(decodedMessage) as object;
         return {
           "@type": m.type_url,
-          ...messageJson,
+          creator: decodedMessage.creator,
           session_key: pubKeyAnyToAminoJson(decodedMessage.session_key),
+          expires_at: decodedMessage.expires_at.toString(),
+          ...(decodedMessage.allow_paths.length > 0 && {
+            allow_paths: decodedMessage.allow_paths,
+          }),
+          ...(decodedMessage.spend_limit !== "" && {
+            spend_limit: decodedMessage.spend_limit,
+          }),
+          ...(decodedMessage.spend_period !== 0n && {
+            spend_period: decodedMessage.spend_period.toString(),
+          }),
         };
       }
       case MsgEndpoint.MSG_REVOKE_SESSION: {

@@ -31,10 +31,16 @@ import {
   MsgEndpoint,
 } from "./endpoints.js";
 import {
-  Constructor, Realm, Return, UnionToIntersection,
+  Constructor,
+  Realm,
+  Return,
+  UnionToIntersection,
 } from "./helpers.js";
 import {
-  decodeTxMessages, defaultTxFee, fundsToCoins,
+  decodeTxMessages,
+  defaultTxFee,
+  fundsToCoins,
+  sortCoins,
 } from "./utility/index.js";
 
 /**
@@ -287,7 +293,7 @@ export class GnoWallet extends Wallet {
       session_key: sessionKey,
       expires_at: expiresAt,
       allow_paths: allowPaths,
-      spend_limit: spendLimit,
+      spend_limit: sortCoins(spendLimit),
       spend_period: spendPeriod,
     };
 
@@ -518,6 +524,7 @@ export class GnoWallet extends Wallet {
    * @param {Map<string, number>} [funds] the denomination -> value map for funds, if any
    * @param {Map<string, number>} [maxDeposit] the denomination -> value map for max storage deposit, if any
    * @param {TxFee} [fee] the custom transaction fee, if any (gas_fee as a single <amount><denom> coin, ex. 1000000ugnot)
+   * @param {Map<string, number>} [maxSend] the denomination -> value map capping coins sent out of the caller's account; empty refuses transfers outside replayed history
    */
   executePackage = async <K extends keyof BroadcastTransactionMap>(
     gnoPackage: MemPackage,
@@ -525,6 +532,7 @@ export class GnoWallet extends Wallet {
     funds?: Map<string, number>,
     maxDeposit?: Map<string, number>,
     fee?: TxFee,
+    maxSend?: Map<string, number>,
   ): Promise<BroadcastTransactionMap[K]["result"]> => {
     // Convert the funds into the correct representation
     const amount: string = fundsToCoins(funds);
@@ -547,6 +555,7 @@ export class GnoWallet extends Wallet {
       send: amount,
       package: gnoPackage,
       max_deposit: maxDepositAmount,
+      max_send: fundsToCoins(maxSend),
     };
 
     // Construct the transfer transaction
