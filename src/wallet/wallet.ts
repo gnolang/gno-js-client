@@ -31,10 +31,15 @@ import {
   MsgEndpoint,
 } from "./endpoints.js";
 import {
-  Constructor, Realm, Return, UnionToIntersection,
+  Constructor,
+  Realm,
+  Return,
+  UnionToIntersection,
 } from "./helpers.js";
 import {
-  decodeTxMessages, defaultTxFee, fundsToCoins,
+  decodeTxMessages,
+  defaultTxFee,
+  fundsToCoins,
 } from "./utility/index.js";
 
 /**
