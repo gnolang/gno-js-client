@@ -3,10 +3,13 @@ import {
   ABCIResponse,
   adaptAbciQueryResponse,
   BaseTm2Provider,
+  parseSignCoin,
   Provider,
+  TxSignCoin,
 } from "@gnolang/tm2-js-client";
 
 import {
+  ParamsEndpoint,
   VMEndpoint,
 } from "./endpoints.js";
 import {
@@ -16,6 +19,8 @@ import {
 import {
   EvalJSONResult,
   FunctionSignature,
+  PackageDocumentation,
+  RealmStorage,
   SessionAccountInfo,
 } from "./types/index.js";
 import {
@@ -98,6 +103,26 @@ export interface GnoProvider extends Provider {
   ): Promise<EvalJSONResult>
 
   /**
+   * Fetches the storage size and deposit of a realm as uint64 bigints
+   * @param {string} packagePath the gno realm path
+   * @param {number} [height=0] the height for querying.
+   */
+  getRealmStorage(packagePath: string, height?: number): Promise<RealmStorage>
+
+  /**
+   * Fetches the storage price per byte (the vm storage_price param)
+   * @param {number} [height=0] the height for querying.
+   */
+  getStoragePrice(height?: number): Promise<TxSignCoin>
+
+  /**
+   * Fetches the package documentation as the node's raw JSON
+   * @param {string} packagePath the gno package path
+   * @param {number} [height=0] the height for querying.
+   */
+  getPackageDocument(packagePath: string, height?: number): Promise<PackageDocumentation>
+
+  /**
    * Fetches the file content, or the list of files if the path is a directory
    * @param {string} packagePath the gno package path
    * @param {number} [height=0] the height for querying.
@@ -168,6 +193,56 @@ export abstract class BaseGnoProvider extends BaseTm2Provider implements GnoProv
     return result;
   }
 
+  async getRealmStorage(packagePath: string, height?: number): Promise<RealmStorage> {
+    const abciResponse = await this.abciQuery({
+      path: `vm/${VMEndpoint.STORAGE}`,
+      data: encodeVMQueryData([packagePath]),
+      height: height ?? 0,
+      prove: false,
+    });
+
+    const raw = extractOptionalStringFromResponse(abciResponse.response.ResponseBase.Data);
+    const match = /^storage: ([0-9]+), deposit: ([0-9]+)$/.exec(raw);
+    if (!match) {
+      throw new Error("Invalid vm/qstorage response: expected storage: <uint64>, deposit: <uint64>");
+    }
+    return {
+      storage: BigInt(match[1]),
+      deposit: BigInt(match[2]),
+    };
+  }
+
+  async getStoragePrice(height?: number): Promise<TxSignCoin> {
+    const abciResponse = await this.abciQuery({
+      path: `params/${ParamsEndpoint.STORAGE_PRICE}`,
+      data: new Uint8Array(),
+      height: height ?? 0,
+      prove: false,
+    });
+
+    const raw = extractStringFromResponse(abciResponse.response.ResponseBase.Data);
+    const price: unknown = JSON.parse(raw);
+    if (typeof price !== "string") {
+      throw new Error("Invalid storage price response: expected a JSON coin string");
+    }
+    const coin = parseSignCoin(price)[0];
+    if (!coin) {
+      throw new Error("Invalid storage price response: expected a positive coin");
+    }
+    return coin;
+  }
+
+  async getPackageDocument(packagePath: string, height?: number): Promise<PackageDocumentation> {
+    const abciResponse = await this.abciQuery({
+      path: `vm/${VMEndpoint.DOC}`,
+      data: encodeVMQueryData([packagePath]),
+      height: height ?? 0,
+      prove: false,
+    });
+
+    return JSON.parse(extractStringFromResponse(abciResponse.response.ResponseBase.Data));
+  }
+
   async getFileContent(packagePath: string, height?: number): Promise<string> {
     const abciResponse = await this.abciQuery({
       path: `vm/${VMEndpoint.FILE_CONTENT}`,
@@ -215,16 +290,9 @@ export abstract class BaseGnoProvider extends BaseTm2Provider implements GnoProv
       ResponseBase,
     } = abciResponse.response;
 
-    if (!ResponseBase.Data) {
-      return [];
-    }
-
-    const raw = extractStringFromResponse(ResponseBase.Data);
-    if (raw.trim() === "") {
-      return [];
-    }
-
-    return (JSON.parse(raw) as unknown[]).map(normalizeSessionAccount);
+    // No sessions arrive as empty data or JSON null.
+    const raw = extractOptionalStringFromResponse(ResponseBase.Data).trim();
+    return ((raw ? JSON.parse(raw) : null) as unknown[] | null ?? []).map(normalizeSessionAccount);
   }
 
   async getSession(

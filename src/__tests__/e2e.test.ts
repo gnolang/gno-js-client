@@ -179,6 +179,37 @@ describe("E2E Tests", () => {
     await expect(provider.getRenderOutput("gno.land/r/tests/vm", "")).resolves.toBe("");
   });
 
+  test("realm storage parses and its deposit matches the storage price", async () => {
+    const {
+      storage,
+      deposit,
+    } = await provider.getRealmStorage("gno.land/r/tests/vm");
+    const price = await provider.getStoragePrice();
+
+    expect(storage).toBeGreaterThan(0n);
+    expect(price.denom).toBe("ugnot");
+    expect(deposit).toBe(storage * BigInt(price.amount));
+    await expect(provider.getRealmStorage("gno.land/r/does/not/exist"))
+      .rejects.toBeInstanceOf(InvalidPkgPathError);
+  });
+
+  test("package documentation keeps the node's JSON shape", async () => {
+    const doc = await provider.getPackageDocument("gno.land/r/tests/vm");
+
+    expect(doc.package_path).toBe("gno.land/r/tests/vm");
+    expect(doc.funcs?.find(f => f.name === "IncCounter")).toMatchObject({
+      crossing: true,
+      line: expect.any(String),
+    });
+    await expect(provider.getPackageDocument("gno.land/r/does/not/exist"))
+      .rejects.toBeInstanceOf(InvalidPkgPathError);
+  });
+
+  test("an account without sessions lists none", async () => {
+    // The node encodes the empty list as JSON null.
+    await expect(provider.getSessions("g1jg8mtutu9khhfwc4nxmuhcpftf0pajdhfvsqf5")).resolves.toEqual([]);
+  });
+
   afterAll(async () => {
     // Stop gnodev server
     if (gnodevProcess) {
