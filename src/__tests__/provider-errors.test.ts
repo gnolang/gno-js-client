@@ -5,9 +5,6 @@ import {
   type Tm2Client,
 } from "@gnolang/tm2-js-client";
 import {
-  AbciQueryResponse,
-} from "@gnolang/tm2-rpc";
-import {
   describe,
   expect,
   test,
@@ -15,7 +12,6 @@ import {
 
 import {
   assertNoABCIError,
-  BaseGnoProvider,
   constructGnoError,
   ExportDepthExceededError,
   ExportSizeExceededError,
@@ -28,6 +24,10 @@ import {
   StringError,
   TypeCheckError,
 } from "../index.js";
+import {
+  nodeResponse,
+  TestGnoProvider,
+} from "./helpers.js";
 
 // Payloads below are verbatim `ResponseBase` values captured from a live node.
 
@@ -88,31 +88,6 @@ Msg Traces:
 Stack Trace:
     0  /gnoroot/tm2/pkg/errors/errors.go:93`;
 
-/**
- * Builds the raw RPC response a node sends, so a test can drive the same
- * `adaptAbciQueryResponse` path the provider uses instead of handing
- * `assertNoABCIError` an already-adapted object.
- * @param {object} [error] the amino-encoded `ResponseBase.error`
- * @param {string} [log] the raw `ResponseBase.log`
- */
-const nodeResponse = (
-  error?: Record<string, unknown>,
-  log = "",
-): AbciQueryResponse => {
-  return {
-    responseBase: {
-      error: error as AbciQueryResponse["responseBase"]["error"],
-      data: new Uint8Array(),
-      events: [],
-      log,
-      info: "",
-    },
-    key: new Uint8Array(),
-    value: new Uint8Array(),
-    height: 0,
-  };
-};
-
 /** Runs a raw node response through the provider's adapt-then-assert path */
 const assertNodeResponse = (
   error?: Record<string, unknown>,
@@ -122,12 +97,6 @@ const assertNodeResponse = (
     adaptAbciQueryResponse(nodeResponse(error, log)).response.ResponseBase,
   );
 };
-
-class TestGnoProvider extends BaseGnoProvider {
-  constructor(client: Tm2Client) {
-    super(client);
-  }
-}
 
 describe("BaseGnoProvider.abciQuery", () => {
   const params: AbciQueryParams = {

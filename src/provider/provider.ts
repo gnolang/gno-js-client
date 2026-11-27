@@ -14,6 +14,7 @@ import {
   ObjectNotFoundError,
 } from "./errors/index.js";
 import {
+  EvalJSONResult,
   FunctionSignature,
   SessionAccountInfo,
 } from "./types/index.js";
@@ -85,6 +86,18 @@ export interface GnoProvider extends Provider {
   ): Promise<string>
 
   /**
+   * Evaluates an expression in readonly mode and returns raw amino TypedValue JSON
+   * @param {string} packagePath the gno package path
+   * @param {string} expression the expression to be evaluated
+   * @param {number} [height=0] the height for querying.
+   */
+  evaluateExpressionJSON(
+    packagePath: string,
+    expression: string,
+    height?: number
+  ): Promise<EvalJSONResult>
+
+  /**
    * Fetches the file content, or the list of files if the path is a directory
    * @param {string} packagePath the gno package path
    * @param {number} [height=0] the height for querying.
@@ -130,6 +143,29 @@ export abstract class BaseGnoProvider extends BaseTm2Provider implements GnoProv
     });
 
     return extractOptionalStringFromResponse(abciResponse.response.ResponseBase.Data);
+  }
+
+  async evaluateExpressionJSON(
+    packagePath: string,
+    expression: string,
+    height?: number,
+  ): Promise<EvalJSONResult> {
+    const abciResponse = await this.abciQuery({
+      path: `vm/${VMEndpoint.EVALUATE_JSON}`,
+      data: encodeVMQueryData([packagePath, expression], "."),
+      height: height ?? 0,
+      prove: false,
+    });
+
+    const {
+      Data,
+    } = abciResponse.response.ResponseBase;
+    const result = Data ? JSON.parse(extractStringFromResponse(Data)) : null;
+    if (!Array.isArray(result?.results)) {
+      throw new Error(`vm/${VMEndpoint.EVALUATE_JSON} response has no results array`);
+    }
+
+    return result;
   }
 
   async getFileContent(packagePath: string, height?: number): Promise<string> {
@@ -240,7 +276,7 @@ export abstract class BaseGnoProvider extends BaseTm2Provider implements GnoProv
 
   async getRealmPaths(prefix: string): Promise<string[]> {
     const abciResponse = await this.abciQuery({
-      path: "vm/qpaths",
+      path: `vm/${VMEndpoint.PATHS}`,
       data: encodeVMQueryData([prefix]),
       height: 0,
       prove: false,
